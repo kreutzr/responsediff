@@ -1,0 +1,15 @@
+= AsciiDocConverterTest
+:doctype: book
+:encoding: utf-8
+:lang: de
+:toc: left
+:toclevels: 5
+
+
+== Chapter 1
+
+Some text
+
+== Chapter 2
+
+Some more text

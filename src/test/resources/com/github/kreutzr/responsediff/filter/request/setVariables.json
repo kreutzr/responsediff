@@ -1,0 +1,17 @@
+{
+  "variables" : {
+    "key1" : [ "value11", "value12", "value13" ],
+    "key2" : [ "value21", "value22", "value23" ]
+  },
+  "variableSets" : [
+    { "key1": "value31", "key2" : "value41" },
+    { "key1": "value31", "key2" : "value42" },
+    { "key1": "value31", "key2" : "value43" },
+    { "key1": "value32", "key2" : "value41" },
+    { "key1": "value32", "key2" : "value42" },
+    { "key1": "value32", "key2" : "value43" },
+    { "key1": "value33", "key2" : "value41" },
+    { "key1": "value33", "key2" : "value42" },
+    { "key1": "value33", "key2" : "value43" }
+  ]
+}

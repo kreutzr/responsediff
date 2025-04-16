@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="Setup 00-01">
+
+  <testSet id="TestSet 00-01" report="all">
+    <description>Test set 00-01</description>
+
+	  <response>
+      <filters>
+        <filter id="zzz"/>
+      </filters>
+	    <ignore>
+	      <header>ZZZ</header>
+	      <explanation>ZZZ</explanation>
+	    </ignore>
+      <expected>
+          <httpStatus>203</httpStatus>
+          <headers>
+             <header name="FFF">FFFFFF</header>
+             <header name="GGG">GGG</header>
+          </headers>
+          <values>
+             <value path="NNN" >NNN</value>
+          </values>
+        </expected>
+	  </response>
+
+    <test id="Test C">
+      <response>
+      <filters>
+        <filter id="ccc"/>
+      </filters>
+        <ignore>
+          <header>CCC</header>
+          <explanation>CCC</explanation>
+        </ignore>
+        <expected>
+            <httpStatus>204</httpStatus>
+            <headers>
+               <header name="HHH">HHH</header>
+            </headers>
+            <values>
+               <value path="NNN" >NNNNNN</value>
+            </values>
+          </expected>
+      </response>
+    </test>
+
+    <test id="Test D">
+      <response>
+      <filters inherit="false">
+        <!-- Outer filters are removed here -->
+      </filters>
+      </response>
+    </test>
+  </testSet>
+
+</XmlResponseDiffSetup>

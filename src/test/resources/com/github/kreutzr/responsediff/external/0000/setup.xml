@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="GETTING STARTED SETUP">
+   <description>Demo to demonstrate a basic test setup structure</description>
+   <testSet id="Person CRUD DDDD1" order="strict">
+      <description>Reading person data</description>
+
+      <request endpoint="solution/portfolio/calculate-growth" >
+         <description>DDDDDD calculate-growth for ${contractId}</description>
+         <variables>
+            <variable id="contractId" type="string">100000000</variable>
+         </variables>
+         <parameters>
+            <parameter id="begin">2010-01-01</parameter>
+            <parameter id="end">2023-08-01</parameter>
+            <parameter id="contract">${contractId}</parameter>
+         </parameters>
+      </request>
+
+      <test id="calculate-growth with " ticketReference="TICKET-001">
+         <description>Some description</description>
+      </test>
+
+   </testSet>
+</XmlResponseDiffSetup>

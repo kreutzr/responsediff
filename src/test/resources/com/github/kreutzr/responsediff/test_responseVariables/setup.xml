@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="ROOT SETUP">
+  <description>Test that response variables are handled server instance specific</description>
+
+  <testSet id="Response Variables" order="strict" report="all">
+
+    <response>
+      <expected>
+        <headers>
+          <header name="receiveTime" type="datetime" epsilon="PT5S">${nowDateTime()}
+          </header>
+        </headers>
+      </expected>
+    </response>
+
+    <test id="Step 01 - Read response variable">
+      <request endpoint="my-endpoint" />
+      <response>
+        <variables>
+          <variable id="HEADER__CONTENT_TYPE" path="$.headers.content-type" />
+          <variable id="STEP1_KEY" path="$.key" type="string" />
+        </variables>
+      </response>
+    </test>
+
+    <test id="Step 02 - Use response variables">
+      <request endpoint="my-endpoint?step1_key=${HEADER__CONTENT_TYPE}">
+        <headers>
+          <header name="content-type">${HEADER__CONTENT_TYPE}</header>
+        </headers>
+        <body>
+          {
+            "step1_key" : "${STEP1_KEY}"
+          }
+        </body>
+      </request>
+    </test>
+
+    <test id="Step 03 - Use response variables again">
+      <request endpoint="my-endpoint?step1_key=${STEP1_KEY}">
+        <headers>
+          <header name="content-type">${HEADER__CONTENT_TYPE}</header>
+        </headers>
+        <body>
+          {
+            "step1_key" : "${STEP1_KEY}"
+          }
+        </body>
+      </request>
+
+      <response>
+        <expected>
+          <values>
+            <value path="$.DOES_NOT_EXIST" checkPathExists="true" />
+          </values>
+        </expected>
+      </response>
+    </test>
+
+    <test id="Step 04 - Perform some feature tests">
+      <variables>
+        <variable id="VAR00">ZZZ</variable>
+      </variables>
+      <request endpoint="my-endpoint?step4_key=${STEP1_KEY}">
+      </request>
+
+      <response>
+        <variables>
+          <variable id="COUNT_1" path="$.array.length()" type="int" />
+        </variables>
+        <expected>
+          <values>
+            <value path="$.key00">aaa ${VAR00} bbb</value>     <!-- Use variables in expected values -->
+            <value path="$.key01">false</value>               <!-- String check against String ("false") -->
+            <value path="$.key01" type="boolean">false</value> <!-- Boolean check against String ("false") -->
+            <value path="$.key02" type="boolean">false</value> <!-- Boolean check against Boolean -->
+            <value path="$.array[?(@.key03=='a')].key04#0" type="boolean">false</value> <!-- Boolean check against String ("false") -->
+            <value path="$.array[?(@.key03=='a')].key05#0" type="boolean">false</value> <!-- Boolean check against Boolean -->
+            <value path="$.array[?(@.key03=='a')].key04#0" checkIsNull="true" checkInverse="true" />
+            <value path="$.array[?(@.key03=='a')].key06#0" checkIsNull="true" />
+            <value path="$.array.length()" type="int">1</value>
+            <value path="$.doesNotExist" type="boolean">true</value>
+          </values>
+        </expected>
+      </response>
+    </test>
+
+    <test id="Step 05 - Perform some feature tests with empty body">
+      <request endpoint="my-endpoint?step5_key=${STEP1_KEY}">
+      </request>
+
+      <response>
+        <expected>
+          <values>
+            <value path="$.key00">aaa</value>     <!-- Expected values should cause a failure with empty bodies -->
+          </values>
+        </expected>
+      </response>
+    </test>
+
+  </testSet>
+</XmlResponseDiffSetup>

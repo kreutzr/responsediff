@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="Setup 00-02">
+  <testSet id="TestSet 02" order="strict" report="all">
+    <test id="Test D" ticketReference="AAA-123">
+      <request endpoint="/my-endpoint" >
+        <body>
+          {
+             "key" : "value",
+             "array" : [ { "key" : "value 'ä' &amp; 'ß'" } ],
+             "map" : {
+                "key" : "${var-00}"
+             }
+          }
+        </body>
+      </request>
+      <response>
+        <variables>
+          <variable id="TEST" path="$.errorMessage" type="string" />
+        </variables>
+      </response>
+    </test>
+
+    <test id="Test E" ticketReference="AAA-123" >
+      <request endpoint="/my-endpoint?param1=${USERNAME}" >
+        <body>
+          {
+             "key" : "value",
+             "test" : "${TEST}",
+             "array" : [ { "key" : "${HELLO} ${HUHU} 'ä' &amp; 'ß'" } ],
+             "map" : {
+                "key" : "${USERNAME}"
+             }
+          }
+        </body>
+      </request>
+    </test>
+  </testSet>
+</XmlResponseDiffSetup>

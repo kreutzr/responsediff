@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="ROOT SETUP">
+  <description>Setup description</description>
+
+  <filterRegistry>
+    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter">
+    </filter>
+    <filter id="setVariables" clazz="com.github.kreutzr.responsediff.filter.request.setvariables.SetVariablesRequestFilter">
+      <parameters>
+      <!--
+         <parameter id="source">C:/home/rkreutz/setVariables.json</parameter>
+      -->
+         <parameter id="source">src/test/resources/com/github/kreutzr/responsediff/filter/request/setVariables.json</parameter>
+         <parameter id="useVariables">false</parameter>
+      </parameters>
+    </filter>
+  </filterRegistry>
+
+  <variables>
+     <variable id="var-00">value-root-00</variable>
+     <variable id="var-01">value-root-01</variable>
+  </variables>
+
+  <testSet id="TestSet 00" project="TMS" order="random">
+     <description>Test set description</description>
+
+     <variables>
+        <variable id="var-00">value-set-00</variable>
+        <variable id="var-01">value-set-01</variable>
+     </variables>
+
+     <request method="GET" endpoint="http://${test-server}/some/endpoint">
+        <description>Test request description with header "${var-00}"</description>
+        <variables>
+           <variable id="var-02">value-req-02</variable>
+        </variables>
+        <headers>
+           <header name="dmz-client-id">2</header>
+           <header name="Content-Type">application/json</header>
+        </headers>
+     <!--
+        <filters>
+        </filters>
+     -->
+     </request>
+
+     <response>
+        <description>Test response description with header "${var-00}"</description>
+        <variables>
+           <variable id="var-02">value-resp-02</variable>
+           <variable id="var-03">value-resp-03</variable>
+        </variables>
+        <filters>
+          <filter id="sortJsonBody"/>
+        </filters>
+
+        <ignore ticketReference="TMS-222">
+        <!--
+           <header>
+           </header>
+           <path></path>
+           <explanation></explanation>
+           -->
+        </ignore>
+        <ignore ticketReference="TMS-333">
+        <!--
+           <path></path>
+           <explanation></explanation>
+        -->
+        </ignore>
+     </response>
+
+     <test id="Test A" ticketReference="TMS-123" iterations="400">
+        <description>Test description with header "${var-00}"</description>
+
+        <variables>
+           <variable id="var-00">value-var-00a</variable>
+           <variable id="var-04">value-var-04</variable>
+        </variables>
+
+        <request endpoint="my-endpoint" >
+           <filters>
+             <filter id="setVariables"/>
+           </filters>
+           <parameters>
+              <parameter id="key-00">value-00</parameter>
+              <parameter id="key-01">${DOES_NOT_EXIST}</parameter>
+           </parameters>
+
+           <headers>
+              <header name="header-name">header_${var-00}_value</header>
+           </headers>
+
+           <body>
+           {
+              "key" : "value",
+              "array" : [ { "key" : "value 'ä' &amp; 'ß'" } ],
+              "map" : {
+                 "key" : "${var-00}",
+                 "key1" : "${key1}",
+                 "key2" : "${key2}"
+              }
+           }
+           </body>
+        </request>
+
+        <response>
+           <ignore ticketReference="TMS-222">
+              <header>content-type</header>
+              <explanation>The content-type is random - haha</explanation>
+           </ignore>
+           <ignore ticketReference="TMS-111">
+              <path>$.array[1].a</path>
+              <explanation>The element "a" is random - haha</explanation>
+           </ignore>
+           <ignore ticketReference="TMS-333">
+              <path>$.map.my-uuid</path>
+              <explanation>An UUID is random</explanation>
+           </ignore>
+
+           <expected>
+              <httpStatus>201</httpStatus>
+              <headers>
+                 <header name="test-header" trim="true" ignoreCase="true"> test-value  </header>
+                 <header name="Hubba">bubba</header>
+              </headers>
+              <values>
+                 <value path="$.text" trim="true" ignoreCase="true">Hello WORLD</value>
+                 <value path="$.text" trim="true" ignoreCase="true" match="true">^.{5} wOrld$</value>
+                 <value path="$.number" type="double" epsilon="0.00002">3.44446</value>
+                 <value path="$.number" type="double" >[3.5,3.6]</value>
+                 <value path="$.number" type="double" >3.44445</value>
+                 <value path="$.date"     type="date"     epsilon="P1D">2005-06-05</value>
+                 <value path="$.datetime" type="datetime" epsilon="PT30S">2005-06-04T23:35:00</value>
+                 <value path="$.duration" type="duration" epsilon="PT0.01S">PT55.007S</value>
+              </values>
+           </expected>
+        </response>
+     </test>
+
+     <testSetInclude file="definitions/test_01.xml" />
+     <testSetInclude file="definitions/test_02.xml" />
+
+  </testSet>
+
+</XmlResponseDiffSetup>

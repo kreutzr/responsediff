@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="GETTING STARTED SETUP">
+  <description>Demo to demonstrate a basic test setup structure</description>
+
+  <filterRegistry>
+    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+  </filterRegistry>
+
+  <testSet id="Person CRUD" order="strict">
+     <description>Person create, read, update and delete</description>
+
+     <test id="Test that person firstname is no longer missing" ticketReference="MT-001">
+        <description>In version 1.0.0 a persons firstname was not returned. In version 1.1.0 this should be fixed.</description>
+
+        <request method="GET" endpoint="/my-tool/person" >
+           <descfiption>Some optional description</descfiption>
+           <parameters>
+              <parameter id="personId">1000000000000000</parameter>
+           </parameters>
+           <headers>
+              <header name="Accept">application/json</header>
+              <header name="Content-Type">application/json</header>
+	         </headers>
+        </request>
+
+        <response>
+           <descfiption>Some optional description</descfiption>
+           <filters>
+              <filter id="sortJsonBody"/>
+           </filters>
+
+		       <ignore>
+		          <header>set-cookie</header>
+		          <explanation>Cookie reference is random</explanation>
+		       </ignore>
+		       <ignore ticketReference="MT-001">
+              <path>$.firstname</path>
+              <explanation>The firstname is missing in version 1.0.0</explanation>
+           </ignore>
+           <ignore>
+              <path>$.random</path>
+              <explanation>We do not expect matching UUIDs</explanation>
+           </ignore>
+
+           <expected>
+              <httpStatus>200</httpStatus>
+              <values>
+                 <value path="$.id"                  type="long"   >1000000000000000</value>
+                 <value path="$.name"                type="string" >Kreutz</value>
+                 <value path="$.firstname"           type="string" >Reinhard</value>
+                 <value path="$.dateOfBirth"         type="date"   >1967-09-27</value>
+                 <value path="$.size"                type="double" >1.94</value>
+                 <value path="$.hasPet"              type="boolean" >false</value>
+                 <value path="$.lastUpdated"         type="datetime" epsilon="PT30S">2023-06-15T17:00:00</value>
+                 <value path="$.timeSinceLastUpdate" type="duration">PT55.007S</value>
+                 <value path="$.random"              type="string" ></value>
+              </values>
+           </expected>
+        </response>
+     </test>
+
+  </testSet>
+</XmlResponseDiffSetup>

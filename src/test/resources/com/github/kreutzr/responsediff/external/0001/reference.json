@@ -1,0 +1,227 @@
+[
+  {
+    "activities": [
+      "005cc7d1-83c9-414e-8722-16e8a069f3ab",
+      "196c84af-fd65-44cd-969d-f07925ba8abe",
+      "81067eb3-4f08-4d2e-863f-74502c288f0b",
+      "86fe79cc-e9c1-4206-8669-4597ec24b2eb",
+      "d0a69ad1-6b0d-4de9-bb78-ee72131b4821"
+    ],
+    "attributes": [
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_ID",
+        "attributeValue": "#201900010"
+      },
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_OBJECTIVE",
+        "attributeValue": "Consumption test "
+      }
+    ],
+    "begin": "2024-04-01T13:00:00Z",
+    "creationTime": "2022-06-27T13:00:00Z",
+    "end": "2024-04-22T14:55:00Z",
+    "id": "02255d9f-09b4-4f55-b563-6a53538ff8ab",
+    "location": "STUTTGART",
+    "name": "Validation HDI consumption",
+    "project": "Development HDI 4.3.2 TDI",
+    "requestor": "admin",
+    "resourceAssignments": [],
+    "type": "AS_DEV_TEST_SERIES",
+    "typeName": "Dev Test Series"
+  },
+  {
+    "activities": [
+      "0261014a-ce90-4b3c-b68f-980efbb85d8a",
+      "301a97d3-f059-4f97-a649-26a9170f4830",
+      "444ce144-6ca4-4a7d-a267-c125a5f3fdeb",
+      "5b3958bc-ced9-452a-af3e-594598c9fd2a",
+      "661f100d-6a90-4784-9b6e-b395e689bb27",
+      "73794ce1-bd0b-49df-abc7-c64aa96ad104",
+      "b6a4c712-3bce-422d-9eb3-2f34a01fce63",
+      "d4f9e39b-ba6d-4d61-8d63-95e72216e7d7",
+      "ebb5498a-7f9c-4888-8578-8cdd7cf7ac99",
+      "ff06efe7-4348-458f-9d9d-ea4bb20f3aab"
+    ],
+    "attributes": [
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_ID",
+        "attributeValue": "#201900092"
+      },
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_OBJECTIVE",
+        "attributeValue": "Testing Standard STD 0815"
+      }
+    ],
+    "begin": "2024-04-07T22:00:00Z",
+    "creationTime": "2022-07-03T22:00:00Z",
+    "end": "2024-04-17T04:00:00Z",
+    "id": "ded537d1-1f03-4773-8bc0-4267b5655075",
+    "location": "STUTTGART",
+    "name": "Testing MTDI 0815",
+    "project": "Development HDI 4.3.2 TDI",
+    "requestor": "admin",
+    "resourceAssignments": [],
+    "type": "AS_DEV_TEST_SERIES",
+    "typeName": "Dev Test Series"
+  },
+  {
+    "activities": [
+      "05b2dc1b-814f-4d43-8003-a356f44cec14",
+      "2075586d-d93a-4cf9-b820-fa7f7b84b0a8",
+      "30f18ba1-d647-46fb-82cd-487682848e5f",
+      "734806b2-4e2a-4daa-acb6-9e5465435d00",
+      "7485adcf-2455-4061-b578-ac08675e699f",
+      "7a62c808-0fa0-42fd-9d0f-477e375145e3",
+      "8d42f256-a602-4e0c-8e35-aa0e4b7b49db",
+      "c8521263-8635-4097-8825-e976d4f9322f",
+      "d75a96d9-28e8-4a7a-a549-da84e1a09537",
+      "d7675287-b6f8-4471-bff1-9efee70d9281",
+      "e599e759-790d-44e2-9ff5-36c4f524d3da"
+    ],
+    "attributes": [
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_ID",
+        "attributeValue": "#201900090"
+      },
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_OBJECTIVE",
+        "attributeValue": "Testing MTDI 3234"
+      }
+    ],
+    "begin": "2024-04-06T22:00:00Z",
+    "creationTime": "2022-07-02T22:00:00Z",
+    "end": "2024-04-16T03:00:00Z",
+    "id": "8e9c277f-bcd6-4236-a202-2f89691c2594",
+    "location": "STUTTGART",
+    "name": "Testing MTDI 1423",
+    "project": "Development HDI 4.3.2 TDI",
+    "requestor": "admin",
+    "resourceAssignments": [],
+    "type": "AS_DEV_TEST_SERIES",
+    "typeName": "Dev Test Series"
+  },
+  {
+    "activities": [
+      "07e7d98b-a38d-4a54-8636-31d4d3efaf6b",
+      "12bc1054-7d85-4bce-9443-b68b1faa6483",
+      "14b99688-5d18-4dff-955a-91558bd7d2ec",
+      "1eddad85-f6a0-450f-b269-67d7a4f7774e",
+      "23734551-9847-4142-b4aa-3fa45f2de29f",
+      "3502a6fc-2e0e-4fca-a9d5-c02cc538980f",
+      "696abe58-406d-440a-870f-e77a355a5bbd",
+      "6ecebe97-0e64-4801-8f92-8a57b284b4d9",
+      "77744048-4e84-4dc0-97dd-0475fb7c3e66",
+      "897f5fb5-5e95-424d-bf3c-4d1ad3f9bd49",
+      "8f779d14-c9b7-4bc6-bcce-ac49af8f7b57",
+      "94e06f89-1fd6-45c1-ad3b-296edf6de6c8",
+      "b45f7213-a714-4057-b240-9bbf107e6da4",
+      "bc08c87f-be72-407d-b1f6-800762a86f8c",
+      "cb62aaa1-dfbe-4044-b394-ba53b3a98683",
+      "cf592444-4ddd-445a-85ff-81f69aacb490",
+      "d11ce26c-5c90-45a0-8f17-0ed3966a9554",
+      "d48b3424-52e6-4a76-b3d4-76c6d99ac387",
+      "f3096567-0b8b-4164-9657-ee579a61b4cf",
+      "fafb30ce-0389-4a97-b732-3fd6590d1c4d"
+    ],
+    "attributes": [
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_ID",
+        "attributeValue": "#201900091"
+      },
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_OBJECTIVE",
+        "attributeValue": "Standard test series STD 23102"
+      }
+    ],
+    "begin": "2024-04-03T05:00:00Z",
+    "creationTime": "2022-06-29T05:00:00Z",
+    "end": "2024-04-16T03:00:00Z",
+    "id": "e615b175-5054-400d-9cca-9e410a9037a4",
+    "location": "STUTTGART",
+    "name": "MTDI 2341",
+    "project": "Development HDI 4.3.2 TDI",
+    "requestor": "ProjectLeader",
+    "resourceAssignments": [],
+    "type": "AS_DEV_TEST_SERIES",
+    "typeName": "Dev Test Series"
+  },
+  {
+    "activities": [
+      "0bb28775-bf65-4eec-a8a1-2557cd26e3db",
+      "0c341db9-475f-4218-8516-f3cd4a3a85e6",
+      "558587c7-7a82-4433-9fb3-771107695e24",
+      "8b840aa8-93d7-4ff9-bb05-7670152e2ed8",
+      "a468a89a-fcde-4f79-bc54-0f3f9cacc367",
+      "ac7b0408-4575-4099-bd3c-1c5a2c9f63d0",
+      "b102e0ff-c497-4fed-935d-baed7a264fc6",
+      "b6dfd36f-a41d-4701-a0b9-125f4808a258",
+      "b8a1e1b0-94db-4aff-b897-978922d93056",
+      "ec0ba157-29e3-4280-8ada-442b83e06d4a"
+    ],
+    "attributes": [
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_ID",
+        "attributeValue": "#201900089"
+      },
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_OBJECTIVE",
+        "attributeValue": "Testing MTI 1323"
+      }
+    ],
+    "begin": "2024-03-30T15:35:00Z",
+    "creationTime": "2022-06-25T14:35:00Z",
+    "end": "2024-04-06T22:00:00Z",
+    "id": "0da5c206-f926-41a4-9819-c54bd42a90fc",
+    "location": "STUTTGART",
+    "name": "Testing MTI 1232",
+    "project": "Development HDI 4.3.2 TDI",
+    "requestor": "admin",
+    "resourceAssignments": [],
+    "type": "AS_DEV_TEST_SERIES",
+    "typeName": "Dev Test Series"
+  },
+  {
+    "activities": [
+      "36df9a7f-136c-42fc-8180-dbdc770677b0",
+      "4ea1577d-c7cf-418e-8a17-91cdd0b1d78c",
+      "812e5148-2de9-426c-9999-244515cb4bd7",
+      "a47cae00-c0f6-41a0-84dc-ec159a31e9a3",
+      "b7dd2217-1d04-4af7-ac35-28bea4d1153e",
+      "cad94354-cb00-4445-8902-5d11858e10d4",
+      "f3b8a9d0-3107-4972-bda6-caf3e9c03588"
+    ],
+    "attributes": [
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_ID",
+        "attributeValue": "#201900093"
+      },
+      {
+        "attributeGroup": null,
+        "attributeName": "SERIES_OBJECTIVE",
+        "attributeValue": "Testing standard STD 0816"
+      }
+    ],
+    "begin": "2024-03-30T16:45:00Z",
+    "creationTime": "2022-06-25T15:45:00Z",
+    "end": "2024-04-10T22:00:00Z",
+    "id": "cbf3dc75-97d9-4a08-98bd-ab155c704cd8",
+    "location": "STUTTGART",
+    "name": "Testing MTDI 0816",
+    "project": "Development HDI 4.3.2 TDI",
+    "requestor": "admin",
+    "resourceAssignments": [],
+    "type": "AS_DEV_TEST_SERIES",
+    "typeName": "Dev Test Series"
+  }
+]

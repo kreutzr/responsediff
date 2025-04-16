@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="Setup 00-02">
+
+  <variables>
+     <variable id="var-00">var-00 of child 02</variable>
+     <variable id="var-03">var-03 of child 02</variable>
+  </variables>
+
+  <testSet id="TestSet 00-02" report="all">
+     <test id="Test C">
+       <variables>
+         <variable id="var-00">var-00 of test C</variable>
+       </variables>
+
+       <request endpoint="my-endpoint" >
+         <variables>
+           <variable id="var-02">var-02 of test C request</variable>
+         </variables>
+       </request>
+    </test>
+  </testSet>
+
+</XmlResponseDiffSetup>

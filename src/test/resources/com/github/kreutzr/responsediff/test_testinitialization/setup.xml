@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="ROOR SETUP">
+  <description>Test that static variables are inherited from setup to testSet to test</description>
+
+  <filterRegistry>
+    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter"/>
+  </filterRegistry>
+
+  <variables>
+     <variable id="var-00">AAA</variable>
+  </variables>
+
+  <testSet id="TestSet 00" order="strict" report="all">
+     <description>Test set description with variable "var-00"="${var-00}"</description>
+
+     <request method="GET" endpoint="my-endpoint">
+        <description>Request description with variable "var-00"="${var-00}"</description>
+
+        <headers>
+           <header name="header-name">header_${var-00}_value</header>
+        </headers>
+
+        <body>
+        {
+           "map" : {
+              "a" : "${var-00}",
+              "b" : "${var-01}"
+           }
+        }
+        </body>
+     </request>
+
+     <response>
+        <variables>
+           <variable id="var-99">XXX</variable>
+        </variables>
+
+        <filters>
+          <filter id="sortJsonBody"/>
+        </filters>
+     </response>
+
+     <test id="Test A" >
+        <description>Test description with variable "var-00"="${var-00}"</description>
+
+        <variables>
+           <variable id="var-00">BBB</variable>
+           <variable id="var-01">CCC</variable> <!-- NEEDS FIX B: "${var-00}" does not work as value -->
+        </variables>
+
+        <request endpoint="my-endpoint" >
+           <parameters>
+              <parameter id="param-00">${var-01}</parameter>
+           </parameters>
+        </request>
+     </test>
+
+     <testSetInclude file="children/test_01.xml" />
+
+  </testSet>
+
+</XmlResponseDiffSetup>

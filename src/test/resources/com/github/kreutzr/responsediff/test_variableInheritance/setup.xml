@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="ROOR SETUP">
+  <description>Test that static variables are inherited from setup to testSet to test</description>
+
+  <variables>
+     <variable id="var-00">var-00 of root</variable>
+     <variable id="var-01">var-01 of root</variable>
+     <variable id="var-globalUUID">${randomUUID()}</variable>
+  </variables>
+
+  <testSet id="TestSet 00" order="strict" report="all">
+     <description>Test set description with variable "var-00"="${var-00}"</description>
+
+     <variables>
+        <variable id="var-00">var-00 of test set 00</variable>
+     </variables>
+
+     <request method="GET" endpoint="my-endpoint">
+        <description>Request description with variable "var-00"="${var-00}"</description>
+        <variables>
+           <variable id="var-02">var-02 of test set 00 request</variable>
+        </variables>
+     </request>
+
+     <test id="Test A" >
+        <description>Test description with variable "var-00"="${var-00}"</description>
+
+        <variables>
+           <variable id="var-00">var-00 of test A</variable>
+           <variable id="var-03">var-03 of test A</variable>
+        </variables>
+
+        <request endpoint="my-endpoint" >
+           <variables>
+             <variable id="var-request-local">REQUEST_LOCAL</variable>
+             <variable id="var-randomUUID">${randomUUID()}</variable>
+             <variable id="var-randomInteger">${randomInteger()}</variable>
+             <variable id="var-randomLong">${randomLong()}</variable>
+             <variable id="var-randomDouble">${randomDouble()}</variable>
+             <variable id="var-randomDate">${randomDate()}</variable>
+             <variable id="var-randomDateTime">${randomDateTime()}</variable>
+             <variable id="var-randomBoolean">${randomBoolean()}</variable>
+             <variable id="var-randomEnum">${randomEnum(AAA,  BBB , CCC)}</variable>
+             <variable id="var-nowDate">${nowDate()}</variable>
+             <variable id="var-nowDateTime">${nowDateTime()}</variable>
+           </variables>
+           <parameters>
+              <parameter id="var-04">var-04 of test A request</parameter>
+              <parameter id="var-05-from-00">${var-00}</parameter>
+              <parameter id="local">${var-request-local}</parameter>
+           </parameters>
+
+           <headers>
+              <header name="header-name">header_${var-00}_value</header>
+           </headers>
+
+           <body>
+           {
+              "map" : {
+                 "a" : "${var-00}",
+                 "b" : "${var-01}"
+              }
+           }
+           </body>
+        </request>
+     </test>
+
+     <testSetInclude file="children/test_01.xml" />
+     <testSetInclude file="children/test_02.xml" />
+
+  </testSet>
+
+  <testSet id="TestSet 01" order="random" report="all">
+     <variables>
+        <variable id="var-01">var-01 of test set 01</variable>
+     </variables>
+  </testSet>
+
+</XmlResponseDiffSetup>

@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            attributeFormDefault="unqualified"
+            elementFormDefault="unqualified"
+            version="1.0">
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <!-- NOTE: A root element needs to be handled differently -->
+  <xsd:element name="XmlResponseDiffSetup">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="ticketServiceUrl" type="xsd:string"        minOccurs="0" maxOccurs="1" />
+        <xsd:element name="description"      type="xsd:string"        minOccurs="0" maxOccurs="1" />
+        <xsd:element name="filterRegistry"   type="XmlFilterRegistry" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="variables"        type="XmlVariables"      minOccurs="0" maxOccurs="1" />
+        <xsd:element name="testSet"          type="XmlTestSet"        minOccurs="1" maxOccurs="unbounded" />
+        <xsd:element name="analysis"         type="XmlAnalysis"       minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+        <xsd:element name="structureDepth"   type="xsd:int"           minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+        <xsd:element name="runtime"          type="XmlRuntime"        minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      </xsd:sequence>
+
+      <xsd:attribute name="id" type="xsd:string" use="required" />
+    </xsd:complexType>
+  </xsd:element>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlRuntime">
+    <xsd:sequence>
+      <xsd:element name="buildVersion" type="xsd:string"  minOccurs="1" maxOccurs="1" />
+      <xsd:element name="buildTime"    type="xsd:string"  minOccurs="1" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlFilterRegistry">
+    <xsd:sequence>
+      <xsd:element name="filter" type="XmlFilterRegistryEntry" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlFilterRegistryEntry">
+    <xsd:sequence>
+      <xsd:element name="parameters" type="XmlParameters" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+
+    <xsd:attribute name="id"    type="xsd:string" use="required" />
+    <xsd:attribute name="clazz" type="xsd:string" use="required" />
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlVariables">
+    <xsd:sequence>
+      <xsd:element name="variable" type="XmlVariable" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlVariable">
+    <xsd:simpleContent>
+       <xsd:extension base="xsd:string">
+           <xsd:attribute name="id"   type="xsd:string"   use="required" />
+           <xsd:attribute name="path" type="xsd:string"   use="optional" />                 <!-- Required for reading variables from a response body. Use this in Response variables block. -->
+           <xsd:attribute name="type" type="XmlValueType" use="optional" default="string"/> <!-- Required for reading variables from a response body. Use this in Response variables block. -->
+       </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlTestSet">
+    <xsd:sequence>
+      <xsd:element name="fileName"        type="xsd:string"         minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="filePath"        type="xsd:string"         minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="description"     type="xsd:string"         minOccurs="0" maxOccurs="1" />
+      <xsd:element name="filterRegistry"  type="XmlFilterRegistry"  minOccurs="0" maxOccurs="1" />
+      <xsd:element name="variables"       type="XmlVariables"       minOccurs="0" maxOccurs="1" />
+      <xsd:element name="request"         type="XmlRequest"         minOccurs="0" maxOccurs="1" />
+      <xsd:element name="response"        type="XmlResponse"        minOccurs="0" maxOccurs="1" />
+      <xsd:element name="test"            type="XmlTest"            minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="testSet"         type="XmlTestSet"         minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="testSetInclude"  type="XmlTestSetInclude"  minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="overAllExpected" type="XmlOverAllExpected" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="analysis"        type="XmlAnalysis"        minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="structureDepth"  type="xsd:int"            minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+    </xsd:sequence>
+
+    <xsd:attribute name="id"             type="xsd:string"   use="required" />
+    <xsd:attribute name="report"         type="xsd:string"   use="optional" />
+    <xsd:attribute name="project"        type="xsd:string"   use="optional" />
+    <xsd:attribute name="order"          type="XmlTestOrder" use="optional" />
+    <xsd:attribute name="iterations"     type="xsd:int"      use="optional" />
+    <xsd:attribute name="breakOnFailure" type="xsd:boolean"  use="optional" default="false"/>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:simpleType name="XmlTestOrder">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="random" />
+      <xsd:enumeration value="strict" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlTestSetInclude">
+    <xsd:simpleContent>
+       <xsd:extension base="xsd:string">
+           <xsd:attribute name="file" type="xsd:string" use="required" />
+       </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlRequest">
+    <xsd:sequence>
+      <xsd:element name="curl"        type="xsd:string"     minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="description" type="xsd:string"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="variables"   type="XmlVariables"   minOccurs="0" maxOccurs="1" />
+      <xsd:element name="filters"     type="XmlFilters"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="parameters"  type="XmlParameters"  minOccurs="0" maxOccurs="1" />
+      <xsd:element name="headers"     type="XmlHeaders"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="body"        type="xsd:string"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="uploadParts" type="XmlUploadParts" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+
+    <xsd:attribute name="method"      type="XmlHttpRequestMethod" use="optional" default="GET"/>
+    <xsd:attribute name="endpoint"    type="xsd:string"           use="optional" />
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlResponse">
+    <xsd:sequence>
+      <xsd:element name="description"       type="xsd:string"      minOccurs="0" maxOccurs="1" />
+      <xsd:element name="variables"         type="XmlVariables"    minOccurs="0" maxOccurs="1" />
+      <xsd:element name="filters"           type="XmlFilters"      minOccurs="0" maxOccurs="1" />
+      <xsd:element name="ignore"            type="XmlIgnore"       minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="expected"          type="XmlExpected"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="httpResponse"      type="XmlHttpResponse" minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="referenceResponse" type="XmlHttpResponse" minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="requestTime"       type="xsd:string"      minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+    </xsd:sequence>
+
+    <xsd:attribute name="hideBody" type="xsd:boolean" use="optional" default="false" />
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlAnalysis">
+    <xsd:sequence>
+      <xsd:element name="begin"          type="xsd:string"  minOccurs="1" maxOccurs="1" />
+      <xsd:element name="end"            type="xsd:string"  minOccurs="1" maxOccurs="1" />
+      <xsd:element name="duration"       type="xsd:string"  minOccurs="1" maxOccurs="1" />
+      <xsd:element name="minDuration"    type="xsd:string"  minOccurs="0" maxOccurs="1" />
+      <xsd:element name="maxDuration"    type="xsd:string"  minOccurs="0" maxOccurs="1" />
+      <xsd:element name="avgDuration"    type="xsd:string"  minOccurs="0" maxOccurs="1" />
+      <xsd:element name="totalDuration"  type="xsd:string"  minOccurs="0" maxOccurs="1" />
+      <xsd:element name="expectedCount"  type="xsd:long"    minOccurs="1" maxOccurs="1" />
+      <xsd:element name="successCount"   type="xsd:int"     minOccurs="1" maxOccurs="1" />
+      <xsd:element name="failCount"      type="xsd:int"     minOccurs="1" maxOccurs="1" />
+      <xsd:element name="skipCount"      type="xsd:int"     minOccurs="1" maxOccurs="1" />
+      <xsd:element name="totalCount"     type="xsd:int"     minOccurs="1" maxOccurs="1" />
+      <xsd:element name="messages"       type="XmlMessages" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlMessages">
+    <xsd:sequence>
+      <xsd:element name="message" type="XmlMessage" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlMessage">
+    <xsd:simpleContent>
+       <xsd:extension base="xsd:string">
+           <xsd:attribute name="level" type="XmlLogLevel" use="required" />
+           <xsd:attribute name="path"  type="xsd:string"  use="optional" />
+       </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:simpleType name="XmlLogLevel">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="UNKNOWN" />
+      <xsd:enumeration value="TRACE" />
+      <xsd:enumeration value="FATAL" />
+      <xsd:enumeration value="ERROR" />
+      <xsd:enumeration value="WARN" />
+      <xsd:enumeration value="INFO" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:simpleType name="XmlHttpRequestMethod">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="GET" />
+      <xsd:enumeration value="HEAD" />
+      <xsd:enumeration value="POST" />
+      <xsd:enumeration value="PUT" />
+      <xsd:enumeration value="DELETE" />
+      <xsd:enumeration value="CONNECT" />
+      <xsd:enumeration value="OPTIONS" />
+      <xsd:enumeration value="TRACE" />
+      <xsd:enumeration value="PATCH" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlTest">
+    <xsd:sequence>
+      <xsd:element name="description"     type="xsd:string"         minOccurs="0" maxOccurs="1" />
+      <xsd:element name="variables"       type="XmlVariables"       minOccurs="0" maxOccurs="1" />
+      <xsd:element name="request"         type="XmlRequest"         minOccurs="0" maxOccurs="1" />
+      <xsd:element name="response"        type="XmlResponse"        minOccurs="0" maxOccurs="1" />
+      <xsd:element name="overAllExpected" type="XmlOverAllExpected" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="analysis"        type="XmlAnalysis"        minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="structureDepth"  type="xsd:int"            minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+    </xsd:sequence>
+
+    <xsd:attribute name="id"              type="xsd:string"  use="required" />
+    <xsd:attribute name="report"          type="xsd:string"  use="optional" />
+    <xsd:attribute name="ticketReference" type="xsd:string"  use="optional" />
+    <xsd:attribute name="iterations"      type="xsd:int"     use="optional" />
+    <xsd:attribute name="breakOnFailure"  type="xsd:boolean" use="optional" default="false"/>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlFilters">
+    <xsd:sequence>
+      <xsd:element name="filter" type="XmlFilter" minOccurs="0" maxOccurs="unbounded" /> <!-- We allow this to be empty to reset outer filters (inherit="false") -->
+    </xsd:sequence>
+
+    <xsd:attribute name="inherit" type="xsd:boolean" use="optional" default="true"/>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlFilter">
+    <xsd:sequence>
+    </xsd:sequence>
+
+    <xsd:attribute name="id" type="xsd:string" use="required" />
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlParameters">
+    <xsd:sequence>
+      <xsd:element name="parameter" type="XmlParameter" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlParameter">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="id"          type="xsd:string" use="required" />
+        <xsd:attribute name="description" type="xsd:string" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlHeaders">
+    <xsd:sequence>
+      <xsd:element name="header" type="XmlHeader" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlHeader">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="name"            type="xsd:string"   use="required" />
+        <xsd:attribute name="type"            type="XmlValueType" use="optional" default="string"/>
+        <xsd:attribute name="epsilon"         type="xsd:string"   use="optional" />
+        <xsd:attribute name="trim"            type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ignoreCase"      type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="match"           type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkPathExists" type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkIsNull"     type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkInverse"    type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ticketReference" type="xsd:string"   use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlUploadParts">
+    <xsd:sequence>
+      <xsd:element name="file" type="XmlFile" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlFile">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="name"        type="xsd:string" use="optional" />
+        <xsd:attribute name="contentType" type="xsd:string" use="required" />
+        <xsd:attribute name="charSet"     type="xsd:string" use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlIgnore">
+    <xsd:sequence>
+      <xsd:element name="header"      type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="path"        type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="explanation" type="xsd:string" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+
+    <xsd:attribute name="ticketReference" type="xsd:string"  use="optional" />
+    <xsd:attribute name="forEver"         type="xsd:boolean" use="optional" default="false"/>
+    <xsd:attribute name="justExplain"     type="xsd:boolean" use="optional" default="false"/>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlExpected">
+    <xsd:sequence>
+      <xsd:element name="httpStatus"  type="XmlHttpStatus" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="headers"     type="XmlHeaders"    minOccurs="0" maxOccurs="1" />
+      <xsd:element name="maxDuration" type="xsd:string"    minOccurs="0" maxOccurs="1" />
+      <xsd:element name="values"      type="XmlValues"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="body"        type="XmlBody"       minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlOverAllExpected">
+    <xsd:sequence>
+      <xsd:element name="maxDuration" type="xsd:string" minOccurs="0" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:simpleType name="XmlHttpStatusBase">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="100" />
+      <xsd:maxInclusive value="599" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="XmlHttpStatus">
+    <xsd:simpleContent>
+      <xsd:extension base="XmlHttpStatusBase">
+        <xsd:attribute name="checkInverse"    type="xsd:boolean" use="optional" default="false"/>
+        <xsd:attribute name="ticketReference" type="xsd:string"  use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlBody">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="noBody"          type="xsd:boolean" use="optional" default="false"/>
+        <xsd:attribute name="ticketReference" type="xsd:string"  use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlValues">
+    <xsd:sequence>
+      <xsd:element name="value" type="XmlValue" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlValue">
+    <xsd:simpleContent>
+      <xsd:extension base="xsd:string">
+        <xsd:attribute name="path"            type="xsd:string"   use="required" />
+        <xsd:attribute name="type"            type="XmlValueType" use="optional" default="string"/>
+        <xsd:attribute name="epsilon"         type="xsd:string"   use="optional" />
+        <xsd:attribute name="trim"            type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ignoreCase"      type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="match"           type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkPathExists" type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkIsNull"     type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkInverse"    type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ticketReference" type="xsd:string"   use="optional" />
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:simpleType name="XmlValueType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="int" />
+      <xsd:enumeration value="long" />
+      <xsd:enumeration value="double" />
+      <xsd:enumeration value="boolean" />
+      <xsd:enumeration value="string" />
+      <xsd:enumeration value="date" />
+      <xsd:enumeration value="datetime" />
+      <xsd:enumeration value="duration" />
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlHttpResponse">
+    <xsd:sequence>
+      <xsd:element name="bodyIsJson"       type="xsd:boolean"     minOccurs="1" maxOccurs="1" />
+      <xsd:element name="httpStatus"       type="XmlHttpStatus"   minOccurs="0" maxOccurs="1" />
+      <xsd:element name="headers"          type="XmlHeaders"      minOccurs="0" maxOccurs="1" />
+      <xsd:element name="body"             type="xsd:string"      minOccurs="0" maxOccurs="1" />
+      <xsd:element name="download"         type="XmlDownload"     minOccurs="0" maxOccurs="1" />
+      <xsd:element name="requestDuration"  type="xsd:string"      minOccurs="0" maxOccurs="1" />
+      <xsd:element name="originalResponse" type="XmlHttpResponse" minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlDownload">
+    <xsd:sequence>
+      <xsd:element name="filename" type="xsd:string"  minOccurs="1" maxOccurs="1" />
+      <xsd:element name="size"     type="xsd:int"     minOccurs="1" maxOccurs="1" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

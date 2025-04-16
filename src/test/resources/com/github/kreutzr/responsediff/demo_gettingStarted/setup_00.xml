@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="GETTING STARTED SETUP">
+  <description>Demo to demonstrate a basic test setup structure</description>
+
+  <filterRegistry>
+    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+  </filterRegistry>
+
+  <testSet id="Person CRUD" order="strict" report="all">
+     <description>Person create, read, update and delete</description>
+
+     <test id="Test that person firstname is no longer missing" ticketReference="MT-001, MT002">
+        <description>In version 1.0.0 a persons firstname was not returned and hasPet was not supported. In version 1.1.0 this should be fixed.</description>
+
+        <request method="GET" endpoint="/my-tool/person" >
+           <descfiption>Some optional description</descfiption>
+           <parameters>
+              <parameter id="personId">1000000000000000</parameter>
+           </parameters>
+           <headers>
+              <header name="Accept">application/json</header>
+           </headers>
+        </request>
+
+        <response>
+           <descfiption>Some optional description</descfiption>
+           <filters>
+              <filter id="sortJsonBody"/>
+           </filters>
+
+           <ignore>
+              <header>set-cookie</header>
+              <explanation>Cookie reference is random</explanation>
+           </ignore>
+           <ignore ticketReference="MT-001">
+              <path>$.firstname</path>
+              <explanation>The firstname is missing in version 1.0.0</explanation>
+           </ignore>
+           <ignore  ticketReference="MT-002">
+              <path>$.hasPet</path>
+              <explanation>hasPet was not supported in version 1.0.0</explanation>
+           </ignore>
+
+           <expected>
+              <httpStatus>200</httpStatus>
+              <values>
+                 <value path="$.firstname" type="string" >Reinhard</value>
+                 <value path="$.hasPet"    type="boolean" >false</value>
+              </values>
+           </expected>
+        </response>
+     </test>
+
+  </testSet>
+</XmlResponseDiffSetup>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="ROOR SETUP">
+  <description>Test that response definitions are inherited from setup to testSet to test</description>
+
+  <filterRegistry>
+    <filter id="aaa" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+    <filter id="bbb" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+    <filter id="ccc" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+    <filter id="xxx" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+    <filter id="zzz" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+  </filterRegistry>
+  <testSet id="TestSet 00" order="strict" report="all">
+     <description>Test set 00</description>
+
+	  <response>
+	    <filters>
+	      <filter id="xxx"/>
+	    </filters>
+	    <ignore>
+	      <header>XXX</header>
+	      <explanation>Timestamps may differ</explanation>
+	    </ignore>
+      <expected>
+        <httpStatus>200</httpStatus>
+        <headers>
+           <header name="EEE">EEE</header>
+        </headers>
+        <values>
+           <value path="MMM" >MMM</value>
+        </values>
+      </expected>
+	   </response>
+
+     <test id="Test A" >
+        <description>Test A</description>
+		    <response>
+		      <filters>
+		        <filter id="aaa"/>
+		      </filters>
+		      <ignore>
+		        <header>AAA</header>
+		        <explanation>AAA</explanation>
+		      </ignore>
+					<expected>
+					  <httpStatus>201</httpStatus>
+					  <headers>
+					     <header name="FFF">FFF</header>
+					  </headers>
+					  <values>
+					     <value path="MMM" >MMMMMM</value>
+					  </values>
+					</expected>
+		    </response>
+     </test>
+
+     <testSetInclude file="children/test_01.xml" />
+
+  </testSet>
+
+  <testSet id="TestSet 01" order="random" report="all">
+     <description>Test set 01</description>
+
+     <response>
+       <expected>
+         <httpStatus>202</httpStatus>
+         <headers>
+            <header name="GGG">GGG</header>
+         </headers>
+         <values>
+            <value path="NNN" >NNN</value>
+         </values>
+         <body noBody="true"/>
+       </expected>
+     </response>
+     <test id="Test B" >
+        <description>Test B</description>
+        <response>
+		      <filters>
+		        <filter id="bbb"/>
+		      </filters>
+          <ignore>
+            <header>BBB</header>
+            <explanation>BBB</explanation>
+          </ignore>
+        </response>
+     </test>
+
+  </testSet>
+
+</XmlResponseDiffSetup>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Properties>
+    <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %5pid [%4tid] %-5level %-40logger{1} # %msg%notEmpty{ THREW %throwable{separator(|)}}%throwable{0}%n</Property>
+    <Property name="logpath">log</Property>
+    <Property name="service">responsediff-test</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT">
+      <PatternLayout pattern="${pattern}"/>
+    </Console>
+
+    <!-- Async Loggers will auto-flush in batches, so switch off immediateFlush. -->
+    <RollingRandomAccessFile
+      name="FileAppender"
+      fileName="log/${service}.log"
+      filePattern="log/${service}-%d{yyyyMMdd-HHmmss}.log.gz"
+      immediateFlush="false"
+      append="true"
+    >
+      <PatternLayout pattern="${pattern}"/>
+      <Policies>
+        <SizeBasedTriggeringPolicy size="5MB"/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${logpath}" maxDepth="2">
+          <IfFileName glob="*">
+            <!-- Deletes log files older that match any of the conditions below. -->
+            <IfAny>
+              <IfAccumulatedFileCount exceeds="11" /> <!-- current log file + 10 archived logs -->
+              <IfLastModified age="P30D" />
+              <IfAccumulatedFileSize exceeds="1GB" />
+            </IfAny>
+          </IfFileName>
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingRandomAccessFile>
+  </Appenders>
+
+  <Loggers>
+    <Root level="info">
+      <AppenderRef ref="ConsoleAppender" />
+      <AppenderRef ref="FileAppender"/>
+    </Root>
+
+    <Logger name="com.github.kreutzr.responsediff" additivity="false" level="info">
+      <!--
+      <AppenderRef ref="ConsoleAppender" />
+      -->
+      <AppenderRef ref="FileAppender" />
+    </Logger>
+  </Loggers>
+</Configuration>
