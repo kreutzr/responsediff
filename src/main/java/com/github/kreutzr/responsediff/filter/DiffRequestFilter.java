@@ -21,7 +21,7 @@ public interface DiffRequestFilter extends DiffFilter
    * @param xmlRequest The XmlRequest to apply the filters functionality to. May be null.
    * @param serviceId A String that indicates the associated service (one of CANDIDATE, REFERENCE or CONTROL). May be null.
    * @param xmlTest The current XmlTest. Must not be null.
-   * @throws If an error occurs, an Exception is thrown.
+   * @throws DiffFilterException If an error occurs, an Exception is thrown.
   */
   public void apply(
     final XmlRequest xmlRequest,

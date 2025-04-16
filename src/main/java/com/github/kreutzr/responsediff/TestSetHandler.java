@@ -152,7 +152,7 @@ public class TestSetHandler
    * @param referenceXmlSetup An optional XmlSetup that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
    * @param structureDepth The depth within the test structure. The root element (setup) has depth 1.
    * @throws ParseException
-   * @throws May throw a {@link BreakOnFailureException}.
+   * @throws BreakOnFailureException
    */
   private static void handleTestSet(
      final XmlTestSet           xmlTestSet,
@@ -485,7 +485,7 @@ public class TestSetHandler
    * @param testFileName The file name the current test is configured in. Must not be null.
    * @param referenceXmlSetup An optional XmlSetup that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
    * @param structureDepth The depth within the test structure. The root element (setup) has depth 1.
-   * @throws May throw a {@link BreakOnFailureException}.
+   * @throws BreakOnFailureException
    */
   private static void handleTest(
      final XmlTestSet           xmlTestSet,
@@ -1295,7 +1295,7 @@ public class TestSetHandler
   /**
    * Joins the given ticket reference(s) to those of the given XmlTest.
    * @param xmlTest The XmlTest. Must not be null.
-   * @param ticketReference The ticket reference(s) to join. May be null.
+   * @param ticketReferences The ticket reference(s) to join. May be null.
    */
   static void joinTicketReferences(
     final XmlTest xmlTest,

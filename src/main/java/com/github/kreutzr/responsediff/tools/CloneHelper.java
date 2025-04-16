@@ -15,7 +15,7 @@ public class CloneHelper
    * @param object The object to clone. May be null.
    * @param clazz The class of the object to clone. Must not be null.
    * @return A deep copy (clone) of the passed object.
-   * @throws If an error occurs a RuntimeException is thrown.
+   * @throws RuntimeException If an error occurs a RuntimeException is thrown.
    */
   public static <T> T deepCopyJAXB( final T object, final Class<T> clazz )
   {

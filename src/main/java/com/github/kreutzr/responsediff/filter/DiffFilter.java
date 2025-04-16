@@ -12,7 +12,7 @@ public interface DiffFilter
    * @param name The name of the filter parameter. Must not be null.
    * @param value The value of the filter parameter. May be null.
    * @return this.
-   * @throws If the filter parameter name is not supported, an Exception is thrown.
+   * @throws UnregisteredParameterException If the filter parameter name is not supported, an Exception is thrown.
    */
   public DiffFilter setFilterParameter( final String name, final String value ) throws UnregisteredParameterException;
 
@@ -29,7 +29,7 @@ public interface DiffFilter
 
   /**
    * Initializes the filter according to the parameters.
-   * @throws If an error occurs, an Exception is thrown.
+   * @throws DiffFilterException If an error occurs, an Exception is thrown.
    */
   public void init() throws DiffFilterException;
 

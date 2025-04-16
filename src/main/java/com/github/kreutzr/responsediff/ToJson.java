@@ -66,7 +66,7 @@ public class ToJson
 
   /**
    * Creates a JSON representation of the passed XmlVariable.
-   * @param xmlvariable The variable to transform. May be null.
+   * @param xmlVariable The variable to transform. May be null.
    * @return The formatted XmlVariable.
    */
   static String fromVariable( final XmlVariable xmlVariable )
@@ -189,7 +189,6 @@ public class ToJson
    * Creates a JSON representation of the passed Xml objects.
    * @param endpoint   The HTTP endpoint. May be null.
    * @param xmlHeaders The headers. May be null.
-   * @param httpStatus The HTTP status. May be null.
    * @param body       The HTTP body. May be null.
    * @return The formatted JSON representation.
    */

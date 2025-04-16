@@ -88,7 +88,7 @@ public class XmlFileHandler
    * Reads a XmlResponseDiffSetup with the the given fileName.
    * @param xmlFilePath The name (including the path) of the XML file to read. Must not be null.
    * @param schema An optional Schema to use for XSD validation. May be null.
-   * @param xmlTestSetParen The XmlTestSetParent. May be null.
+   * @param xmlTestSetParent The XmlTestSetParent. May be null.
    * @param initialize Flag, if the read XmlSetup shall be initialized (true) or not (false).
    * @param testSetPath The path of the current TestSet. Must not be null.
    * @return The deserialized XmlResponseDiffSetup.

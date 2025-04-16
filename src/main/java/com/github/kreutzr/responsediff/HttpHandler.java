@@ -160,7 +160,7 @@ public class HttpHandler
   /**
    * Creates a ByteArrayInputStream that contains all uploadParts. <b>NOTE:</b> The "Content-Type" header will be adjusted as a side effect.
    * @param xmlRequest The XmlRequest to use. Must not be null.
-   * @param testFilename The complete file name of the test. Must not null.
+   * @param testFileName The complete file name of the test. Must not null.
    * @return A ByteArrayInputStream. May be empty but never null.
    * @throws IOException
    */
@@ -892,7 +892,6 @@ public class HttpHandler
   /**
    * Replaces all found variable names within the request body by the defined variable values.
    * @param xmlRequest The XmlRequest to process. Must not be null.
-   * @param requestVariables The variable definitions to use. Must not be null.
    * @param serviceId A String that indicates the associated service (one of CANDIDATE, REFERENCE or CONTROL). May be null.
    * @param testId The current test id. Must not be null.
    * @param testFileName The file name the current test is configured in. Must not be null.
@@ -918,7 +917,6 @@ public class HttpHandler
    * @param serviceId A String that indicates the associated service (one of CANDIDATE, REFERENCE or CONTROL). May be null.
    * @param testId The current test id. Must not be null.
    * @param testFileName The file name the current test is configured in. Must not be null.
-   * @return The handled parameters. May be null.
    */
   static void handleRequestParameters(
     final XmlRequest xmlRequest,

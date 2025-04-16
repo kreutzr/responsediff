@@ -35,8 +35,7 @@ public class _JsonTraverser
   /**
    * Constructor
    * @param json The JSON to traverse. Must not be null.
-   * @throws JsonMappingException
-   * @throws JsonProcessingException
+   * @throws JsonMappingException, JsonProcessingException If an error occurs an exception is thrown.
    */
   public _JsonTraverser( final String json )
   throws JsonMappingException, JsonProcessingException

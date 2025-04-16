@@ -21,7 +21,7 @@ public class VariablesHandler
   /**
    * Replaces all found variable names within a given text by the defined variable values.
    * @param text      The text in which the variable name shall be replaced. May be null.
-   * @param variables The variable definitions to use. Must not be null.
+   * @param xmlVariables The variable definitions to use. Must not be null.
    * @param source    A String that indicates the source of the given text (e.g. "body", "header", "parameter")
    * @param serviceId A String that indicates the associated service (one of CANDIDATE, REFERENCE or CONTROL). May be null.
    * @param testId    The current test id. Must not be null.

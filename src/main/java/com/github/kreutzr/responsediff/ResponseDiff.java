@@ -80,7 +80,7 @@ public class ResponseDiff
     * @param epsilon The epsilon for decimal comparison. Must not be null.
     * @param referenceFilePath Optional filename that points to a XML report that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
     * @param exitWithExitCode Flag, if an exit code shall be returned or not. (Pass false for local development.)
-    * @throws If an error occurs during the initialization, an Exception is thrown
+    * @throws Exception If an error occurs during the initialization, an Exception is thrown
     */
    public ResponseDiff(
      final String            rootPath,

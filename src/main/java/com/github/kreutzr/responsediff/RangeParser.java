@@ -13,7 +13,7 @@ public class RangeParser
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Tries to parses a value description which may be a range or not.
+   * Tries to parses a range description which may be a range or not.
    * <p/>
    * Range expressions are coded as follows:
    * <pre> ["["|"]"](.*),(.*)["["|[]"] </pre>
@@ -23,7 +23,7 @@ public class RangeParser
    * <li>"]x" means lower border excluding x</li>
    * <li>"y[" means upper border excluding y</li>
    * <li>"y]" means upper border including y</li>
-   * @param value The value to parse.
+   * @param rangeDefinition The range description to parse.
    * @return A Range object if the passed value as a lower and an upper border. Otherwise null is returned.
    */
   public static Range parse( final String rangeDefinition )
