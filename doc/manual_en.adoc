@@ -638,7 +638,7 @@ The filter is configured using the following parameter:
 
 This filter is specifically designed to handle bulk testing. For more information, see the "Mass Testing in Requests" section.
 
-Custom filters can be easily added. (See section "<<Custom Filters>>")
+Custom filters can be easily added. (See section "<<Custom filters>>")
 
 
 === Dealing with different server responses
@@ -969,7 +969,7 @@ Functional tests check whether individual response values ​​match the expect
 
 ResponseDiff offers several options for dealing with such deviations. For this purpose, a tolerance range (`epsilon`) can be defined for each expected value, depending on the data type.
 
-In addition, an expected value (for `header` as well as for `value`) can also be generated dynamically (see `$.lastUpdated` in the following example). Further information on dynamic values ​​can be found in the section "<<Function Values ​​in Variable Definitions and Expected Values>>".
+In addition, an expected value (for `header` as well as for `value`) can also be generated dynamically (see `$.lastUpdated` in the following example). Further information on dynamic values ​​can be found in the section "<<Function values ​​in variable definitions and expected values>>".
 
 .Example of expected values ​​in functional tests
 ====
@@ -1026,7 +1026,7 @@ HttpStatus has no tolerance range. It is always a three-digit integer between 10
 
 
 ==== Checking the headers (`headers`)
-For a header value, ResponseDiff defaults to the data type `string`. If a different data type is explicitly specified using the `type` attribute, the value can be interpreted and checked differently. In this respect, checking headers and values ​​is no different (see the following section "<<Checking Values ​​(`values`)>>").
+For a header value, ResponseDiff defaults to the data type `string`. If a different data type is explicitly specified using the `type` attribute, the value can be interpreted and checked differently. In this respect, checking headers and values ​​is no different (see the following section "<<Checking values ​​(`values`)>>").
 
 *Note:* With the `Allow` header, ResponseDiff ensures that the provided, supported HTTP verbs are listed in alphabetical order. This makes verification much easier.
 

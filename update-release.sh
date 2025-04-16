@@ -10,20 +10,22 @@ mvn clean install -P dependencyCheck -P license-summary
 # -------------------------------------------------------
 # Switch to "releases" folder
 # -------------------------------------------------------
-mkdir ./releases
 cd ./releases
+mkdir ./ResponseDiff
 
 # -------------------------------------------------------
 # Delete existing file compilation of former version
 # -------------------------------------------------------
-rm ./ResponseDiff/responsediff-*
+rm ./ResponseDiff/*
+mkdir ./ResponseDiff/doc
+mkdir ./ResponseDiff/reporter
 
 # -------------------------------------------------------
 # Create file compilation of new version
 # -------------------------------------------------------
 cp ../target/responsediff-*               ./ResponseDiff/.
 cp ../target/log4j2.xml                   ./ResponseDiff/.
-cp ../target/LICENSE.txt                  ./ResponseDiff/.
+cp ../LICENSE                             ./ResponseDiff/.
 cp ../target/dependency-check-report.html ./ResponseDiff/.
 cp -r ../target/doc/*                     ./ResponseDiff/doc/.
 rm -rf ./ResponseDiff/doc/src
