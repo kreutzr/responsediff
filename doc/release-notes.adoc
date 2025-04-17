@@ -1,4 +1,9 @@
 = ResponseDiff
+:encoding: utf-8
+:lang: de
+:!toc:
+
+image::img/responsediff-logo_320x160.png[ResponseDiff]
 
 == V0.14.0 (2025-xx-xx)
 === Type

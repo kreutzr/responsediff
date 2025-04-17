@@ -1,4 +1,4 @@
-<img src="doc/img/responsediff-logo_640x320.png" alt="ResponseDiff" width="320px"/>
+<img src="doc/img/responsediff-logo_320x160.png" alt="ResponseDiff"/>
 
 ResponseDiff is a Java based **regression testing** tool that compares the **HTTP** response of a reference installation with that of a candidate (software under test) installation.
 Found differences may be marked as intended (and may be given a **reference to a ticket** for documentation) by the tester for later tests.
@@ -8,7 +8,7 @@ Responses are assumed to be returned as **JSON** but since ResponseDiff supports
 
 Values received in a response may be read via **JSONPath** and then used as **parameters for following requests** which allows flexible test flows. Parameters may also be read from a file or database for **mass data testing**.
 
-The results of the perfomred tests are compiled together with **statistics** and their **curl** commands into a **report** (Asciidoc and PDF by default). 
+The results of the performed tests are compiled together with **statistics** and their **curl** commands into a **report** (Asciidoc and PDF by default).
 The entire raw data (variables, requests and respones) is made available for **further inspection as XML**.
 
 **Manuals** are currently provided in [English](doc/manual_en.adoc) and [German](doc/manual_de.adoc).
