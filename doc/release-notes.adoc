@@ -36,9 +36,9 @@ This is a regular maintenance release.
 
 === Hints
 
-* BREAKING CHANGE: The namespace was set to "com.github.kreutzr.responsediff" since the code was moved to github.
-  Therefore you will have to adjust your XML files when registering the filters that are coming with ResponseDiff.
-  Thereby the package of the main class also changed, so adjusted your scripts (if any), too.
+* **BREAKING CHANGE:** The namespace was set to "**com.github.kreutzr.responsediff**" since the code was moved to github.
+  ** Therefore you will have to adjust your XML files when registering the filters that are coming with ResponseDiff.
+  ** Thereby the package of the main class also changed, so adjusted your scripts (if any), too.
 
 === Features / Changes
 
