@@ -1,4 +1,4 @@
-# ResponseDiff
+<img src="doc/img/responsediff-logo_640x320.png" alt="ResponseDiff" width="320px"/>
 
 ResponseDiff is a Java based **regression testing** tool that compares the **HTTP** response of a reference installation with that of a candidate (software under test) installation.
 Found differences may be marked as intended (and may be given a **reference to a ticket** for documentation) by the tester for later tests.
