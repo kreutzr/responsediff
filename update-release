@@ -5,7 +5,8 @@
 # -------------------------------------------------------
 # Build the new version
 # -------------------------------------------------------
-mvn clean install -P dependencyCheck -P license-summary
+mvn clean install -P documentation -P dependency-check -P license-summary -P maven-central
+#mvn clean install -P maven-central
 
 # -------------------------------------------------------
 # Switch to "releases" folder
@@ -16,16 +17,17 @@ mkdir ./ResponseDiff
 # -------------------------------------------------------
 # Delete existing file compilation of former version
 # -------------------------------------------------------
-rm ./ResponseDiff/*
+rm -rf ./ResponseDiff/*
 mkdir ./ResponseDiff/doc
 mkdir ./ResponseDiff/reporter
 
 # -------------------------------------------------------
 # Create file compilation of new version
 # -------------------------------------------------------
+cp ../target/classes/LICENSE              ../.
+cp ../target/classes/LICENSE              ./ResponseDiff/.
 cp ../target/responsediff-*               ./ResponseDiff/.
 cp ../target/log4j2.xml                   ./ResponseDiff/.
-cp ../LICENSE                             ./ResponseDiff/.
 cp ../target/dependency-check-report.html ./ResponseDiff/.
 cp -r ../target/doc/*                     ./ResponseDiff/doc/.
 rm -rf ./ResponseDiff/doc/src

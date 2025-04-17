@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 //
-// mvn clean package
+// mvn clean install -P documentation -P dependency-check -P license-summary -P maven-central
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 -->
@@ -16,12 +16,41 @@
   <packaging>jar</packaging>
 
   <name>responsediff</name>
-  
-<!--
+  <description>ResponseDiff is a Java based regression testing tool that compares the HTTP response of a reference installation with that of a candidate (software under test) installation. Found differences may be marked as intended (and may be given a reference to a ticket for documentation) by the tester for later tests. It also supports functional testing (e.g., expected values) and non-functional testing (e.g., maximum response times).</description>
+  <url>https://github.com/kreutzr/responsediff</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/license/mit</url>
+    </license>
+  </licenses>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
   <scm>
-    <developerConnection>scm:git:git@###:intern/responsediff.git</developerConnection>
+   <connection>scm:git:git://github.com/kreutzr/responsediff.git</connection>
+    <developerConnection>scm:git:ssh://github.com:kreutz/responsediff.git</developerConnection>
+    <url>https://github.com/kreutzr/responsediff</url>
   </scm>
--->
+
+  <developers>
+    <developer>
+      <name>Reinhard Kreutz</name>
+      <email>reinhardkreutz@hotmail.com</email>
+      <organization>com.github.kreutzr</organization>
+      <organizationUrl>https://github.com/kreutzr</organizationUrl>
+    </developer>
+  </developers>
 
   <properties>
     <main.basedir>${project.basedir}</main.basedir>
@@ -259,7 +288,7 @@
         <!-x- Break on nondeterministic class loading -x->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.4.1</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>enforce</id>
@@ -359,15 +388,15 @@
         <version>1.5.3</version>
         <executions>
           <execution>
-            <phase>prepare-package</phase>
+            <phase>initialize</phase>
             <goals>
               <goal>replace</goal>
             </goals>
           </execution>
         </executions>
         <configuration>
-          <file>src/main/resources/LICENSE</file>
-          <outputFile>${project.build.outputDirectory}/../LICENSE</outputFile>
+          <file>${basedir}/src/main/resource-templates/LICENSE</file>
+          <outputFile>${basedir}/src/main/resources/LICENSE</outputFile>
           <replacements>
             <replacement>
               <token>&lt;YEAR&gt;</token>
@@ -379,129 +408,6 @@
             </replacement>
           </replacements>
         </configuration>
-      </plugin>
-
-      <plugin>
-        <!-- Expose files to end users -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>copy-XSD</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/doc/xsds</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/resources/com/github/kreutzr/responsediff</directory>
-                  <includes>
-                    <include>responseDiffSetup.xsd</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-XSLT</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target/reporter</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/resources/com/github/kreutzr/responsediff/reporter</directory>
-                  <includes>
-                    <include>report-to-adoc.xslt</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-log4j2-xml</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/resources</directory>
-                  <includes>
-                    <include>log4j2.xml</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <!-- Create manual document(s) -->
-        <groupId>org.asciidoctor</groupId>
-        <artifactId>asciidoctor-maven-plugin</artifactId>
-        <version>2.2.6</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctorj-pdf</artifactId>
-            <version>${version.asciidoctorj-pdf}</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <headerFooter>true</headerFooter>
-        </configuration>
-        <executions>
-          <!-- Convert AsciiDoc manual to HTML -->
-          <execution>
-            <id>asciidoc-to-html</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>process-asciidoc</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>doc</sourceDirectory>
-              <outputDirectory>target/doc</outputDirectory>
-              <backend>html5</backend>
-              <attributes>
-                <source-highlighter>coderay</source-highlighter>
-                <imagesdir>doc/img</imagesdir>
-                <toc>top</toc>
-                <icons>font</icons>
-              </attributes>
-            </configuration>
-          </execution>
-          <execution>
-            <!-- Convert AsciiDoc manual to PDF -->
-            <id>asciidoc-to-pdf</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>process-asciidoc</goal>
-            </goals>
-            <configuration>
-              <sourceDirectory>doc</sourceDirectory>
-              <outputDirectory>target/doc</outputDirectory>
-              <backend>pdf</backend>
-              <attributes>
-                <source-highlighter>rouge</source-highlighter>
-                <icons>font</icons>
-                <pagenums/>
-                <toc/>
-                <idprefix/>
-                <idseparator>-</idseparator>
-              </attributes>
-            </configuration>
-          </execution>
-
-        </executions>
       </plugin>
 
       <!--
@@ -661,10 +567,11 @@
               <configuration>
                 <transformers>
                   <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                    <mainClass>com.github.kreutzr.responsediff.</mainClass>
+                    <mainClass>com.github.kreutzr.responsediff.ResponseDiff</mainClass>
                   </transformer>
                 </transformers>
                 <minimizeJar>false</minimizeJar><!-- True will remove required classes :( -->
+                <createSourcesJar>false</createSourcesJar> <!-- NOTE: If we create the source JAR here, the source of ALL 3rd party libraries is added, too. -->
               </configuration>
            </execution>
         </executions>
@@ -674,8 +581,139 @@
   </build>
 
   <profiles>
+
     <profile>
-      <id>dependencyCheck</id>
+      <id>documentation</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- Expose files to end users -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>copy-XSD</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target/doc/xsds</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${basedir}/src/main/resources/com/github/kreutzr/responsediff</directory>
+                      <includes>
+                        <include>responseDiffSetup.xsd</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-XSLT</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target/reporter</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${basedir}/src/main/resources/com/github/kreutzr/responsediff/reporter</directory>
+                      <includes>
+                        <include>report-to-adoc.xslt</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-log4j2-xml</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <configuration>
+                  <outputDirectory>${basedir}/target</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${basedir}/src/main/resources</directory>
+                      <includes>
+                        <include>log4j2.xml</include>
+                      </includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <!-- Create manual document(s) -->
+            <groupId>org.asciidoctor</groupId>
+            <artifactId>asciidoctor-maven-plugin</artifactId>
+            <version>2.2.6</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctorj-pdf</artifactId>
+                <version>${version.asciidoctorj-pdf}</version>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <headerFooter>true</headerFooter>
+            </configuration>
+            <executions>
+              <!-- Convert AsciiDoc manual to HTML -->
+              <execution>
+                <id>asciidoc-to-html</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>process-asciidoc</goal>
+                </goals>
+                <configuration>
+                  <sourceDirectory>doc</sourceDirectory>
+                  <outputDirectory>target/doc</outputDirectory>
+                  <backend>html5</backend>
+                  <attributes>
+                    <source-highlighter>coderay</source-highlighter>
+                    <imagesdir>doc/img</imagesdir>
+                    <toc>top</toc>
+                    <icons>font</icons>
+                  </attributes>
+                </configuration>
+              </execution>
+              <execution>
+                <!-- Convert AsciiDoc manual to PDF -->
+                <id>asciidoc-to-pdf</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>process-asciidoc</goal>
+                </goals>
+                <configuration>
+                  <sourceDirectory>doc</sourceDirectory>
+                  <outputDirectory>target/doc</outputDirectory>
+                  <backend>pdf</backend>
+                  <attributes>
+                    <source-highlighter>rouge</source-highlighter>
+                    <icons>font</icons>
+                    <pagenums/>
+                    <toc/>
+                    <idprefix/>
+                    <idseparator>-</idseparator>
+                  </attributes>
+                </configuration>
+              </execution>
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>dependency-check</id>
       <build>
         <plugins>
           <plugin>
@@ -776,5 +814,105 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>maven-central</id>
+      <build>
+        <plugins>
+          <plugin>
+            <!-- Deploy to maven central via sonatype "ossrh" -->
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.3.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <!--
+                <phase>verify</phase>
+                -->
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.11.2</version>
+            <configuration>
+              <doclint>none</doclint>
+              <show>private</show>
+              <nohelp>true</nohelp>
+            </configuration>
+            <executions>
+              <execution>
+                <id>generate-javadoc</id>
+                <phase>package</phase> <!-- NOTE: The JavaDoc plugin must be executed before the grp plugin starts. Otherwise the javadoc.jar will not be signed, which is required for deployment to maven central. -->
+                <goals>
+                  <goal>javadoc</goal>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>3.2.7</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>net.ju-n.maven.plugins</groupId>
+            <artifactId>checksum-maven-plugin</artifactId>
+            <version>1.4</version>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>${basedir}/target/</directory>
+                  <includes>
+                    <include>responsediff*.jar</include>
+                    <include>responsediff*.pom</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>files</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 </project>

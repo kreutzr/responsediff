@@ -31,6 +31,7 @@ replay_pid*
 /regression
 /releases
 /test-results
+/src/main/resources/LICENSE
 dependency-reduced-pom.xml
 .classpath
 .project
