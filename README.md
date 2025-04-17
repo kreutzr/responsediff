@@ -11,4 +11,4 @@ Values received in a response may be read via **JSONPath** and then used as **pa
 The results of the perfomred tests are compiled together with **statistics** and their **curl** commands into a **report** (Asciidoc and PDF by default). 
 The entire raw data (variables, requests and respones) is made available for **further inspection as XML**.
 
-Manuals are currently provided in English and German.
+Manuals are currently provided in [English](doc/manual_en.adoc) and [German](doc/manual_de.adoc).
