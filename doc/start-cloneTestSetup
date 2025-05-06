@@ -1,0 +1,21 @@
+# ==============================================================================================
+# Start script for CloneTestSetup
+#
+# SYNTAX:
+# ./start-cloneTestSetup
+#
+# ==============================================================================================
+set -x
+
+sourceFilePath='regression/v1.0.0_vs_v0.8.0/setup.xml';
+
+targetFolderPath='regression/v1.1.0_vs_v1.0.0/';
+
+overwriteTarget='true';
+disableIgnoreTags='true';
+
+eval echo 'Starting CloneTestSetup'
+
+java -cp ./responsediff-0.13.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.CloneTestSetup "$( eval echo '{ \"sourceFilePath\" : \"${sourceFilePath}\", \"targetFolderPath\" : \"${targetFolderPath}\", \"overwriteTarget\" : ${overwriteTarget}, \"disableIgnoreTags\": \"${disableIgnoreTags}\" }' )"
+
+echo $?

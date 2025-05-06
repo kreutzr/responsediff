@@ -1,0 +1,28 @@
+# ==============================================================================================
+# Start script for CompareJson
+#
+# SYNTAX:
+# ./start-compareJson <configuration>
+#
+# Example:
+# ./start-compareJson ./compare/v0.8.0.json ./compare/v1.0.0.json ./compare-result.adoc
+#
+# ==============================================================================================
+#set -x
+
+referenceFilePath=$1
+candidateFilePath=$2
+storeResultPath=$3
+
+trim=false
+ignoreCase=false
+epsilon=0.00000001
+ignorePaths=''
+sortArrays=false
+sortArraysKeys=''
+
+eval echo 'Starting CompareJson for files ${referenceFilePath} ${candidateFilePath}'
+
+java -cp ./responsediff-0.13.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.CompareJson "$( eval echo '{ \"referenceFilePath\" : \"${referenceFilePath}\", \"candidateFilePath\" : \"${candidateFilePath}\", \"storeResultPath\" : \"${storeResultPath}\", \"trim\" : ${trim}, \"ignoreCase\" : \"${ignoreCase}\", \"epsilon\" : ${epsilon}, \"ignorePaths\" : \"${ignorePaths}\", \"sortArrays\" : ${sortArrays}, \"sortArraysKeys\" : \"${sortArraysKeys}\" }' )"
+
+echo $?
