@@ -478,6 +478,11 @@ public class ValidationHandler
        }
      }
      catch( final PathNotFoundException ex ) {
+       LOG.error( "Path not found: \"" + xmlValue.getPath() + "\".", ex );
+       if( xmlValue.getPath() != null && xmlValue.getPath().indexOf( "." ) >= 0 ) {
+         LOG.warn( "The lookup path \"" + xmlValue.getPath() + "\" holds a dot \".\" which most probably caused JSONPath to fail. It is recommended not to use dots within JSON attribute keys." );
+       }
+
        final Object actualObject = null;
        final String jsonPath     = xmlValue.getPath();
 
@@ -562,7 +567,7 @@ public class ValidationHandler
        checkValue = false;
      }
 
-     // Check if either actual of expect is null to avoid NullpointerException in the following code.
+     // Check if either actual or expect is null to avoid NullpointerException in the following code.
      if( checkValue
         && ( ( actualObject == null && xmlValue.getValue() != null )
           || ( actualObject != null && xmlValue.getValue() == null ) )
@@ -969,16 +974,26 @@ public class ValidationHandler
      sb.append( "values : [" );
      if( xmlExpected.getValues() != null && xmlExpected.getValues().value != null ) {
        for( final XmlValue xmlValue : xmlExpected.getValues().value ) {
-         sb.append( "{ path : "    ).append( xmlValue.getPath() )
-           .append( ", type : "    ).append( xmlValue.getType() )
-           .append( ", value : "   ).append( xmlValue.getValue() )
-           .append( ", epsilon : " ).append( xmlValue.getEpsilon() )
-           .append( " }" );
+         sb.append( toString( xmlValue ) );
        }
      }
      sb.append( "]" );
 
      sb.append( "}" );
+
+     return sb.toString();
+   }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   public static String toString( final XmlValue xmlValue )
+   {
+     final StringBuilder sb = new StringBuilder()
+       .append( "{ path : "    ).append( xmlValue.getPath() )
+       .append( ", type : "    ).append( xmlValue.getType() )
+       .append( ", value : "   ).append( xmlValue.getValue() )
+       .append( ", epsilon : " ).append( xmlValue.getEpsilon() )
+       .append( " }" );
 
      return sb.toString();
    }

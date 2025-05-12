@@ -18,17 +18,18 @@ import com.github.kreutzr.responsediff.tools.JsonHelper;
 
 /**
  * Allows traversal over all JSON elements.
- * Listeners are notified for each JSON element.
+ * Visitors are notified for each JSON element.
  */
-public class _JsonTraverser
+public class JsonTraverser
 {
   @SuppressWarnings("unused")
-  private static final Logger LOG = LoggerFactory.getLogger( _JsonTraverser.class );
+  private static final Logger LOG = LoggerFactory.getLogger( JsonTraverser.class );
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   final JsonNode root_;
-  final List< _JsonTraverserListener > listeners_ = new ArrayList<>();
+  final List< JsonTraverserVisitor > structureVisitors_ = new ArrayList<>();
+  final List< JsonTraverserVisitor > valueVisitors_     = new ArrayList<>();
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +38,7 @@ public class _JsonTraverser
    * @param json The JSON to traverse. Must not be null.
    * @throws JsonMappingException, JsonProcessingException If an error occurs an exception is thrown.
    */
-  public _JsonTraverser( final String json )
+  public JsonTraverser( final String json )
   throws JsonMappingException, JsonProcessingException
   {
     root_ = JsonHelper.provideObjectMapper().readTree( json );
@@ -46,52 +47,90 @@ public class _JsonTraverser
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Adds a listener to the JsonTraverser
-   * @param listener The listener to add. Must not be null.
+   * @return The root node of the JSON passed over in the constructor.
+   */
+  public JsonNode getRoot()
+  {
+    return root_;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Adds a structure visitor to the JsonTraverser. A structure visitor is invoked before the sub-structure (map) is traversed.
+   * @param visitor The visitor to add. Must not be null.
    * @return this.
    */
-  public _JsonTraverser addListener( final _JsonTraverserListener listener )
+  public JsonTraverser addStructureVisitor( final JsonTraverserVisitor visitor )
   {
-    listeners_.add( listener );
+    structureVisitors_.add( visitor );
     return this;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  public void traverse()
+  /**
+   * Adds a value visitor to the JsonTraverser. A value visitor is invoked for leaf values only.
+   * @param visitor The visitor to add. Must not be null.
+   * @return this.
+   */
+  public JsonTraverser addValueVisitor( final JsonTraverserVisitor visitor )
   {
-    if( listeners_.isEmpty() ) {
-      return;
-    }
-
-    iterate( root_, "$" );
+    valueVisitors_.add( visitor );
+    return this;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private void callListeners( final JsonNode node, final String jsonPath )
+  /**
+   * Performs the traversal over the JSON structure passed over in the constructor.
+   * @return this instance.
+   */
+  public JsonTraverser traverse()
   {
-    for( final _JsonTraverserListener listener : listeners_ ) {
-      listener.notify( node, jsonPath );
+    if( structureVisitors_.isEmpty() && valueVisitors_.isEmpty() ) {
+      return this;
+    }
+
+    iterate( root_, root_.getNodeType(), "$" );
+
+    return this;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private void callStructureVisitors( final JsonNode node, final JsonNodeType parentNodeType, final String jsonPath )
+  {
+    for( final JsonTraverserVisitor visitor : structureVisitors_ ) {
+      visitor.notify( node, parentNodeType, jsonPath );
     }
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private void iterate( final JsonNode node, final String path )
+  private void callValueVisitors( final JsonNode node, final JsonNodeType parentNodeType, final String jsonPath )
+  {
+    for( final JsonTraverserVisitor visitor : valueVisitors_ ) {
+      visitor.notify( node, parentNodeType, jsonPath );
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private void iterate( final JsonNode node, final JsonNodeType parentNodeType, final String path )
   {
     final JsonNodeType type = node.getNodeType();
 
     switch( type ) {
-    case ARRAY   : iterateArray( node, path );
+    case ARRAY   : callStructureVisitors( node, parentNodeType, path ); iterateArray( node, path );
       break;
-    case OBJECT  : iterateMap( node, path );
+    case OBJECT  : callStructureVisitors( node, parentNodeType, path ); iterateMap( node, path );
       break;
-    case BOOLEAN : callListeners( node, path );
+    case BOOLEAN : callValueVisitors( node, parentNodeType, path );
       break;
-    case NUMBER  : callListeners( node, path );
+    case NUMBER  : callValueVisitors( node, parentNodeType, path );
       break;
-    case STRING  : callListeners( node, path );
+    case STRING  : callValueVisitors( node, parentNodeType, path );
       break;
     case NULL    : // Do nothing because we checked canType != refType already, so here both types are NULL.
       break;
@@ -111,7 +150,7 @@ public class _JsonTraverser
 
     int i=0;
     while( i < length) {
-      iterate( node.get( i ), JsonDiff.getArrayPath( path, i ) );
+      iterate( node.get( i ), JsonNodeType.ARRAY, JsonDiff.getArrayPath( path, i ) );
       i++;
     }
   }
@@ -123,19 +162,19 @@ public class _JsonTraverser
     final Set< String > keys = getKeySet( node );
 
     for( final String key : keys ) {
-      iterate( node.get( key ), JsonDiff.getMapPath( path, key ) );
+      iterate( node.get( key ), JsonNodeType.OBJECT, JsonDiff.getMapPath( path, key ) );
     }
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private Set< String > getKeySet( final JsonNode jsonNode )
+  public static Set< String > getKeySet( final JsonNode jsonNode )
   {
     final Set< String > keys = new TreeSet<>();
 
     final Iterator< Map.Entry< String, JsonNode > > fields = jsonNode.fields();
     while(fields.hasNext()) {
-        keys.add( fields.next().getKey() );
+      keys.add( fields.next().getKey() );
     }
 
     return keys;

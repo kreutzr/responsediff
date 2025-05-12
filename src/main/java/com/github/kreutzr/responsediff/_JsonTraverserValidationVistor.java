@@ -11,12 +11,12 @@ import com.github.kreutzr.responsediff.tools.Converter;
 import com.jayway.jsonpath.DocumentContext;
 
 /**
- * Listener that checks whenever a notified JSON path matches a XmlValue JSON path, the notified value matches the expected XmlValue value.
+ * Visitor that checks whenever a notified JSON path matches a XmlValue JSON path, the notified value matches the expected XmlValue value.
  * Any mismatch is reported to a given JsonDiff object.
  */
-public class _JsonTraverserValidationListener implements _JsonTraverserListener
+public class _JsonTraverserValidationVistor implements JsonTraverserVisitor
 {
-  private static final Logger LOG = LoggerFactory.getLogger( _JsonTraverserValidationListener.class );
+  private static final Logger LOG = LoggerFactory.getLogger( _JsonTraverserValidationVistor.class );
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +34,7 @@ public class _JsonTraverserValidationListener implements _JsonTraverserListener
    * @param relevantDiff The JsonDiff to report into. Must not be null.
    * @param whiteNoiseDiff A whiteNoise JsonDiff to use. May be null.
    */
-  public _JsonTraverserValidationListener(
+  public _JsonTraverserValidationVistor(
     final DocumentContext context,
     final List< XmlValue > xmlValues,
     final JsonDiff relevantDiff,
@@ -58,7 +58,7 @@ public class _JsonTraverserValidationListener implements _JsonTraverserListener
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Override
-  public void notify( final JsonNode node, final String jsonPath )
+  public void notify( final JsonNode node, final JsonNodeType parentNodeType, final String jsonPath )
   {
     for( final XmlValue xmlValue : xmlValues_ ) {
       // NEEDS FIX A: This is where paths with subqueries (e.g. "$[*].attributes[?(@.attributeName=='SERIES_ID')].attributeValue")

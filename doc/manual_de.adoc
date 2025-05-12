@@ -760,6 +760,20 @@ Der Filter nimmt vier optionale Konfigurationsparameter entgegen:
 * `skipAttributes` : Wird der Wert `true` übergeben, so werden Tag-Attribute bei der Umwandlung in JSON ignoriert (default ist `false`).
 * `storeOriginalResponse` : Über diesen Parameter kann die eingehende Antwort im Filterergebnis gespeichert werden, bevor der Filter seine Arbeit aufnimmt. Die Original-Antwort findet sich in der Ergebnisstruktur unter `originalResponse`. Die Speicherung wird aktiviert, wenn als Parameterwert `true` gesetzt wird (default ist `false`).
 
+==== NormalizeJsonBodyResponseFilter
+
+Für die Verwendung von JSONPath ist es unerlässlich, dass die JSON-Struktur eindeutig geparst werden kann. Diese Annahme ist verletzt, wenn beispielsweise der Name eines JSON Attributs einen Punkt (`.`) enthält, da der Punkt vom JSONPath-Standard als Strukturierungskennzeichen interpretiert wird.
+
+Der `NormalizeJsonBodyResponseFilter` kann verwendet werden, um eine eingehende Serverantwort zu normalisieren. Hierbei wird versucht, Attribute, die einen Punkt im Namen führen, in Strukturen zu wandeln.
+
+Es ist zu betonen, dass hierdurch die native Serverantwort verändert wird und dass es in jedem Fall vorzuziehen ist, korrekt strukturierte Antworten vom Server zu erhalten.
+
+Der Filter kann wie folgt konfiguriert werden:
+
+* `replacements` : Mit diesem optionalen Parameter können einzelne Textvorkommen ersetzt werden (z.B.: `"project.id" -> "project-id"`). Die Ersetzungen werden als JSON wie folgt übergeben: `{ "<ist_1>" : "<soll_1>", "<ist_2>" : "<soll_2>;", ... }`. (default ist leer).
+* `normalizeMaps` : Der optionale Parameter bewirkt, dass bei gesetztem Wert `true` versucht wird, die Serverantwort so anzupassen, dass entsprechende Unterstrukturen eingefügt werden (z.B.: `"project.id" : ...` -> `"project" : { "id" : ... }`). Damit die Anpassung sich auch auf Listeneinträge erstreckt, muss zusätzlich `normalizeArrays` auf `true` gesetzt werden. (default ist `false`)
+* `normalizeArrays` : Dieser Parameter darf nur auf `true` gesetzt werden, wenn der Parameter `normalizeMaps` auf `true` gesetzt wurde. Ist dies der Fall, so bewirkt dies, dass Einträge innerhalb von JSON-Listen ebenfalls normalisiert werden (z.B.: `[ "array.length" : 1 ]' -> "[ "array" : { "length" : 1  } ]`). (default is `false`)
+
 
 .Beispiel für eine Filterkonfiguration
 ====
@@ -788,16 +802,19 @@ Der Filter nimmt vier optionale Konfigurationsparameter entgegen:
          <parameter id="storeOriginalResponse">true</parameter>
       </parameters>
     </filter>
+    <filter id="normalizeJson" clazz="com.github.kreutzr.responsediff.filter.response.NormalizeJsonBodyResponseFilter">
+      <parameters>
+         <parameter id="replace">{"project.id":"project-id"}</parameter>
+         <parameter id="normalizeMaps">true</parameter>
+         <parameter id="normalizeArrays">false</parameter>
+      </parameters>  </filterRegistry>
+    </filter>
   </filterRegistry>
 
   ...
 </XmlResponseDiffSetup
 ----
 ====
-
-==== NormalizeJsonBodyResponseFilter
-
-... 
 
 
 === Eigene Filter

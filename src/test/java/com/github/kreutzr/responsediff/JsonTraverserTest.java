@@ -8,19 +8,20 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 
-public class _JsonTraverserTest
+public class JsonTraverserTest
 {
-  private class _JsonTraverserTestListener implements _JsonTraverserListener
+  private class _JsonTraverserTestListener implements JsonTraverserVisitor
   {
     private List< String > pathes_ = new ArrayList<>();
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
-    public void notify( JsonNode node, String jsonPath)
+    public void notify( final JsonNode node, final JsonNodeType parentNodeType, final String jsonPath )
     {
-      System.out.println( jsonPath );
+//      System.out.println( jsonPath );
       pathes_.add( jsonPath );
     }
 
@@ -41,11 +42,11 @@ public class _JsonTraverserTest
       // Given
       final String json = "{ \"a\": [ { \"x\": 2 }, { \"x\": 2 } ], \"b\": { \"x\": 2 }, \"c\":3, \"x\": 2 }";
       final _JsonTraverserTestListener listener = new _JsonTraverserTestListener();
-      final _JsonTraverser traverser = new _JsonTraverser( json );
+      final JsonTraverser traverser = new JsonTraverser( json );
 
       // When
       traverser
-        .addListener( listener )
+        .addValueVisitor( listener )
         .traverse();
 
       // Then

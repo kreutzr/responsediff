@@ -760,6 +760,20 @@ The filter accepts four optional configuration parameters:
 * `skipAttributes` : If the value `true` is passed, tag attributes are ignored when converting to JSON (default is `false`).
 * `storeOriginalResponse` : This parameter allows the incoming response to be saved in the filter result before the filter begins its operation. The original response can be found in the result structure under `originalResponse`. Saving is enabled when the parameter value is set to `true` (default is `false`).
 
+==== NormalizeJsonBodyResponseFilter
+
+To use JSONPath, it is essential that the JSON structure can be parsed uniquely. This assumption is violated if, for example, the name of a JSON attribute contains a dot (`.`), as the dot is interpreted by the JSONPath standard as a structuring indicator.
+
+The `NormalizeJsonBodyResponseFilter` can be used to normalize an incoming server response. This attempts to convert attributes with a dot in their name into structures.
+
+It should be emphasized that this changes the native server response and that it is always preferable to receive correctly structured responses from the server.
+
+The filter can be configured as follows:
+
+* `replacements` : This optional parameter can be used to replace individual text occurrences (e.g.: `“project.id” -> “project-id”`). The replacements are passed as JSON as follows: `{ “<source_1>” : “<target_1>”, “<source_2>” : “<target_2>;”, ... }`. (default is empty).
+* `normalizeMaps` : The optional parameter means that if the value `true` is set, an attempt is made to adapt the server response so that corresponding substructures are inserted (e.g.: `“project.id” : ...` -> `“project” : { “id” : ... }`). So that the adjustment also extends to list entries, `normalizeArrays` must also be set to `true`. (default is `false`)
+* `normalizeArrays` : This parameter may only be set to `true` if the `normalizeMaps` parameter has been set to `true`. If this is the case, this means that entries within JSON lists are also normalized (e.g.: `[ “array.length” : 1 ]' -> “[ ‘array’ : { ‘length’ : 1 } ]`). (default is `false`)
+
 
 .Example of a filter configuration
 ====
@@ -788,16 +802,19 @@ The filter accepts four optional configuration parameters:
          <parameter id="storeOriginalResponse">true</parameter>
       </parameters>
     </filter>
+    <filter id="normalizeJson" clazz="com.github.kreutzr.responsediff.filter.response.NormalizeJsonBodyResponseFilter">
+      <parameters>
+         <parameter id="replace">{"project.id":"project-id"}</parameter>
+         <parameter id="normalizeMaps">true</parameter>
+         <parameter id="normalizeArrays">false</parameter>
+      </parameters>
+    </filter>
   </filterRegistry>
 
   ...
 </XmlResponseDiffSetup
 ----
 ====
-
-==== NormalizeJsonBodyResponseFilter
-
-... 
 
 
 === Custom filters

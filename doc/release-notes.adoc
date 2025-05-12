@@ -47,6 +47,7 @@ This is a regular maintenance release.
 * The manual was translated from German to English.
 * Added optional parameter "maskAuthorizationHeaderInCurl" to responseDiff configuration.
 * File name extensions of downloaded files are generated from the content type header if not received from the server.
+* Added NormalizeJsonBodyResponseFilter.
 
 === Bug fixes
 
