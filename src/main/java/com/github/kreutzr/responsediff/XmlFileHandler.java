@@ -159,7 +159,8 @@ public class XmlFileHandler
            final String absPath         = xmlFile.getAbsolutePath();
            final String name            = xmlFile.getName();
            final String includeFileName = absPath.substring( 0, absPath.length() - name.length() ) + xmlTestSetInclude.getFile();
-           final String includeFilePath = testSetPath + Path.of( xmlTestSetInclude.getFile() ).getParent().toString() + File.separator;
+           final Path   parentPath      = Path.of( xmlTestSetInclude.getFile() ).getParent();
+           final String includeFilePath = testSetPath + ( parentPath != null ? parentPath.toString() + File.separator : "" );
 
            final XmlResponseDiffSetup includeSetup = readSetup(
              includeFileName,

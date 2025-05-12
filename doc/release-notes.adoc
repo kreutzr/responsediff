@@ -49,6 +49,7 @@ This is a regular maintenance release.
 === Bug fixes
 
 * Fixed handling of compressed files.
+* Fixed issue when including setup files within same folder.
 
 === External libraries
 
