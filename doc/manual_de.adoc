@@ -1633,7 +1633,9 @@ Der Wert entspricht dabei der Länge des empfangenen Byte-Array - also der gegeb
 
 === Punkte in Attributnamen
 
-Die JSONPATH-Syntax erlaubt keine Punkte in Attributnamen, da Punkte als Suchpfadseparatoren interpretiert werden. Punkte lassen sich auch nicht maskieren (siehe Abschnitt "<<Unterstützte JSONPath-Syntax>>"). Durch Verwendung des <<NormalizeJsonBodyResponseFilter>> können Attributnamen jedoch angepasst werden.
+Die JSONPath-Syntax erlaubt keine Punkte in Attributnamen, da Punkte als Suchpfadseparatoren interpretiert werden. Punkte lassen sich auch nicht maskieren (siehe Abschnitt "<<Unterstützte JSONPath-Syntax>>"). Durch Verwendung des <<NormalizeJsonBodyResponseFilter>> können Attributnamen jedoch angepasst werden.
+
+Werden Punkte in Attributnamen nicht angepasst, so können irreführende Abweichungen im Test gemeldet werden, die auf einen fehlenden Wert bei der Kandidateninstanz hinweisen (z.B.: " `... expected: ... *but was: null*` "). Die Ursache hierfür ist, dass der Referenzwert mit dem Kandidatenwert oder dem konfigurierten Erwartungswert (`expected`) verglichen wird, wobei hierfür versucht wird, den Wert per JSONPath aus der Kandidatenantwort zu lesen, was aufgrund der abweichenden Struktur fehlschlägt.
 
 
 == Automatische Anpassung der Tests bei Versionswechsel

@@ -1636,7 +1636,9 @@ The value corresponds to the length of the received byte array - i.e. the compre
 
 === Dots in attribut names
 
-The JSONPATH-Syntax does not allow dots in attribut names because these are reserved as path separators. It is also not possible mask dots (see section "<<Supported JSONPath syntax>>"). Using the <<NormalizeJsonBodyResponseFilter>> gives you the opportunity to adjust received attribute names.
+The JSONPath-Syntax does not allow dots in attribute names because these are reserved as path separators. It is also not possible to mask dots (see section "<<Supported JSONPath syntax>>"). Using the <<NormalizeJsonBodyResponseFilter>> gives you the opportunity to adjust received attribute names.
+
+If dots in attribute names are not adjusted, misleading deviations may be reported in the test, indicating a missing value in the candidate instance (e.g., " `... expected: ... *but was: null*"` ). This is caused by comparing the reference value with the candidate value or the configured expected value (`expected`), whereby an attempt is made to read the value from the candidate response via JSONPath, which fails due to the different structure.
 
 
 == Automatic adaptation of tests when changing versions
