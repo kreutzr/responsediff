@@ -196,6 +196,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
   "testIdPattern" : "...",
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
+  "maskAuthorizationHeaderInCurl" : [true|false],
   "xsltFilePath" : "...",
   "reportFileEnding" : "...",
   "reportConversionFormats" : "...",
@@ -221,6 +222,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `testIdPattern`: Optionaler regulärer Ausdruck (in Java RegEx Syntax), um die Ausführung auf einzelne Tests einzuschränken. Wird nichts oder null übergeben, so werden alle Tests ausgeführt (default). Andernfalls werden nur diejenigen Tests ausgeführt, deren `id` zum übergebenen Ausdruck passt.
 * `storeResultPath`: Mandatorische Angabe des Verzeichnisses, in dem die Ergebnisse der Tests als XML gespeichert werden sollen. (z.B. "../test-results/")
 * `reportWhiteNoise`: Optionales Flag, ob auch ignorierte, technische Unterschiede (whiteNoise) ausgewiesen werden sollen (`true`) oder nicht (`false`). (default ist `false`)
+* `maskAuthorizationHeaderInCurl`: Optionales Flag, ob Werte des `Authentication`-Headers maskiert werden sollen (`true`) oder nicht (`false`). (default ist `true`)
 * `xsltFilePath`: Optionaler Pfad zu einer XSLT-Datei, die zur Transformation des erzeugten XML-Reports verwendet werden soll. Das Ergebnis der Transformation wird neben dem XML-Report unter gleichem Namen abgelegt (z.B. "reporter/report-to-adoc.xslt" (default) oder "reporter/report-to-html.xslt"). **Beachte:** Die Transformationsdatei "reporter/report-to-html.xslt" ist sehr rudimentär und dient lediglich als technisches Beispiel für die Erstellung eigener Reports. Soll tatsächlich ein Report im HTML-Format erzeugt werden, so wird empfohlen, den Default-Transformer und die Default-Dateiendung (`reportFileEnding`) nicht zu verändern und stattdessen im Parameter `reportConversionFormats` den Wert `html` zu übergeben.
 * `reportFileEnding`: Optionale Dateiendung für das Transformationsergebnis. (default ist `adoc`)
 * `reportConversionFormats`: Optionale Auflistung der Zielformate, in die ein erzeugter AsciiDoc Report konvertiert werden soll. Die Auflistung erfolgt Komma-separiert. Folgende Aufzählungswerte werden unterstützt: `pdf`, `html`. Dieser Parameter wird nur beachtet, wenn der Parameter `reportFileEnding` den Wert `adoc` hat. Voraussetzung für ein Gelingen der Konvertierung ist selbstverständlich, dass die verwendete XSLT-Datei (vgl. Parameter `xsltFilePath`) tatsächlich den XML-Report in AsciiDoc transformiert. Das Ergebnis der AsciiDoc-Konvertierung wird neben der Reportdatei abgelegt.
@@ -651,7 +653,7 @@ Die konfigurierten Filter werden in der Reihenfolge durchlaufen, in denen sie au
 
 Folgende Antwort-Filter sind bereits in ResponseDiff enthalten:
 
-==== `SortJsonBodyResponseFilter`
+==== SortJsonBodyResponseFilter
 Ein ResponseFilter, der fast immer zum Einsatz kommen wird, ist der Filter `com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter`. Er garantiert, dass die Attributnamen einer eintreffenden JSON-Nachricht in einer festen Reihenfolge erscheinen. Ohne diesen Filter würde der Regressionstest in vielen Fällen unbegründete Abweichungen melden.
 
 Der Filter operiert nur auf JSON-Nachrichten. Nicht-JSON-Nachrichten bleiben unverändert.
@@ -736,7 +738,7 @@ In solchen Fällen empfiehlt es sich, eine möglichst starke Kombination aus and
 ====
 
 
-==== `TextToJsonResponseFilter`
+==== TextToJsonResponseFilter
 Für Text-Antworten (etwa bei einem Bearer-Token) steht der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.TextToJsonResponseFilter` zur Verfügung. Er umschließt die gesamte Server-Antwort mit einem rudimentären JSON. Das JSON hat entweder diese `{"body":"<text>"}` oder diese `{"body":null}` Form.
 
 Der Filter operiert nur auf Nicht-JSON-Nachrichten. JSON-Nachrichten bleiben unverändert.
@@ -746,7 +748,7 @@ Der Filter nimmt einen optionalen Konfigurationsparameter entgegen:
 * `contentType` : Mit diesem Parameter kann der `Content-Type`-Header der in JSON gewandelten Antwort vorgegeben werden (default ist `application/json`).
 
 
-==== `XmlToJsonResponseFilter`
+==== XmlToJsonResponseFilter
 Weiter steht für XML-Antworten (etwa bei SOAP-Requests) der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.XmlToJsonResponseFilter` zur Verfügung. Er berücksichtigt XML Tag-Attribute und das Mischen von Text und weiteren XML-Tags.
 
 Der Filter operiert nur auf Nicht-JSON-Nachrichten. JSON-Nachrichten bleiben unverändert.
@@ -792,6 +794,11 @@ Der Filter nimmt vier optionale Konfigurationsparameter entgegen:
 </XmlResponseDiffSetup
 ----
 ====
+
+==== NormalizeJsonBodyResponseFilter
+
+... 
+
 
 === Eigene Filter
 
@@ -1605,6 +1612,11 @@ Manche Webserver liefern keine `content-length`-Header (z.B. Jetty 12).
 
 Damit der Header für Tests zuverlässig zur Verfügung steht, fügt ResponseDiff ihn in solchen Fällen automatisch hinzu.
 Der Wert entspricht dabei der Länge des empfangenen Byte-Array - also der gegebenfalls komprimierten Daten vor dem Entpacken.
+
+
+=== Punkte in Attributnamen
+
+Die JSONPATH-Syntax erlaubt keine Punkte in Attributnamen, da Punkte als Suchpfadseparatoren interpretiert werden. Punkte lassen sich auch nicht maskieren (siehe Abschnitt "<<Unterstützte JSONPath-Syntax>>"). Durch Verwendung des <<NormalizeJsonBodyResponseFilter>> können Attributnamen jedoch angepasst werden.
 
 
 == Automatische Anpassung der Tests bei Versionswechsel

@@ -42,6 +42,7 @@ public class ResponseDiff
    private final String                    reportConversionFormats_;
    private final String                    storeReportPath_;
    private final boolean                   reportWhiteNoise_;
+   private final boolean                   maskAuthorizationHeaderInCurl_;
    private final String                    ticketServiceUrl_;
    private final String                    candidateServiceUrl_;
    private final List< XmlHeader >         candidateHeaders_;
@@ -91,6 +92,7 @@ public class ResponseDiff
      final String            reportConversionFormats,
      final String            storeReportPath,
      final boolean           reportWhiteNoise,
+     final boolean           maskAuthorizationHeaderInCurl,
      final String            ticketServiceUrl,
      final String            candidateServiceUrl,
      final List< XmlHeader > candidateHeaders,
@@ -105,28 +107,29 @@ public class ResponseDiff
    )
    throws Exception
    {
-     testIdPattern_           = testIdPattern;
-     xsltFilePath_            = ( xsltFilePath == null ) ? null : rootPath + xsltFilePath;
-     reportFileEnding_        = reportFileEnding;
-     reportConversionFormats_ = reportConversionFormats;
-     storeReportPath_         = rootPath + storeReportPath
-                              + ( ( storeReportPath.endsWith( "\\" ) || storeReportPath.endsWith( "/" )) ? "" : File.separator ) // Assure there is a tailing file separator
-                              + getTimeStampFolder();
-     reportWhiteNoise_        = reportWhiteNoise;
-     ticketServiceUrl_        = ticketServiceUrl;
-     candidateServiceUrl_     = unifyUrl( candidateServiceUrl );
-     candidateHeaders_        = candidateHeaders;
-     referenceServiceUrl_     = unifyUrl( referenceServiceUrl );
-     referenceHeaders_        = referenceHeaders;
-     controlServiceUrl_       = unifyUrl( controlServiceUrl );
-     controlHeaders_          = controlHeaders;
-     timeoutMs_               = timeoutMs;
-     epsilon_                 = epsilon;
-     referenceFilePath_       = referenceFilePath;
-     exitWithExitCode_        = exitWithExitCode;
+     testIdPattern_                 = testIdPattern;
+     xsltFilePath_                  = ( xsltFilePath == null ) ? null : rootPath + xsltFilePath;
+     reportFileEnding_              = reportFileEnding;
+     reportConversionFormats_       = reportConversionFormats;
+     storeReportPath_               = rootPath + storeReportPath
+                                    + ( ( storeReportPath.endsWith( "\\" ) || storeReportPath.endsWith( "/" )) ? "" : File.separator ) // Assure there is a tailing file separator
+                                  + getTimeStampFolder();
+     reportWhiteNoise_              = reportWhiteNoise;
+     maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+     ticketServiceUrl_              = ticketServiceUrl;
+     candidateServiceUrl_           = unifyUrl( candidateServiceUrl );
+     candidateHeaders_              = candidateHeaders;
+     referenceServiceUrl_           = unifyUrl( referenceServiceUrl );
+     referenceHeaders_              = referenceHeaders;
+     controlServiceUrl_             = unifyUrl( controlServiceUrl );
+     controlHeaders_                = controlHeaders;
+     timeoutMs_                     = timeoutMs;
+     epsilon_                       = epsilon;
+     referenceFilePath_             = referenceFilePath;
+     exitWithExitCode_              = exitWithExitCode;
 
-     xmlTestSetup_            = null;
-     filterRegistry_          = null;
+     xmlTestSetup_                  = null;
+     filterRegistry_                = null;
      setXmlFilePath( xmlFilePath );
 
      if( candidateServiceUrl_ == null ) {
@@ -264,7 +267,8 @@ public class ResponseDiff
        epsilon_,
        referenceFilePath_,
        storeReportPath_,
-       reportWhiteNoise_
+       reportWhiteNoise_,
+       maskAuthorizationHeaderInCurl_
      );
 
      // Store test setup with all analysis results
@@ -369,42 +373,44 @@ public class ResponseDiff
        System.exit( 1 );
      }
 
-     String   rootPath                = new File( "" ).getAbsolutePath() + File.separator;
-     String   xmlFilePath             = null;
-     String   testIdPattern           = null;
-     String   xsltFilePath            = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
-     String   reportFileEnding        = "adoc";
-     String   reportConversionFormats = "pdf";
-     String   storeResultPath         = "../test-results/";
-     Boolean  reportWhiteNoise        = false;
-     String   ticketServiceUrl        = null;
-     String   candidateServiceUrl     = null;
-     String   referenceServiceUrl     = null;
-     String   controlServiceUrl       = null;
-     Long     responseTimeoutMs       = 1000L;
-     Double   epsilon                 = Constants.EPSILON;
-     String   referenceFilePath       = null;
-     Boolean  exitWithExitCode        = true; // Disable for local IDE testing
-     long     startupSleepMs          = -1;
+     String   rootPath                      = new File( "" ).getAbsolutePath() + File.separator;
+     String   xmlFilePath                   = null;
+     String   testIdPattern                 = null;
+     String   xsltFilePath                  = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
+     String   reportFileEnding              = "adoc";
+     String   reportConversionFormats       = "pdf";
+     String   storeResultPath               = "../test-results/";
+     Boolean  reportWhiteNoise              = false;
+     Boolean  maskAuthorizationHeaderInCurl = true;
+     String   ticketServiceUrl              = null;
+     String   candidateServiceUrl           = null;
+     String   referenceServiceUrl           = null;
+     String   controlServiceUrl             = null;
+     Long     responseTimeoutMs             = 1000L;
+     Double   epsilon                       = Constants.EPSILON;
+     String   referenceFilePath             = null;
+     Boolean  exitWithExitCode              = true; // Disable for local IDE testing
+     long     startupSleepMs                = -1;
 
      // Read parameters from configuration
-     rootPath                = Converter.asString ( config.getRootPath(),                rootPath );
-     xmlFilePath             = Converter.asString ( config.getXmlFilePath(),             xmlFilePath );
-     testIdPattern           = Converter.asString ( config.getTestIdPattern(),           testIdPattern );
-     xsltFilePath            = Converter.asString ( config.getXsltFilePath(),            xsltFilePath );
-     reportFileEnding        = Converter.asString ( config.getReportFileEnding(),        reportFileEnding );
-     reportConversionFormats = Converter.asString ( config.getReportConversionFormats(), reportConversionFormats );
-     storeResultPath         = Converter.asString ( config.getStoreResultPath(),         storeResultPath );
-     reportWhiteNoise        = Converter.asBoolean( config.getReportWhiteNoise(),        reportWhiteNoise );
-     ticketServiceUrl        = Converter.asString ( config.getTicketServiceUrl(),        ticketServiceUrl );
-     candidateServiceUrl     = Converter.asString ( config.getCandidateServiceUrl(),     candidateServiceUrl );
-     referenceServiceUrl     = Converter.asString ( config.getReferenceServiceUrl(),     referenceServiceUrl );
-     controlServiceUrl       = Converter.asString ( config.getControlServiceUrl(),       controlServiceUrl );
-     responseTimeoutMs       = Converter.asLong   ( config.getResponseTimeoutMs(),       responseTimeoutMs );
-     epsilon                 = Converter.asDouble ( config.getEpsilon(),                 epsilon );
-     referenceFilePath       = Converter.asString ( config.getReferenceFilePath(),       referenceFilePath );
-     exitWithExitCode        = Converter.asBoolean( config.isExitWithExitCode(),         exitWithExitCode );
-     startupSleepMs          = Converter.asLong   ( config.getStartupSleepMs(),          startupSleepMs );
+     rootPath                      = Converter.asString ( config.getRootPath(),                      rootPath );
+     xmlFilePath                   = Converter.asString ( config.getXmlFilePath(),                   xmlFilePath );
+     testIdPattern                 = Converter.asString ( config.getTestIdPattern(),                 testIdPattern );
+     xsltFilePath                  = Converter.asString ( config.getXsltFilePath(),                  xsltFilePath );
+     reportFileEnding              = Converter.asString ( config.getReportFileEnding(),              reportFileEnding );
+     reportConversionFormats       = Converter.asString ( config.getReportConversionFormats(),       reportConversionFormats );
+     storeResultPath               = Converter.asString ( config.getStoreResultPath(),               storeResultPath );
+     reportWhiteNoise              = Converter.asBoolean( config.getReportWhiteNoise(),              reportWhiteNoise );
+     maskAuthorizationHeaderInCurl = Converter.asBoolean( config.getMaskAuthorizationHeaderInCurl(), maskAuthorizationHeaderInCurl );
+     ticketServiceUrl              = Converter.asString ( config.getTicketServiceUrl(),              ticketServiceUrl );
+     candidateServiceUrl           = Converter.asString ( config.getCandidateServiceUrl(),           candidateServiceUrl );
+     referenceServiceUrl           = Converter.asString ( config.getReferenceServiceUrl(),           referenceServiceUrl );
+     controlServiceUrl             = Converter.asString ( config.getControlServiceUrl(),             controlServiceUrl );
+     responseTimeoutMs             = Converter.asLong   ( config.getResponseTimeoutMs(),             responseTimeoutMs );
+     epsilon                       = Converter.asDouble ( config.getEpsilon(),                       epsilon );
+     referenceFilePath             = Converter.asString ( config.getReferenceFilePath(),             referenceFilePath );
+     exitWithExitCode              = Converter.asBoolean( config.isExitWithExitCode(),               exitWithExitCode );
+     startupSleepMs                = Converter.asLong   ( config.getStartupSleepMs(),                startupSleepMs );
 
      if( testIdPattern != null
        && ( testIdPattern.trim().isEmpty() || testIdPattern.trim().equals( "null" ) )
@@ -455,6 +461,7 @@ public class ResponseDiff
          reportConversionFormats,
          storeResultPath,
          reportWhiteNoise,
+         maskAuthorizationHeaderInCurl,
          ticketServiceUrl,
          candidateServiceUrl,
          candidateHeaders,
@@ -467,7 +474,7 @@ public class ResponseDiff
          referenceFilePath != null && !referenceFilePath.isEmpty() ? ( rootPath + referenceFilePath ) : null,
          exitWithExitCode
       );
-	
+
       responseDiff.runLocalTests();
     }
     catch( final Throwable ex ) {

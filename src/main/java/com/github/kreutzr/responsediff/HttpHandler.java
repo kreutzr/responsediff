@@ -304,15 +304,17 @@ public class HttpHandler
    * @param xmlRequest   The XmlRequest to use. May be null.
    * @param serviceId    A String that indicates the associated service (one of CANDIDATE, REFERENCE or CONTROL). May be null.
    * @param testFileName The current test file name. Must not be null.
+   * @param outerContext The outer context. Must not be null.
    */
   static void addCurl(
     final XmlRequest xmlRequest,
     final String serviceId,
-    final String testFileName
+    final String testFileName,
+    final OuterContext outerContext
   )
   {
     if( xmlRequest != null ) {
-      final String curl = toCurl( xmlRequest, testFileName );
+      final String curl = toCurl( xmlRequest, testFileName, outerContext );
       if( LOG.isTraceEnabled() ) {
         LOG.trace( "Sending " + serviceId + " request. " + curl );
       }
@@ -419,10 +421,12 @@ public class HttpHandler
    * Creates a CURL String for the given XmlRequest.
    * @param xmlRequest   The XmlRequest to use. Must not be null.
    * @param testFileName The current test file name. Must not be null.
+   * @param outerContext The outer context. Must not be null.
    */
   public static String toCurl(
     final XmlRequest xmlRequest,
-    final String testFileName
+    final String testFileName,
+    final OuterContext outerContext
   )
   {
     final StringBuilder sb = new StringBuilder( "curl" );
@@ -455,7 +459,10 @@ public class HttpHandler
     // Handle headers
     if( xmlRequest.getHeaders() != null ) {
       for( final XmlHeader xmlHeader : xmlRequest.getHeaders().getHeader() ) {
-        sb.append( " -H \"" ).append( xmlHeader.getName() ).append( ": " ).append( xmlHeader.getValue() ).append( "\"" );
+        final String xmlHeaderValue = ( xmlHeader.getName().equalsIgnoreCase( "Authorization" ) && outerContext.getMaskAuthorizationHeaderInCurl() )
+          ? "..."
+          : xmlHeader.getValue();
+        sb.append( " -H \"" ).append( xmlHeader.getName() ).append( ": " ).append( xmlHeaderValue ).append( "\"" );
       }
     }
 
@@ -641,6 +648,7 @@ public class HttpHandler
         // Download successful non JSON response body
         xmlHttpResponse.setDownload( createXmlDownload(
           rawBody,
+          newContentType,
           serviceId,
           testId,
           contentDisposition,
@@ -680,6 +688,7 @@ public class HttpHandler
   /**
    * Stores the body content to a file and creates a XmlDownload object that holds all information associated with to that file.
    * @param bytes The bytes to store. May be null.
+   * @param contentType The content type. May be null.
    * @param serviceId A String that indicates the associated service (one of CANDIDATE, REFERENCE or CONTROL). May be null.
    * @param testId The current test id. Must not be null.
    * @param contentDisposition The content disposition header. May be null.
@@ -690,6 +699,7 @@ public class HttpHandler
    */
   static XmlDownload createXmlDownload(
     final byte[] bytes,
+    final String contentType,
     final String serviceId,
     final String testId,
     final String contentDisposition,
@@ -708,8 +718,16 @@ public class HttpHandler
 
     // Read filename from content disposition header.
     String fileName = readFileNameFromContentDispositionHeader( contentDisposition );
+
+    if( fileName == null ) {
+      final String extension = contentType != null
+        ? getFileExtensionFromContentType( contentType )
+        : "bin";
+
+      fileName = new StringBuilder( "download." ).append( extension ).toString();
+    }
     // NOTE: Using "__" around the serviceId will trigger the AsciiDoc renderer and ruin the resulting file URL
-    fileName = testName + "_" + ( serviceId != null ? serviceId.trim() : "UNKNOWN" ) + "_" + ( (fileName == null ) ? "download.bin" : fileName );
+    fileName = testName + "_" + ( serviceId != null ? serviceId.trim() : "UNKNOWN" ) + "_" + fileName;
 
 //LOG.error( "### RKR ###: filename="        + fileName );
 //LOG.error( "### RKR ###: storeReportPath=" + storeReportPath );
@@ -731,6 +749,47 @@ public class HttpHandler
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Computes a file extension for a given content type.
+   * @param contentType The content type. May be null.
+   * @return The requested content type. If content type is null, "bin" is returned.
+   */
+  static String getFileExtensionFromContentType( final String contentType )
+  {
+	  String extension = "bin";
+
+	  if( contentType != null ) {
+        // E.g., "application/hal+json; charset=UTF-8"
+        int pos = contentType.lastIndexOf( "/" );
+        if( pos > 0 ) {
+          extension = contentType.substring( pos + 1 ); // => "hal+json; charset=UTF-8"
+        }
+        pos = extension.lastIndexOf( "+" );
+        if( pos > 0 ) {
+          extension = extension.substring( pos + 1 ); // => "json; charset=UTF-8"
+        }
+        pos = extension.lastIndexOf( ";" );
+        if( pos > 0 ) {
+          extension = extension.substring( 0, pos );  // => "json"
+        }
+
+        // Special mapping
+        if( extension.equalsIgnoreCase( "plain" ) ) { // E.g.; "text/plain; charset=UTF-8"
+          extension = "txt";
+        }
+	  }
+
+      return extension;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Reads the character set from a given content type.
+   * @param contentType The content type. May be null.
+   * @param fallback The fallback to use. May be null.
+   * @return The requested character set. May be null.
+   */
   static Charset readCharsetFromContentTypeHeader( final String contentType, final Charset fallback )
   {
     if( contentType == null ) {

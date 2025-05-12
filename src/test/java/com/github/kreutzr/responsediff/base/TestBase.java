@@ -42,18 +42,19 @@ public class TestBase
   @BeforeAll
   public static void init() throws Exception
   {
-    String  xmlFilePath             = null;
-    String  testIdPattern           = null;
-    String  xsltFilePath            = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
-    String  reportFileEnding        = "adoc";
-    String  reportConversionFormats = ""; // html, pdf (CAUTION: This will produce a lot of reports in the test-result folder)
-    String  storeResultPath         = "./test-results/";
-    boolean reportWhiteNoise        = false;
-    String  ticketServiceUrl        = null;
-    Long    responseTimeoutMs       = 1000L;
-    Double  epsilon                 = 0.00000001;
-    String  referenceFilePath       = null;
-    Boolean exitWithExitCode        = false; // Disable for local IDE testing
+    String  xmlFilePath                   = null;
+    String  testIdPattern                 = null;
+    String  xsltFilePath                  = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
+    String  reportFileEnding              = "adoc";
+    String  reportConversionFormats       = ""; // html, pdf (CAUTION: This will produce a lot of reports in the test-result folder)
+    String  storeResultPath               = "./test-results/";
+    boolean reportWhiteNoise              = false;
+    boolean maskAuthorizationHeaderInCurl = true;
+    String  ticketServiceUrl              = null;
+    Long    responseTimeoutMs             = 1000L;
+    Double  epsilon                       = 0.00000001;
+    String  referenceFilePath             = null;
+    Boolean exitWithExitCode              = false; // Disable for local IDE testing
 
     List< XmlHeader > candidateHeaders = new ArrayList<>();
     List< XmlHeader > referenceHeaders = new ArrayList<>();
@@ -68,6 +69,7 @@ public class TestBase
       reportConversionFormats,
       storeResultPath,
       reportWhiteNoise,
+      maskAuthorizationHeaderInCurl,
       ticketServiceUrl,
       CANDIDATE_URL,
       candidateHeaders,

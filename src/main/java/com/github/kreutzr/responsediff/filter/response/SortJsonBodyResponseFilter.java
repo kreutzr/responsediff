@@ -30,7 +30,7 @@ import com.github.kreutzr.responsediff.XmlHttpResponse;
  * <b>Supported parameters:</b>
  * <ul>
  * <li>name="sortArrays",    values=[ "true", "false" ]</li>
- * <li>name="sortArrayKeys", values=[ <id>, <id> ]</li>
+ * <li>name="sortArrayKeys", values=[ &lt;id&gt;, &lt;id&gt; ]</li>
  * </ul>
  * <p>
  * <b>Supported inherited parameters:</b>

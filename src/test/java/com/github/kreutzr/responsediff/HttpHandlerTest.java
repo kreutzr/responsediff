@@ -17,6 +17,8 @@ public class HttpHandlerTest
      assertThat( HttpHandler.readFileNameFromContentDispositionHeader( "filename = test.txt ; more-text" ) ).isEqualTo( "test.txt" );
    }
 
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    @Test
    public void testThatCreateServiceUrlWorks()
    {
@@ -30,6 +32,8 @@ public class HttpHandlerTest
      // Then
      assertThat( xmlRequest.getEndpoint() ).isEqualTo( "http://my-server:1234/myEndpoint" );
    }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    @Test
    public void testThatCreateServiceUrlWorksForVariables()
@@ -52,6 +56,8 @@ public class HttpHandlerTest
      assertThat( xmlRequest.getEndpoint() ).isEqualTo( "http://my-server:1234/asynchResults/SOME-UUID" );
    }
 
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
    @Test
    public void testThatIsBodyJsonWorks()
    {
@@ -61,4 +67,20 @@ public class HttpHandlerTest
      assertThat( HttpHandler.isJsonResponse( HttpHandler.HEADER_VALUE__CONTENT_TYPE__JSON     ) ).isTrue();
      assertThat( HttpHandler.isJsonResponse( HttpHandler.HEADER_VALUE__CONTENT_TYPE__JSON_API ) ).isTrue();
      assertThat( HttpHandler.isJsonResponse( "application/text" ) ).isFalse();
-   }}
+   }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   @Test
+   public void testThatGetFileExtensionFromContentTypeWorks()
+   {
+     // Given
+
+     // When / Then
+     assertThat( HttpHandler.getFileExtensionFromContentType( null ) ).isEqualTo( "bin" );
+     assertThat( HttpHandler.getFileExtensionFromContentType( "text/plain" ) ).isEqualTo( "txt" );
+     assertThat( HttpHandler.getFileExtensionFromContentType( "application/hal+json" ) ).isEqualTo( "json" );
+     assertThat( HttpHandler.getFileExtensionFromContentType( "application/hal+json; charset=UTF-8" ) ).isEqualTo( "json" );
+     assertThat( HttpHandler.getFileExtensionFromContentType( "image/png" ) ).isEqualTo( "png" );
+   }
+}

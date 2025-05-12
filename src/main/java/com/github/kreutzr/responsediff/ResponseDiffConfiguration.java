@@ -15,6 +15,7 @@ public class ResponseDiffConfiguration
   private String            reportConversionFormats_;
   private String            storeResultPath_;
   private boolean           reportWhiteNoise_;
+  private boolean           maskAuthorizationHeaderInCurl_ = true;
   private String            ticketServiceUrl_;
   private String            candidateServiceUrl_;
   private List< XmlHeader > candidateHeaders_;
@@ -138,6 +139,20 @@ public class ResponseDiffConfiguration
   public void setReportWhiteNoise( final boolean reportWhiteNoise )
   {
     reportWhiteNoise_ = reportWhiteNoise;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public boolean getMaskAuthorizationHeaderInCurl()
+  {
+    return maskAuthorizationHeaderInCurl_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setMaskAuthorizationHeaderInCurl( final boolean maskAuthorizationHeaderInCurl )
+  {
+	  maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

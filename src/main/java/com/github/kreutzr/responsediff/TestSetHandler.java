@@ -58,6 +58,7 @@ public class TestSetHandler
    * @param referenceFilePath Optional filename that points to a XML report that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
    * @param storeReportPath The path where the report is stored to. May be null.
    * @param reportWhiteNoise Flag, if any different value shall be reported (true) or only those that were not discovered to be white noise (differences between reference and control, or expected differences) (false).
+   * @param maskAuthorizationHeaderInCurl Flag, if authorization header shall be logged in the reported curl command (true) or not (false)
    * @throws SAXException
    * @throws JAXBException
    * @throws ParseException
@@ -76,7 +77,8 @@ public class TestSetHandler
       final double                    epsilon,
       final String                    referenceFilePath,
       final String                    storeReportPath,
-      final boolean                   reportWhiteNoise
+      final boolean                   reportWhiteNoise,
+      final boolean                   maskAuthorizationHeaderInCurl
   )
   throws JAXBException, SAXException, ParseException
   {
@@ -94,7 +96,8 @@ public class TestSetHandler
         timeoutMs,
         epsilon,
         storeReportPath,
-        reportWhiteNoise
+        reportWhiteNoise,
+        maskAuthorizationHeaderInCurl
       );
 
     final XmlResponseDiffSetup referenceXmlSetup = referenceFilePath != null
@@ -556,7 +559,7 @@ public class TestSetHandler
       xmlRequest.setDescription( candidateXmlRequest.getDescription() );
 
       // Create candidate CURL for reporting
-      HttpHandler.addCurl( candidateXmlRequest, CANDIDATE, testFileName );
+      HttpHandler.addCurl( candidateXmlRequest, CANDIDATE, testFileName, outerContext );
       xmlRequest.setCurl( candidateXmlRequest.getCurl() );
 
       // NOTE: We invoke the reference and the control services first, because we need their responses first
