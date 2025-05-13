@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.tools.ComparatorHelper;
-
 public class ComparatorHelperTest
 {
   @Test

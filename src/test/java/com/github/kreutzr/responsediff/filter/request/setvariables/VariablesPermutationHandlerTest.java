@@ -9,8 +9,6 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.filter.request.setvariables.VariablesPermutationHandler;
-
 public class VariablesPermutationHandlerTest
 {
   @Test

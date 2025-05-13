@@ -11,27 +11,9 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
-import com.github.kreutzr.responsediff.HttpHandler;
-import com.github.kreutzr.responsediff.JsonDiff;
-import com.github.kreutzr.responsediff.JsonDiffEntry;
-import com.github.kreutzr.responsediff.TestSetHandler;
-import com.github.kreutzr.responsediff.XmlFileHandler;
 import com.github.kreutzr.responsediff.filter.DiffFilter;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
 
-import com.github.kreutzr.responsediff.XmlAnalysis;
-import com.github.kreutzr.responsediff.XmlHeader;
-import com.github.kreutzr.responsediff.XmlHeaders;
-import com.github.kreutzr.responsediff.XmlHttpResponse;
-import com.github.kreutzr.responsediff.XmlOverAllExpected;
-import com.github.kreutzr.responsediff.XmlRequest;
-import com.github.kreutzr.responsediff.XmlResponse;
-import com.github.kreutzr.responsediff.XmlResponseDiffSetup;
-import com.github.kreutzr.responsediff.XmlTest;
-import com.github.kreutzr.responsediff.XmlTestSet;
-import com.github.kreutzr.responsediff.XmlTestSetInclude;
-import com.github.kreutzr.responsediff.XmlVariable;
-import com.github.kreutzr.responsediff.XmlVariables;
 import jakarta.xml.bind.JAXBException;
 
 public class TestSetHandlerTest

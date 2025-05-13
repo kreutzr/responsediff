@@ -6,12 +6,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.Test;
 
 import com.github.kreutzr.responsediff.HttpHandler;
-import com.github.kreutzr.responsediff.filter.response.TextToJsonResponseFilter;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
 import com.github.kreutzr.responsediff.XmlHeader;
 import com.github.kreutzr.responsediff.XmlHeaders;
 import com.github.kreutzr.responsediff.XmlHttpResponse;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
 public class TextToJsonResponseFilterTest
 {

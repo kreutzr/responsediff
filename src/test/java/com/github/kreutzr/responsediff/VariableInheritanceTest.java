@@ -7,13 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import com.github.kreutzr.responsediff.HttpHandler;
 import com.github.kreutzr.responsediff.base.TestBase;
-
-import com.github.kreutzr.responsediff.XmlResponseDiffSetup;
-import com.github.kreutzr.responsediff.XmlTest;
-import com.github.kreutzr.responsediff.XmlTestSet;
-import com.github.kreutzr.responsediff.XmlVariables;
 
 public class VariableInheritanceTest extends TestBase
 {

@@ -4,11 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.ToJson;
-
-import com.github.kreutzr.responsediff.XmlHeader;
-import com.github.kreutzr.responsediff.XmlHeaders;
-
 public class ToJsonTest
 {
   private XmlHeader createXmlHeader( final String name, final String value )

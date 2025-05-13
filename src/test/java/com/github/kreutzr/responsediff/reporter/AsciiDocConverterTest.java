@@ -8,8 +8,6 @@ import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.reporter.AsciiDocConverter;
-
 public class AsciiDocConverterTest
 {
   @Test

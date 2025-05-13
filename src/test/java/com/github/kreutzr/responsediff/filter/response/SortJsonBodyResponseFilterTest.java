@@ -3,8 +3,6 @@ package com.github.kreutzr.responsediff.filter.response;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter;
-
 import com.github.kreutzr.responsediff.XmlHttpResponse;
 
 public class SortJsonBodyResponseFilterTest

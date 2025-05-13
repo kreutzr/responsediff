@@ -6,8 +6,6 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.tools.Converter;
-
 public class ConverterTest
 {
   @Test

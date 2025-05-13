@@ -15,27 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.kreutzr.responsediff.Constants;
-import com.github.kreutzr.responsediff.JsonDiff;
-import com.github.kreutzr.responsediff.JsonDiffEntry;
-import com.github.kreutzr.responsediff.JsonPathHelper;
-import com.github.kreutzr.responsediff.TestSetHandler;
-import com.github.kreutzr.responsediff.ToJson;
-import com.github.kreutzr.responsediff.ValidationHandler;
 import com.github.kreutzr.responsediff.tools.Converter;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-
-import com.github.kreutzr.responsediff.XmlExpected;
-import com.github.kreutzr.responsediff.XmlHeader;
-import com.github.kreutzr.responsediff.XmlHeaders;
-import com.github.kreutzr.responsediff.XmlHttpResponse;
-import com.github.kreutzr.responsediff.XmlIgnore;
-import com.github.kreutzr.responsediff.XmlResponse;
-import com.github.kreutzr.responsediff.XmlTest;
-import com.github.kreutzr.responsediff.XmlValue;
-import com.github.kreutzr.responsediff.XmlValueType;
-import com.github.kreutzr.responsediff.XmlValues;
 
 public class ValidationHandlerTest
 {

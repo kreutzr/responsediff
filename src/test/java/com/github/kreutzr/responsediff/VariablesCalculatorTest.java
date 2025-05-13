@@ -10,9 +10,6 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.Constants;
-import com.github.kreutzr.responsediff.VariablesCalculator;
-
 public class VariablesCalculatorTest
 {
   @Test

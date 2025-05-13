@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.filter.DiffResponseFilterImpl;
-import com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter;
-
 import com.github.kreutzr.responsediff.XmlHttpResponse;
+import com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter;
 
 public class DiffResponseFilterTest
 {

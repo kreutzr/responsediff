@@ -6,16 +6,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.github.kreutzr.responsediff.TestSetHandler;
-import com.github.kreutzr.responsediff.VariablesHandler;
-
-import com.github.kreutzr.responsediff.XmlHeader;
-import com.github.kreutzr.responsediff.XmlHeaders;
-import com.github.kreutzr.responsediff.XmlRequest;
-import com.github.kreutzr.responsediff.XmlValueType;
-import com.github.kreutzr.responsediff.XmlVariable;
-import com.github.kreutzr.responsediff.XmlVariables;
-
 public class VariablesHandlerTest
 {
   @Test

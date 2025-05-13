@@ -12,9 +12,6 @@ import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 
 import com.github.kreutzr.responsediff.TestSetHandler;
-import com.github.kreutzr.responsediff.filter.request.setvariables.SetVariablesRequestFilter;
-import com.github.kreutzr.responsediff.filter.request.setvariables.SetVariablesRequestFilterSource;
-
 import com.github.kreutzr.responsediff.XmlHeader;
 import com.github.kreutzr.responsediff.XmlHeaders;
 import com.github.kreutzr.responsediff.XmlParameter;
