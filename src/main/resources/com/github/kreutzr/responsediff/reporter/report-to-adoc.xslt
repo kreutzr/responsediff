@@ -9,7 +9,8 @@
 
   <!-- ========================================================================== -->
 
-<xsl:template match="/XmlResponseDiffSetup"><xsl:call-template name="headline"/> <xsl:value-of select="description"/> (<xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="analysis/begin" /></xsl:call-template>)
+<xsl:template match="/XmlResponseDiffSetup"><xsl:call-template name="headline"/> <xsl:value-of select="description"/>
+(<xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="analysis/begin" /></xsl:call-template>)
 :doctype: book
 :encoding: utf-8
 :lang: de
