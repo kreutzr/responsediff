@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.kreutzr.responsediff.JsonTraverserNomalizationVisitor;
+import com.github.kreutzr.responsediff.JsonTraverserNormalizationVisitor;
 import com.github.kreutzr.responsediff.XmlHttpResponse;
 import com.github.kreutzr.responsediff.JsonTraverser;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
@@ -88,13 +88,11 @@ public class NormalizeJsonBodyResponseFilter extends DiffResponseFilterImpl
       final boolean normalizeMaps   = Converter.asBoolean( getFilterParameter( PARAMETER_NAME__NORMALIZE_MAPS   ), false );
       final boolean normalizeArrays = Converter.asBoolean( getFilterParameter( PARAMETER_NAME__NORMALIZE_ARRAYS ), false );
       if( normalizeMaps ) {
-    	  applyNormalization( result, normalizeMaps, normalizeArrays );
+        result = applyNormalization( result, normalizeMaps, normalizeArrays );
       }
-      else {
-        if( normalizeArrays ) {
-          // Filter configuration check
-          throw new DiffFilterException( "The configration parameter \"" + PARAMETER_NAME__NORMALIZE_ARRAYS + "\" must only be set true, if \"" + PARAMETER_NAME__NORMALIZE_MAPS + "\" is set true.");
-        }
+      else if( normalizeArrays ) {
+        // Filter configuration check
+        throw new DiffFilterException( "The configration parameter \"" + PARAMETER_NAME__NORMALIZE_ARRAYS + "\" must only be set true, if \"" + PARAMETER_NAME__NORMALIZE_MAPS + "\" is set true.");
       }
     }
     catch( final Throwable ex ) {
@@ -135,33 +133,37 @@ public class NormalizeJsonBodyResponseFilter extends DiffResponseFilterImpl
   /**
    * Normalizes the given JSON String.
    * @param json The JSON String to normalize. May be null.
-   * @param normalizeArray Flag, if JSON array entries shall be normalized (true) or not (false).
-   * @param normalizeMap   Flag, if JSON map entries shall be normalized (true) or not (false).
+   * @param normalizeMaps   Flag, if JSON map entries shall be normalized (true) or not (false).
+   * @param normalizeArrays Flag, if JSON array entries shall be normalized (true) or not (false).
    * @return The normalized JSON String. If json is null, null is returned.
    * @throws JsonMappingException
    * @throws JsonProcessingException
    */
   private String applyNormalization(
     final String json,
-    final boolean normalizeArray,
-    final boolean normalizeMap
+    final boolean normalizeMaps,
+    final boolean normalizeArrays
   )
   throws JsonMappingException, JsonProcessingException
   {
+    if( LOG.isTraceEnabled() ) {
+      LOG.trace( "applyNormalization( " + normalizeMaps + ", " + normalizeArrays + " )" );
+    }
+
     if( json == null ) {
       return null;
     }
 
-    final JsonTraverserNomalizationVisitor listener = new JsonTraverserNomalizationVisitor(
-      normalizeArray,
-      normalizeMap
+    final JsonTraverserNormalizationVisitor listener = new JsonTraverserNormalizationVisitor(
+      normalizeMaps,
+      normalizeArrays
     );
     final JsonTraverser traverser = new JsonTraverser( json );
     final JsonNode root = traverser
       .addStructureVisitor( listener )
       .traverse()
       .getRoot();
-	
+
     final String result = JsonHelper.provideObjectMapper().writeValueAsString( root );
     return result;
   }

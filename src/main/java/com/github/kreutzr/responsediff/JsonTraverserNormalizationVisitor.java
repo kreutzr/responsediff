@@ -21,29 +21,29 @@ import com.github.kreutzr.responsediff.tools.JsonHelper;
  * <li> normalizeArray: [ "project.id" : "111" ] =&gt; [ "project" : { "id" : "111" } ]</li>
  * </ul>
  */
-public class JsonTraverserNomalizationVisitor implements JsonTraverserVisitor
+public class JsonTraverserNormalizationVisitor implements JsonTraverserVisitor
 {
-  private static final Logger LOG = LoggerFactory.getLogger( JsonTraverserNomalizationVisitor.class );
+  private static final Logger LOG = LoggerFactory.getLogger( JsonTraverserNormalizationVisitor.class );
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  private boolean normalizeMap_;
-  private boolean normalizeArray_;
+  private boolean normalizeMaps_;
+  private boolean normalizeArrays_;
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Constructor
-   * @param normalizeMap   Flag, if JSON map entries shall be normalized (true) or not (false).
-   * @param normalizeArray Flag, if JSON array entries shall be normalized (true) or not (false).
+   * @param normalizeMaps   Flag, if JSON map entries shall be normalized (true) or not (false).
+   * @param normalizeArrays Flag, if JSON array entries shall be normalized (true) or not (false).
    */
-  public JsonTraverserNomalizationVisitor(
-    final boolean normalizeMap,
-    final boolean normalizeArray
+  public JsonTraverserNormalizationVisitor(
+    final boolean normalizeMaps,
+    final boolean normalizeArrays
   )
   {
-    normalizeMap_   = normalizeMap;
-    normalizeArray_ = normalizeArray;
+    normalizeMaps_   = normalizeMaps;
+    normalizeArrays_ = normalizeArrays;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +51,10 @@ public class JsonTraverserNomalizationVisitor implements JsonTraverserVisitor
   @Override
   public void notify( final JsonNode node, final JsonNodeType parentType, final String path )
   {
+    if( LOG.isTraceEnabled() ) {
+      LOG.trace( "notify( parentType=" + parentType + ", path=" + path + " )" );
+    }
+
     final JsonNodeType type = node.getNodeType();
 
     switch( type ) {
@@ -68,7 +72,11 @@ public class JsonTraverserNomalizationVisitor implements JsonTraverserVisitor
 
   private void normalizeMap( final ObjectNode node, final JsonNodeType parentType, final String path )
   {
-    if( !normalizeMap_ || ( parentType == JsonNodeType.ARRAY && !normalizeArray_ ) ) {
+    if( LOG.isTraceEnabled() ) {
+      LOG.trace( "normalizeMap( parentType=" + parentType + ", path=" + path + " )" );
+    }
+
+    if( !normalizeMaps_ || ( parentType == JsonNodeType.ARRAY && !normalizeArrays_ ) ) {
       return;
     }
 

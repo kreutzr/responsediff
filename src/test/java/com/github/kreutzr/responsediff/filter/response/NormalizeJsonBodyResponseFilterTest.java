@@ -46,5 +46,5 @@ public class NormalizeJsonBodyResponseFilterTest
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // NOTE: Tests for map and array normalization are covered by the JsonTraverserNomalizationVisitorTest.
+  // NOTE: Tests for map and array normalization are covered by the JsonTraverserNormalizationVisitorTest.
 }

@@ -478,10 +478,10 @@ public class ValidationHandler
        }
      }
      catch( final PathNotFoundException ex ) {
-       LOG.error( "Path not found: \"" + xmlValue.getPath() + "\".", ex );
-       if( xmlValue.getPath() != null && xmlValue.getPath().indexOf( "." ) >= 0 ) {
-         LOG.warn( "The lookup path \"" + xmlValue.getPath() + "\" holds a dot \".\" which most probably caused JSONPath to fail. It is recommended not to use dots within JSON attribute keys." );
-       }
+       LOG.error( "Path for expected value not found: \"" + xmlValue.getPath() + "\"." + getTestInformation( xmlTest ), ex );
+//       if( xmlValue.getPath() != null && xmlValue.getPath().indexOf( "." ) >= 0 ) {
+//         LOG.warn( "The lookup path \"" + xmlValue.getPath() + "\" holds a dot \".\" which may caused JSONPath to fail. NOTE: It is recommended not to use dots within JSON attribute keys." );
+//       }
 
        final Object actualObject = null;
        final String jsonPath     = xmlValue.getPath();
@@ -493,6 +493,24 @@ public class ValidationHandler
      }
 
      return list;
+   }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
+    * Creates an information to identify a particular test. This may be used for logging.
+    * @param xmlTest The XmlTest. May be null.
+    * @return The requested information.
+    */
+   private static String getTestInformation( final XmlTest xmlTest )
+   {
+     return ( xmlTest == null )
+       ? ""
+       : new StringBuilder( " Test was {" )
+           .append( "\"test-id\" : \"" ).append( xmlTest.getId() )
+           .append( "\", \"endpoint\" : \"" ).append( xmlTest.getRequest().getEndpoint() )
+           .append( "\" }" )
+           .toString();
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -912,7 +930,7 @@ public class ValidationHandler
                expectationMismatch = handleInverse( expectationMismatch, checkInverse );
              }
              else {
-               errorMessage = "String expected to match: (trim=\" + xmlValue.isTrim() + \", ignoreCase=\" + xmlValue.isIgnoreCase() + \")  ### " + expect + " but was: " + actual;
+               errorMessage = "String expected to match: (trim=" + xmlValue.isTrim() + ", ignoreCase=" + xmlValue.isIgnoreCase() + ")  ### " + expect + " but was: " + actual;
 
                if( actual != null ) { // Avoid Pattern error because passed value is null
                  final Pattern pattern = xmlValue.isIgnoreCase()

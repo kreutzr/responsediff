@@ -17,7 +17,7 @@ public class JsonTraverserNomalizationVisitorTest
       final String json = "{ \"license.id\" : \"MIT\", \"project\" : { \"a\" : 2 }, \"project.id\": \"123\", \"project.name\": \"test\", \"some-key\" : 1, \"array\" : [ { \"not.affected\" : \"true\" } ] }";
       final boolean normalizeMaps   = true;
       final boolean normalizeArrays = false;
-      final JsonTraverserNomalizationVisitor visitor = new JsonTraverserNomalizationVisitor( normalizeMaps, normalizeArrays );
+      final JsonTraverserNormalizationVisitor visitor = new JsonTraverserNormalizationVisitor( normalizeMaps, normalizeArrays );
       final JsonTraverser traverser = new JsonTraverser( json );
 
       // When
@@ -64,7 +64,7 @@ public class JsonTraverserNomalizationVisitorTest
       final String json = "{ \"project\" : { \"id\" : \"123\" }, \"project.id.suffix\": \"-SNAPSHOT\", \"array\": [ \"test\" ], \"array.length\" : 1 }";
       final boolean normalizeMaps   = true;
       final boolean normalizeArrays = false;
-      final JsonTraverserNomalizationVisitor visitor = new JsonTraverserNomalizationVisitor( normalizeMaps, normalizeArrays );
+      final JsonTraverserNormalizationVisitor visitor = new JsonTraverserNormalizationVisitor( normalizeMaps, normalizeArrays );
       final JsonTraverser traverser = new JsonTraverser( json );
 
       // When
@@ -102,7 +102,7 @@ public class JsonTraverserNomalizationVisitorTest
       final String json = "{ \"array\" : [ { \"is.affected\" : \"true\" } ] }";
       final boolean normalizeMaps   = true;
       final boolean normalizeArrays = true;
-      final JsonTraverserNomalizationVisitor visitor = new JsonTraverserNomalizationVisitor( normalizeMaps, normalizeArrays );
+      final JsonTraverserNormalizationVisitor visitor = new JsonTraverserNormalizationVisitor( normalizeMaps, normalizeArrays );
       final JsonTraverser traverser = new JsonTraverser( json );
 
       // When

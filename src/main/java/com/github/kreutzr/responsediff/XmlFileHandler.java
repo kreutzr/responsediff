@@ -119,10 +119,17 @@ public class XmlFileHandler
      // Try to activate XSD schema validation
      if( schema != null ) {
        jaxbUnmarshaller.setSchema( schema ); // Activate validation
-       LOG.info( "XML validation is activated for XML file " + xmlFilePath + " ." );
+       LOG.debug( "XML validation is activated for XML file " + xmlFilePath + " ." );
      }
 
-     final XmlResponseDiffSetup setup = (XmlResponseDiffSetup) jaxbUnmarshaller.unmarshal( xmlFile );
+     XmlResponseDiffSetup setup = null;
+     try {
+       setup = (XmlResponseDiffSetup) jaxbUnmarshaller.unmarshal( xmlFile );
+     }
+     catch( final Throwable ex ) {
+       LOG.error( "Error reading setup file \"" + xmlFile.getAbsolutePath() + "\". ", ex );
+       throw new RuntimeException( "Error reading setup file. Test run aborted.");
+     }
 
      if( !initialize ) {
        return setup;
