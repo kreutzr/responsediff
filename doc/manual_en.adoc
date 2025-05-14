@@ -28,8 +28,8 @@ The software can be used locally or in a build pipeline. The deviations recorded
 In the following, we refer to our software to be tested as "MyTool". We assume that MyTool was already released in version 1.0.0.
 For the successor version 1.1.0, the following changes were made:
 
-* A bug was fixed (ticket number MT-001 "firstname is not returned in the person response").
-* A feature was added (ticket number MT-002 "Add new person attribute hasPet (boolean)").
+* A bug was fixed (ticket number `MT-001` "firstname is not returned in the person response").
+* A feature was added (ticket number `MT-002` "Add new person attribute hasPet (boolean)").
 
 Now, the successor version needs to be checked to ensure that the functionality of MyTool from the previous version remains unchanged, except for the two expected deviations.
 
@@ -74,8 +74,8 @@ The test scenarios for ResponseDiff are formulated in a setup file (XML).
     <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" /> <2>
   </filterRegistry>
 
-  <testSet id="Person CRUD" order="strict">
-     <description>Reading person data</description> <3>
+  <testSet id="Person CRUD" order="strict"> <3>
+     <description>Reading person data</description>
 
      <test id="Test that person firstname is no longer missing" ticketReference="MT-001,MT-002"> <4>
         <description>In version 1.0.0 a persons firstname was not returned and hasPet was not supported. In version 1.1.0 this should be fixed.</description>
@@ -132,19 +132,19 @@ Now let's take a look at the setup:
 
 <2> In general, the “sortJsonBody” filter is registered in the setup. It is used in the example further below in the `response` definition. The filter ensures that the map entries of JSON responses are displayed in a fixed and therefore comparable order.
 
-<3> The embedded TestSet can be described with a `description` and contains a single test.
+<3> The embedded TestSet can be described with a `description` and contains a single test (in this example).
 
 <4> The test can optionally refer to one or more associated tickets (`ticketReference`). Links to the ticket system are displayed in the report. If more than one ticket is referenced, the references must be listed one after the other, separated by commas.
 
-<5> The `request` defines which HTTP method (`method`) is used to call the endpoint (`endpoint`), which call parameters (`parameters`) are to be appended to the endpoint URL and which headers are to be set.
+<5> The `request` defines which HTTP method (`method`) is used to call the given service endpoint (`endpoint`), which call parameters (`parameters`) are to be appended to the endpoint URL and which headers are to be set.
 
 <6> The response filter registered above is now used in the `response` for the responses delivered here. If more than one filter is specified in the `filters` section, these are applied to the incoming response in the specified order.
 
 <7> In the various `ignore` blocks, certain aspects are now excluded from the comparison. They are therefore not listed in the report. The specification of which parts of the response are to be ignored is made using JSONPath syntax.
 
 * Cookie references are generally not identical and must therefore (generally) be excluded.
-* The MT-001 bugfix also requires an `ignore` block, as it is clear that the reference will not return anything here. The corresponding ticket is linked here.
-* The same applies to the new feature MT-002.
+* The `MT-001` bugfix also requires an `ignore` block, as it is clear that the reference will not return anything here. The corresponding ticket is linked here.
+* The same applies to the new feature `MT-002`.
 
 <8> As we have used a specific person ID in the call, we can also implement a functional test via `expected`.
 

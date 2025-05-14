@@ -28,8 +28,8 @@ Die Software kann lokal aber auch in einer Build-Pipeline eingesetzt werden. Die
 Im Folgenden nennen wir unsere zu überprüfende Software "MyTool". Wir nehmen an, dass MyTool bereits in Version 1.0.0 ausgeliefert wurde.
 Für die Nachfolgeversion 1.1.0 wurde
 
-* ein Fehler behoben (Ticketnummer MT-001 "firstname wird beim Person-Response nicht geliefert") und
-* ein Feature hinzugefügt (Ticketnummer MT-002 "Neues Person-Attribut hasPet (boolean) aufnehmen").
+* ein Fehler behoben (Ticketnummer `MT-001` "firstname wird beim Person-Response nicht geliefert") und
+* ein Feature hinzugefügt (Ticketnummer `MT-002` "Neues Person-Attribut hasPet (boolean) aufnehmen").
 
 Nun soll die Nachfolgeversion dahingehend überprüft werden, dass die Funktionalität von MyTool aus der Vorgängerversion noch genauso besteht wie vorher, mit Ausnahme der beiden erwarteten Abweichungen.
 
@@ -74,8 +74,8 @@ Die Testszenarien für ResponseDiff werden in einer Setup-Datei (XML) formuliert
     <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" /> <2>
   </filterRegistry>
 
-  <testSet id="Person CRUD" order="strict">
-     <description>Reading person data</description> <3>
+  <testSet id="Person CRUD" order="strict"> <3>
+     <description>Reading person data</description>
 
      <test id="Test that person firstname is no longer missing" ticketReference="MT-001,MT-002"> <4>
         <description>In version 1.0.0 a persons firstname was not returned and hasPet was not supported. In version 1.1.0 this should be fixed.</description>
@@ -132,19 +132,19 @@ Schauen wir uns das Setup nun etwas genauer an:
 
 <2> Im Allgemeinen wird im Setup der "sortJsonBody" Filter registriert. Er wird im Beispiel weiter unten in der `response`-Definition verwendet. Der Filter sorgt dafür, dass die Map-Einträge von JSON-Antworten in einer festen und somit vergleichbaren Reihenfolge dargestellt werden.
 
-<3> Das eingebettete TestSet kann mit einer `description` beschrieben werden und beinhaltet einen einzigen Test.
+<3> Das eingebettete TestSet kann mit einer `description` beschrieben werden und beinhaltet (in diesem Beispiel) einen einzigen Test.
 
 <4> Der Test kann optional auf ein oder mehrere assoziierte Tickets verweisen (`ticketReference`). Links zum Ticketsystem werden im Report dargestellt. Wird mehr als ein Ticket referenziert, so müssen die Referenzen Komma-separiert hintereinander aufgeführt werden.
 
-<5> Im `request` wird definiert, mittels welcher HTTP-Methode (`method`) der Endpunkt (`endpoint`) aufgerufen wird, welche Aufrufparameter (`parameters`) der Endpunkt-URL angehangen werden sollen und welche Header (`headers`) zu setzen sind.
+<5> Im `request` wird definiert, mittels welcher HTTP-Methode (`method`) der angegebene Service-Endpunkt (`endpoint`) aufgerufen wird, welche Aufrufparameter (`parameters`) der Endpunkt-URL angehangen werden sollen und welche Header (`headers`) zu setzen sind.
 
 <6> Im `response` kommt nun für die hier gelieferten Antworten der oben registrierte ResponseFilter zum Einsatz. Sollten im Abschnitt `filters` mehr als ein Filter genannt sein, so werden diese in der angegebenen Reihenfolge auf der eingehenden Antwort angewendet.
 
 <7> In den verschiedenen `ignore`-Blöcken werden nun bestimmte Aspekte vom Vergleich ausgeschlossen. Sie werden folglich nicht im Report aufgeführt. Die Angabe, welche Stellen der Antwort ignoriert werden sollen, erfolgt über per JSONPath-Syntax.
 
 * Cookie-Referenzen sind im Allgemeinen nicht identisch und müssen daher (generell) ausgeschlossen werden.
-* Der Bugfix MT-001 bedingt ebenfalls einen `ignore`-Block, da klar ist, dass die Referenz hier nichts liefern wird. Das zugehörige Ticket ist hier verlinkt.
-* Für das neue Feature MT-002 gilt dasselbe.
+* Der Bugfix `MT-001` bedingt ebenfalls einen `ignore`-Block, da klar ist, dass die Referenz hier nichts liefern wird. Das zugehörige Ticket ist hier verlinkt.
+* Für das neue Feature `MT-002` gilt dasselbe.
 
 <8> Da wir eine konkrete Personen-Id im Aufruf verwendet haben, können wir aber auch noch mittels `expected` einen Funktionstest realisieren.
 
