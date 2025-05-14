@@ -66,21 +66,21 @@ Die Testszenarien für ResponseDiff werden in einer Setup-Datei (XML) formuliert
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="ROOT SETUP"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="responseDiffSetup.xsd"
+  xsi:noNamespaceSchemaLocation="responseDiffSetup.xsd" <1>
 >
   <description>Demo to demonstrate a basic test setup structure</description>
 
   <filterRegistry>
-    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" /> <2>
   </filterRegistry>
 
   <testSet id="Person CRUD" order="strict">
-     <description>Reading person data</description>
+     <description>Reading person data</description> <3>
 
-     <test id="Test that person firstname is no longer missing" ticketReference="MT-001,MT-002">
+     <test id="Test that person firstname is no longer missing" ticketReference="MT-001,MT-002"> <4>
         <description>In version 1.0.0 a persons firstname was not returned and hasPet was not supported. In version 1.1.0 this should be fixed.</description>
 
-        <request method="GET" endpoint="/persons" >
+        <request method="GET" endpoint="/persons" > <5>
            <description>Some optional description</description>
            <parameters>
               <parameter id="personId">1000000000000000</parameter>
@@ -93,28 +93,28 @@ Die Testszenarien für ResponseDiff werden in einer Setup-Datei (XML) formuliert
         <response>
            <description>Some optional description</description>
            <filters>
-              <filter id="sortJsonBody"/>
+              <filter id="sortJsonBody"/> <6>
            </filters>
 
-           <ignore forEver="true">
+           <ignore forEver="true"> <7>
               <header>set-cookie</header>
               <explanation>Cookie reference is random</explanation>
            </ignore>
-           <ignore ticketReference="MT-001">
+           <ignore ticketReference="MT-001"> <7>
               <path>$.firstname</path>
               <explanation>The firstname is missing in version 1.0.0</explanation>
            </ignore>
-           <ignore ticketReference="MT-002">
+           <ignore ticketReference="MT-002"> <7>
               <path>$.hasPet</path>
               <explanation>hasPet was not supported in version 1.0.0</explanation>
            </ignore>
 
-           <expected>
-              <httpStatus ticketReference="MT-003">200</httpStatus>
+           <expected> <8>
+              <httpStatus ticketReference="MT-003">200</httpStatus> <9>
               <headers>
-                <header name="content-type" ticketReference="MT-004">application/json</header>
+                <header name="content-type" ticketReference="MT-004">application/json</header> <10>
               </headers>
-              <values>
+              <values> <11>
                  <value path="$.firstname" type="string" >Reinhard</value>
                  <value path="$.hasPet"    type="boolean" ticketReference="MT-005">false</value>
               </values>
@@ -126,37 +126,34 @@ Die Testszenarien für ResponseDiff werden in einer Setup-Datei (XML) formuliert
   </testSet>
 </XmlResponseDiffSetup>
 ----
-====
-
 Schauen wir uns das Setup nun etwas genauer an:
 
+<1> Die XSD-Datei (XSD = XML Schema Definition) in der XML-Wurzel anzugeben kann das Editieren der XML-Datei vereinfachen. Die XSD-Datei befindet sich im Verzeichnis `doc/xsds` der ResponseDiff-Version.
 
-Die XSD-Datei (XSD = XML Schema Definition) in der XML-Wurzel anzugeben kann das Editieren der XML-Datei vereinfachen. Die XSD-Datei befindet sich im Verzeichnis `doc/xsds` der ResponseDiff-Version.
+<2> Im Allgemeinen wird im Setup der "sortJsonBody" Filter registriert. Er wird im Beispiel weiter unten in der `response`-Definition verwendet. Der Filter sorgt dafür, dass die Map-Einträge von JSON-Antworten in einer festen und somit vergleichbaren Reihenfolge dargestellt werden.
 
-Im Allgemeinen wird im Setup der "sortJsonBody" Filter registriert. Er wird im Beispiel weiter unten in der `response`-Definition verwendet. Der Filter sorgt dafür, dass die Map-Einträge von JSON-Antworten in einer festen und somit vergleichbaren Reihenfolge dargestellt werden.
+<3> Das eingebettete TestSet kann mit einer `description` beschrieben werden und beinhaltet einen einzigen Test.
 
-Das eingebettete TestSet kann mit einer `description` beschrieben werden und beinhaltet einen einzigen Test.
+<4> Der Test kann optional auf ein oder mehrere assoziierte Tickets verweisen (`ticketReference`). Links zum Ticketsystem werden im Report dargestellt. Wird mehr als ein Ticket referenziert, so müssen die Referenzen Komma-separiert hintereinander aufgeführt werden.
 
-Der Test kann optional auf ein oder mehrere assoziierte Tickets verweisen (`ticketReference`). Links zum Ticketsystem werden im Report dargestellt. Wird mehr als ein Ticket referenziert, so müssen die Referenzen Komma-separiert hintereinander aufgeführt werden.
+<5> Im `request` wird definiert, mittels welcher HTTP-Methode (`method`) der Endpunkt (`endpoint`) aufgerufen wird, welche Aufrufparameter (`parameters`) der Endpunkt-URL angehangen werden sollen und welche Header (`headers`) zu setzen sind.
 
-Im `request` wird definiert, mittels welcher HTTP-Methode (`method`) der Endpunkt (`endpoint`) aufgerufen wird, welche Aufrufparameter (`parameters`) der Endpunkt-URL angehangen werden sollen und welche Header (`headers`) zu setzen sind.
+<6> Im `response` kommt nun für die hier gelieferten Antworten der oben registrierte ResponseFilter zum Einsatz. Sollten im Abschnitt `filters` mehr als ein Filter genannt sein, so werden diese in der angegebenen Reihenfolge auf der eingehenden Antwort angewendet.
 
-Im `response` kommt nun für die hier gelieferten Antworten der oben registrierte ResponseFilter zum Einsatz. Sollten im Abschnitt `filters` mehr als ein Filter genannt sein, so werden diese in der angegebenen Reihenfolge auf der eingehenden Antwort angewendet.
-
-In den verschiedenen `ignore`-Blöcken werden nun bestimmte Aspekte vom Vergleich ausgeschlossen. Sie werden folglich nicht im Report aufgeführt.
-Die Angabe, welche Stellen der Antwort ignoriert werden sollen, erfolgt über per JSONPath-Syntax.
+<7> In den verschiedenen `ignore`-Blöcken werden nun bestimmte Aspekte vom Vergleich ausgeschlossen. Sie werden folglich nicht im Report aufgeführt. Die Angabe, welche Stellen der Antwort ignoriert werden sollen, erfolgt über per JSONPath-Syntax.
 
 * Cookie-Referenzen sind im Allgemeinen nicht identisch und müssen daher (generell) ausgeschlossen werden.
 * Der Bugfix MT-001 bedingt ebenfalls einen `ignore`-Block, da klar ist, dass die Referenz hier nichts liefern wird. Das zugehörige Ticket ist hier verlinkt.
 * Für das neue Feature MT-002 gilt dasselbe.
 
-Soweit zum Regressionstest. Da wir eine konkrete Personen-Id im Aufruf verwendet haben, können wir aber auch noch einen Funktionstest realisieren.
+<8> Da wir eine konkrete Personen-Id im Aufruf verwendet haben, können wir aber auch noch mittels `expected` einen Funktionstest realisieren.
 
-Wir erwarten im `expected`-Block, dass die Werte (`values`) `firstname` und `hasPet` ganz konkrete Ausprägungen haben.
-Die Angabe, an welcher Stelle der Antwort welcher Wert erwartete wird, erfolgt über per JSONPath-Syntax.
+<9> Wir erwarten, dass der HTTP Status der Antwort 200 (`OK`) ist,
+<10> der `content-type`-Header den Wert `application/json` hat und
+<11> dass die Werte `firstname` und `hasPet` (definiert in `values`) ganz konkrete Ausprägungen haben. Die Angabe, an welcher Stelle der Antwort welcher Wert erwartete wird, erfolgt über per JSONPath-Syntax.
+====
 
 Das `ignore`-Tag sowie die Elemente `httpStatus`, `header`, `value` und `body` im `expected`-Block können optional mit dem Attribut `ticketReference` ausgestattet werden. Dieses kann Aufschluss darüber geben, warum eine Abweichung ignoriert werden darf oder warum ein konkreter Wert erwartet wird. So angegebene Ticketreferenzen werden dem umschließenden Test zugewiesen und tauchen somit im Report auf.
-
 
 
 === Starten von ResponseDiff
@@ -505,7 +502,7 @@ Darüber benötigt jeder Test verpflichtend ein `id`-Attribut.
 ====
 
 ===== Request
-Ein `request`-Eintrag besteht aus den folgenden, optionale Informationen:
+Ein `request`-Eintrag besteht aus den folgenden, optionalen Informationen:
 
 * Eine Beschreibung (`description`).
 * Eine Deklaration der lokal gültigen Variablen (`variables`).
@@ -1657,23 +1654,26 @@ Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="client-management setup">
-  <testSet id="service-A">
+  <testSet id="service-A"> <1>
     <variables>
-      <variable id="service">service-A</variable> <!-- for generic service info setup xml -->
+      <variable id="service">service-A</variable> <2>
     </variables>
 
-    <testSetInclude file="../generic-service-info.xml" />
+    <testSetInclude file="../generic-service-info.xml" /> <3>
   </testSet>
 
-  <testSet id="service-B">
+  <testSet id="service-B"> <1>
     <variables>
-      <variable id="service">service-B</variable> <!-- for generic service info setup xml -->
+      <variable id="service">service-B</variable> <2>
     </variables>
 
-    <testSetInclude file="../generic-service-info.xml" />
+    <testSetInclude file="../generic-service-info.xml" /> <3>
   </testSet>
 </XmlResponseDiffSetup>
 ----
+<1> Die TestSets werden im Allgemeinen in getrennten Dateien gehalten werden (z.B.: `service-A/setup.xml` und `service-B/setup.xml`).
+<2> Die Variable "service" ist je TestSet unterschiedlich definiert.
+<3> Die Einbettungen je Service verweisen auf die selbe XML-Datei.
 ====
 
 .Beispiel Generisches Testset
@@ -1682,19 +1682,21 @@ Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="generic service info setup">
-  <testSet id="info" workPath="${service}/">
+  <testSet id="info" workPath="${service}/"> <1>
     <test id="Read license info">
-      <request method="GET" endpoint="/${service}/info/license" />
+      <request method="GET" endpoint="/${service}/info/license" /> <2>
     </test>
     <test id="Read health info">
-      <request method="GET" endpoint="/${service}/info/health-check" />
+      <request method="GET" endpoint="/${service}/info/health-check" /> <2>
     </test>
     <test id="Read version info">
-      <request method="GET" endpoint="/${service}/info/version" />
+      <request method="GET" endpoint="/${service}/info/version" /> <2>
     </test>
   </testSet>
 </XmlResponseDiffSetup>
 ----
+<1> Als Arbeitsverzeichnis wird der Wert der Variable "service" verwendet. Dies ist für die meisten Anwendungen eine passende Heuristik.
+<2> Die Aufrufe der Endpunkte unterscheiden sich lediglich im Servicenamen. Durch Einsatz der Variable "service" kann das TestSet wiederverwendet werden.
 ====
 
 

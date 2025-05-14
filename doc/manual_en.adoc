@@ -66,21 +66,21 @@ The test scenarios for ResponseDiff are formulated in a setup file (XML).
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="ROOT SETUP"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="responseDiffSetup.xsd"
+  xsi:noNamespaceSchemaLocation="responseDiffSetup.xsd" <1>
 >
   <description>Demo to demonstrate a basic test setup structure</description>
 
   <filterRegistry>
-    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" />
+    <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter" /> <2>
   </filterRegistry>
 
   <testSet id="Person CRUD" order="strict">
-     <description>Reading person data</description>
+     <description>Reading person data</description> <3>
 
-     <test id="Test that person firstname is no longer missing" ticketReference="MT-001,MT-002">
+     <test id="Test that person firstname is no longer missing" ticketReference="MT-001,MT-002"> <4>
         <description>In version 1.0.0 a persons firstname was not returned and hasPet was not supported. In version 1.1.0 this should be fixed.</description>
 
-        <request method="GET" endpoint="/persons" >
+        <request method="GET" endpoint="/persons" > <5>
            <description>Some optional description</description>
            <parameters>
               <parameter id="personId">1000000000000000</parameter>
@@ -93,28 +93,28 @@ The test scenarios for ResponseDiff are formulated in a setup file (XML).
         <response>
            <description>Some optional description</description>
            <filters>
-              <filter id="sortJsonBody"/>
+              <filter id="sortJsonBody"/> <6>
            </filters>
 
-           <ignore forEver="true">
+           <ignore forEver="true"> <7>
               <header>set-cookie</header>
               <explanation>Cookie reference is random</explanation>
            </ignore>
-           <ignore ticketReference="MT-001">
+           <ignore ticketReference="MT-001"> <7>
               <path>$.firstname</path>
               <explanation>The firstname is missing in version 1.0.0</explanation>
            </ignore>
-           <ignore ticketReference="MT-002">
+           <ignore ticketReference="MT-002"> <7>
               <path>$.hasPet</path>
               <explanation>hasPet was not supported in version 1.0.0</explanation>
            </ignore>
 
-           <expected>
-              <httpStatus ticketReference="MT-003">200</httpStatus>
+           <expected> <8>
+              <httpStatus ticketReference="MT-003">200</httpStatus> <9>
               <headers>
-                <header name="content-type" ticketReference="MT-004">application/json</header>
+                <header name="content-type" ticketReference="MT-004">application/json</header> <10>
               </headers>
-              <values>
+              <values> <11>
                  <value path="$.firstname" type="string" >Reinhard</value>
                  <value path="$.hasPet"    type="boolean" ticketReference="MT-005">false</value>
               </values>
@@ -126,36 +126,34 @@ The test scenarios for ResponseDiff are formulated in a setup file (XML).
   </testSet>
 </XmlResponseDiffSetup>
 ----
-====
-
 Now let's take a look at the setup:
 
-Specifying the XSD file (XSD = XML Schema Definition) in the XML root can simplify the editing of the XML file. The XSD file is located in the `doc/xsds` directory of the ResponseDiff version.
+<1> Specifying the XSD file (XSD = XML Schema Definition) in the XML root can simplify the editing of the XML file. The XSD file is located in the `doc/xsds` directory of the ResponseDiff version.
 
-In general, the “sortJsonBody” filter is registered in the setup. It is used in the example further below in the `response` definition. The filter ensures that the map entries of JSON responses are displayed in a fixed and therefore comparable order.
+<2> In general, the “sortJsonBody” filter is registered in the setup. It is used in the example further below in the `response` definition. The filter ensures that the map entries of JSON responses are displayed in a fixed and therefore comparable order.
 
-The embedded TestSet can be described with a `description` and contains a single test.
+<3> The embedded TestSet can be described with a `description` and contains a single test.
 
-The test can optionally refer to one or more associated tickets (`ticketReference`). Links to the ticket system are displayed in the report. If more than one ticket is referenced, the references must be listed one after the other, separated by commas.
+<4> The test can optionally refer to one or more associated tickets (`ticketReference`). Links to the ticket system are displayed in the report. If more than one ticket is referenced, the references must be listed one after the other, separated by commas.
 
-The `request` defines which HTTP method (`method`) is used to call the endpoint (`endpoint`), which call parameters (`parameters`) are to be appended to the endpoint URL and which headers are to be set.
+<5> The `request` defines which HTTP method (`method`) is used to call the endpoint (`endpoint`), which call parameters (`parameters`) are to be appended to the endpoint URL and which headers are to be set.
 
-The response filter registered above is now used in the `response` for the responses delivered here. If more than one filter is specified in the `filters` section, these are applied to the incoming response in the specified order.
+<6> The response filter registered above is now used in the `response` for the responses delivered here. If more than one filter is specified in the `filters` section, these are applied to the incoming response in the specified order.
 
-In the various `ignore` blocks, certain aspects are now excluded from the comparison. They are therefore not listed in the report.
-The specification of which parts of the response are to be ignored is made using JSONPath syntax.
+<7> In the various `ignore` blocks, certain aspects are now excluded from the comparison. They are therefore not listed in the report. The specification of which parts of the response are to be ignored is made using JSONPath syntax.
 
 * Cookie references are generally not identical and must therefore (generally) be excluded.
 * The MT-001 bugfix also requires an `ignore` block, as it is clear that the reference will not return anything here. The corresponding ticket is linked here.
 * The same applies to the new feature MT-002.
 
-So much for the regression test. As we have used a specific person ID in the call, we can also implement a functional test.
+<8> As we have used a specific person ID in the call, we can also implement a functional test via `expected`.
 
-In the `expected` block, we expect the values (`values`) `firstname` and `hasPet` to have very specific characteristics.
-The specification of which value is expected at which point in the response is made using JSONPath syntax.
+<9> We expect the HTTP Status of the reponse to be 200 (`OK`),
+<10> the `content-type` header as `application/json` and
+<11> the values `firstname` and `hasPet` (defined in `values`) to have very specific characteristics. The specification of which value is expected at which point in the response is made using JSONPath syntax.
+====
 
 The `ignore` tag and the `httpStatus`, `header`, `value` and `body` elements in the `expected` block can optionally be equipped with the `ticketReference` attribute. This can provide information as to why a deviation may be ignored or why a specific value is expected. Ticket references specified in this way are assigned to the enclosing test and thus appear in the report.
-
 
 
 === Starting ResponseDiff
@@ -1660,23 +1658,26 @@ The `workPath` attribute is not inherited, but is only valid locally.
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="client-management setup">
-  <testSet id="service-A">
+  <testSet id="service-A"> <1>
     <variables>
-      <variable id="service">service-A</variable> <!-- for generic service info setup xml -->
+      <variable id="service">service-A</variable> <2>
     </variables>
 
-    <testSetInclude file="../generic-service-info.xml" />
+    <testSetInclude file="../generic-service-info.xml" /> <3>
   </testSet>
 
-  <testSet id="service-B">
+  <testSet id="service-B"> <1>
     <variables>
-      <variable id="service">service-B</variable> <!-- for generic service info setup xml -->
+      <variable id="service">service-B</variable> <2>
     </variables>
 
-    <testSetInclude file="../generic-service-info.xml" />
+    <testSetInclude file="../generic-service-info.xml" /> <3>
   </testSet>
 </XmlResponseDiffSetup>
 ----
+<1> The TestSets are generally kept in separate files (e.g., `service-A/setup.xml` and `service-B/setup.xml`).
+<2> The variable "service" is defined differently for each test set.
+<3> The embeddings for each service point to the same XML file.
 ====
 
 .Example Generic TestSet
@@ -1685,19 +1686,21 @@ The `workPath` attribute is not inherited, but is only valid locally.
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="generic service info setup">
-  <testSet id="info" workPath="${service}/">
+  <testSet id="info" workPath="${service}/"> <1>
     <test id="Read license info">
-      <request method="GET" endpoint="/${service}/info/license" />
+      <request method="GET" endpoint="/${service}/info/license" /> <2>
     </test>
     <test id="Read health info">
-      <request method="GET" endpoint="/${service}/info/health-check" />
+      <request method="GET" endpoint="/${service}/info/health-check" /> <2>
     </test>
     <test id="Read version info">
-      <request method="GET" endpoint="/${service}/info/version" />
+      <request method="GET" endpoint="/${service}/info/version" /> <2>
     </test>
   </testSet>
 </XmlResponseDiffSetup>
 ----
+<1> The value of the "service" variable is used as the working directory. This is a suitable heuristic for most applications.
+<2> The endpoint calls differ only in the service name. Using the variable "service" allows the test set to be reused.
 ====
 
 
