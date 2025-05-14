@@ -260,8 +260,10 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 | begin       | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="begin" /></xsl:call-template> | end | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="end" /></xsl:call-template> | duration    | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="duration" /></xsl:call-template> 
 
+<xsl:if test="(avgDuration != '') and (minDuration != '') and (maxDuration != '')">
 | avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template>  | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
 
+</xsl:if>
 | success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" /> | skip        | <xsl:value-of select="skipCount" />
 
 | total       | <xsl:value-of select="totalCount" />   | expectations| <xsl:value-of select="expectedCount" />|             |
