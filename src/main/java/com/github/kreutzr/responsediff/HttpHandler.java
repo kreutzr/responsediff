@@ -741,12 +741,13 @@ public class HttpHandler
 //LOG.error( "### RKR ###: testSetWorkPath=" + testSetWorkPath );
 
     // Read body and store to file
-    String folderPath = storeReportPath + testSetPath + testSetWorkPath; // This is an absolute path
-    folderPath = folderPath + ( ( folderPath.endsWith( "\\" ) || folderPath.endsWith( "/" )) ? "" : File.separator ); // Assure there is a tailing file separator
+    String relativeTestSetPath = testSetPath + testSetWorkPath;
+    relativeTestSetPath = relativeTestSetPath + ( ( relativeTestSetPath.endsWith( "\\" ) || relativeTestSetPath.endsWith( "/" )) ? "" : File.separator ); // Assure there is a tailing file separator
+    final String folderPath = storeReportPath + relativeTestSetPath; // This is an absolute path
 
     Files.createDirectories( Path.of( folderPath ) ); // Make sure path structure exists
     final String filePath = folderPath + fileName;
-//LOG.error( "### RKR ###: filepath="        + filePath );
+//LOG.error( "### RKR ###: filePath="        + filePath );
     try {
       Files.write( Path.of( filePath ), bytes, StandardOpenOption.CREATE );  // Error with "file=/export/home/rkreutz/work/develop/test/aixigo-responsediff/src/test/resources/poc/goals-and-constraints/../info.xml"
     }
@@ -757,7 +758,7 @@ public class HttpHandler
     }
     // Create XmlDownload
     final XmlDownload xmlDownload= new XmlDownload();
-    xmlDownload.setFilename( testSetPath + fileName ); // We add a relative path here
+    xmlDownload.setFilename( relativeTestSetPath + fileName ); // We add a relative path here
     xmlDownload.setSize( bytes.length );
 
     return xmlDownload;
