@@ -113,7 +113,7 @@ public class ResponseDiff
      reportConversionFormats_       = reportConversionFormats;
      storeReportPath_               = rootPath + storeReportPath
                                     + ( ( storeReportPath.endsWith( "\\" ) || storeReportPath.endsWith( "/" )) ? "" : File.separator ) // Assure there is a tailing file separator
-                                  + getTimeStampFolder();
+                                    + getTimeStampFolder();
      reportWhiteNoise_              = reportWhiteNoise;
      maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
      ticketServiceUrl_              = ticketServiceUrl;

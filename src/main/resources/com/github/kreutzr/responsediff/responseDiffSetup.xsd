@@ -97,6 +97,7 @@
     <xsd:attribute name="order"          type="XmlTestOrder" use="optional" />
     <xsd:attribute name="iterations"     type="xsd:int"      use="optional" />
     <xsd:attribute name="breakOnFailure" type="xsd:boolean"  use="optional" default="false"/>
+    <xsd:attribute name="workPath"       type="xsd:string"   use="optional" />
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

@@ -525,7 +525,7 @@ public class TestSetHandler
     final String            storeReportPath        = outerContext.getStroreReportPath();
     final Set< String >     ignorePaths            = getIgnorePaths  ( xmlResponse, xmlTest );
     final Set< String >     ignoreHeaders          = getIgnoreHeaders( xmlResponse );
-
+    final String            testSetWorkPath        = VariablesHandler.applyVariables( xmlTestSet.getWorkPath(), xmlRequest.getVariables(), "workPath for test \"" + testId + "\"", null, testId, testFileName );
 
     boolean  skipped    = false;
     boolean  hasError   = false;
@@ -566,8 +566,8 @@ public class TestSetHandler
       final CompletableFuture< HttpResponse< byte[] > > referenceResponseFuture = HttpHandler.sendRequest( referenceXmlRequest, referenceHeaders, referenceBuilder, REFERENCE, testId, testFileName );
       final CompletableFuture< HttpResponse< byte[] > > controlResponseFuture   = HttpHandler.sendRequest( controlXmlRequest,   controlHeaders,   controlBuilder,   CONTROL,   testId, testFileName );
 
-            XmlHttpResponse referenceResponse = HttpHandler.createXmlHttpResponse( referenceResponseFuture, xmlResponse, timeoutMs, filterRegistry, REFERENCE, testId, testFileName, referenceXmlRequest, storeReportPath, testSetPath );
-      final XmlHttpResponse controlResponse   = HttpHandler.createXmlHttpResponse( controlResponseFuture,   xmlResponse, timeoutMs, filterRegistry, CONTROL,   testId, testFileName, controlXmlRequest,   storeReportPath, testSetPath );
+            XmlHttpResponse referenceResponse = HttpHandler.createXmlHttpResponse( referenceResponseFuture, xmlResponse, timeoutMs, filterRegistry, REFERENCE, testId, testFileName, referenceXmlRequest, storeReportPath, testSetPath, testSetWorkPath );
+      final XmlHttpResponse controlResponse   = HttpHandler.createXmlHttpResponse( controlResponseFuture,   xmlResponse, timeoutMs, filterRegistry, CONTROL,   testId, testFileName, controlXmlRequest,   storeReportPath, testSetPath, testSetWorkPath );
 
       // If we do not have a reference service, we try to read from an old XML report.
       if( referenceResponse == null && referenceXmlSetup != null) {
@@ -584,7 +584,7 @@ public class TestSetHandler
       xmlResponse.setRequestTime( LocalDateTime.now().toString() );
       final CompletableFuture< HttpResponse< byte[] > > candidateResponseFuture = HttpHandler.sendRequest( candidateXmlRequest, candidateHeaders, candidateBuilder, CANDIDATE, testId, testFileName );
       // Compare candidate and reference considering optional white noise differences
-      final XmlHttpResponse candidateResponse = HttpHandler.createXmlHttpResponse( candidateResponseFuture, xmlResponse, timeoutMs, filterRegistry, CANDIDATE, testId, testFileName, candidateXmlRequest, storeReportPath, testSetPath );
+      final XmlHttpResponse candidateResponse = HttpHandler.createXmlHttpResponse( candidateResponseFuture, xmlResponse, timeoutMs, filterRegistry, CANDIDATE, testId, testFileName, candidateXmlRequest, storeReportPath, testSetPath, testSetWorkPath );
       final boolean bodyIsJson = candidateResponse.isBodyIsJson();
 
       end = LocalDateTime.now();

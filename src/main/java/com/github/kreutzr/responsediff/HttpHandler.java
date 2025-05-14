@@ -1,6 +1,7 @@
 package com.github.kreutzr.responsediff;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -501,6 +502,7 @@ public class HttpHandler
    * @param xmlRequest The XmlRequest. May be null.
    * @param storeReportPath The path where the report is stored to. May be null.
    * @param testSetPath The path of the current TestSet. Must not be null.
+   * @param testSetWorkPath An optional folder (relative to the testSetPath) that should be used (e.g., for downloads)
    * @return The initialized XmlHttpResponse object. If httpResponseFuture is null, null is returned.
    * @throws TimeoutException
    * @throws ExecutionException
@@ -518,7 +520,8 @@ public class HttpHandler
     final String      testFileName,
     final XmlRequest  xmlRequest,
     final String      storeReportPath,
-    final String      testSetPath
+    final String      testSetPath,
+    final String      testSetWorkPath
   )
   throws DiffFilterException, HttpHandlerException, IOException
   {
@@ -653,7 +656,8 @@ public class HttpHandler
           testId,
           contentDisposition,
           storeReportPath,
-          testSetPath
+          testSetPath,
+          testSetWorkPath
         ) );
 
         xmlHttpResponse.setBody( null ); // Either download or body
@@ -694,6 +698,7 @@ public class HttpHandler
    * @param contentDisposition The content disposition header. May be null.
    * @param storeReportPath The path to store the download file. May be null.
    * @param testSetPath The path of the current TestSet. Must not be null.
+   * @param testSetWorkPath An optional folder (relative to the testSetPath) that should be used (e.g., for downloads)
    * @return The link to the downloaded file as JSON.
    * @throws IOException
    */
@@ -704,7 +709,8 @@ public class HttpHandler
     final String testId,
     final String contentDisposition,
     final String storeReportPath,
-    final String testSetPath
+    final String testSetPath,
+    final String testSetWorkPath
   ) throws IOException {
     if( storeReportPath == null ) {
       return null;
@@ -732,13 +738,23 @@ public class HttpHandler
 //LOG.error( "### RKR ###: filename="        + fileName );
 //LOG.error( "### RKR ###: storeReportPath=" + storeReportPath );
 //LOG.error( "### RKR ###: testSetPath="     + testSetPath );
+//LOG.error( "### RKR ###: testSetWorkPath=" + testSetWorkPath );
 
     // Read body and store to file
-    final String folderPath = storeReportPath + testSetPath; // This is an absolute path
+    String folderPath = storeReportPath + testSetPath + testSetWorkPath; // This is an absolute path
+    folderPath = folderPath + ( ( folderPath.endsWith( "\\" ) || folderPath.endsWith( "/" )) ? "" : File.separator ); // Assure there is a tailing file separator
+
     Files.createDirectories( Path.of( folderPath ) ); // Make sure path structure exists
     final String filePath = folderPath + fileName;
-    Files.write( Path.of( filePath ), bytes, StandardOpenOption.CREATE );
-
+//LOG.error( "### RKR ###: filepath="        + filePath );
+    try {
+      Files.write( Path.of( filePath ), bytes, StandardOpenOption.CREATE );  // Error with "file=/export/home/rkreutz/work/develop/test/aixigo-responsediff/src/test/resources/poc/goals-and-constraints/../info.xml"
+    }
+    catch( final Throwable ex ) {
+      final String message = "Error creating download file \"" + filePath + "\".";
+      LOG.error( message );
+      throw new RuntimeException( message, ex );
+    }
     // Create XmlDownload
     final XmlDownload xmlDownload= new XmlDownload();
     xmlDownload.setFilename( testSetPath + fileName ); // We add a relative path here

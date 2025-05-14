@@ -1638,6 +1638,66 @@ Die JSONPath-Syntax erlaubt keine Punkte in Attributnamen, da Punkte als Suchpfa
 Werden Punkte in Attributnamen nicht angepasst, so können irreführende Abweichungen im Test gemeldet werden, die auf einen fehlenden Wert bei der Kandidateninstanz hinweisen (z.B.: " `... expected: ... *but was: null*` "). Die Ursache hierfür ist, dass der Referenzwert mit dem Kandidatenwert oder dem konfigurierten Erwartungswert (`expected`) verglichen wird, wobei hierfür versucht wird, den Wert per JSONPath aus der Kandidatenantwort zu lesen, was aufgrund der abweichenden Struktur fehlschlägt.
 
 
+=== Generische Testsets
+
+Bisweilen kommt es vor, dass Tests (fast) identisch für mehrere Services ausgeführt werden sollen. Zum Beispiel ist dies der Fall, wenn verschiedene Services  einheitliche Endpunkte für Healthchecks oder Lizenz- und Versionsinformationen aufweisen.
+
+Es ist möglich, solche Tests in einem zentralen, generischen Testset zu formulieren, das auf die bekannte Weise mittels `testSetInclude` eingebettet wird. Dies reduziert sowohl die Aufwände beim Anlegen der Tests als auch bei gelegentlichen Anpassungen
+
+Dabei ist jedoch zu beachten, dass die Einbettung eines generischen Testsets Auswirkungen auf Dateipfade hat, die beispielsweise beim Download verwendet werden. Um  Überschreibungen solcher Dateien zu vermeiden und sie fachlich zu gruppieren, wird empfohlen, das Arbeitsverzeichnis im eingebetteten Testset mittels `workPath` explizit anzugeben. Häufig wird dieses Arbeitsverzeichnis identisch zum Servicenamen sein.
+
+Unterschiede, die sich aus dem Kontext der Einbettung ergeben, können in Variablen festgehalten werden. Diese stehen innerhalb des eingebetteten Testsets zur Verfügung.
+
+[CAUTION]
+Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
+
+.Beispiel Einbinden eines generischen Testsets
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="client-management setup">
+  <testSet id="service-A">
+    <variables>
+      <variable id="service">service-A</variable> <!-- for generic service info setup xml -->
+    </variables>
+
+    <testSetInclude file="../generic-service-info.xml" />
+  </testSet>
+
+  <testSet id="service-B">
+    <variables>
+      <variable id="service">service-B</variable> <!-- for generic service info setup xml -->
+    </variables>
+
+    <testSetInclude file="../generic-service-info.xml" />
+  </testSet>
+</XmlResponseDiffSetup>
+----
+====
+
+.Beispiel Generisches Testset
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="generic service info setup">
+  <testSet id="info" workPath="${service}/">
+    <test id="Read license info">
+      <request method="GET" endpoint="/${service}/info/license" />
+    </test>
+    <test id="Read health info">
+      <request method="GET" endpoint="/${service}/info/health-check" />
+    </test>
+    <test id="Read version info">
+      <request method="GET" endpoint="/${service}/info/version" />
+    </test>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+====
+
+
 == Automatische Anpassung der Tests bei Versionswechsel
 
 Ist der Vergleichstest zwischen zwei Versionen erstellt, so nutzt dieser (nur) solange, wie es sinnvoll ist, gegen die Referenzversion zu testen. In einem Szenario, indem beispielsweise die letzte ausgelieferte Version als Referenz für den NightlyBuild der gerade entwickelten Folgeversion verwendet wird, endet dieser Zeitraum im Allgemeinen mit der Auslieferung einer neuen Version und dem Entwicklungsstart einer Folgeversion.

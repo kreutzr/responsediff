@@ -1641,6 +1641,66 @@ The JSONPath-Syntax does not allow dots in attribute names because these are res
 If dots in attribute names are not adjusted, misleading deviations may be reported in the test, indicating a missing value in the candidate instance (e.g., " `... expected: ... *but was: null*"` ). This is caused by comparing the reference value with the candidate value or the configured expected value (`expected`), whereby an attempt is made to read the value from the candidate response via JSONPath, which fails due to the different structure.
 
 
+=== Generic Test Sets
+
+Sometimes, tests need to be executed (almost) identically for multiple services. This is the case, for example, when different services have common endpoints for health checks or license and version information.
+
+It is possible to formulate such tests in a generic TestSet, which is embedded in the usual way using `testSetInclude`. This reduces the effort required for both test creation and occasional adjustments.
+
+However, it should be noted that embedding a generic TestSet affects file paths used, for example, during downloads. To avoid overwriting such files and to group them according to their functionality, it is recommended to explicitly specify the working directory in the embedded test set using `workPath`. This working directory will often be identical to the service name.
+
+Differences resulting from the embedding context can be stored in variables. These are available within the embedded TestSet.
+
+[CAUTION]
+The `workPath` attribute is not inherited, but is only valid locally.
+
+.Example: Embedding a generic TestSet
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="client-management setup">
+  <testSet id="service-A">
+    <variables>
+      <variable id="service">service-A</variable> <!-- for generic service info setup xml -->
+    </variables>
+
+    <testSetInclude file="../generic-service-info.xml" />
+  </testSet>
+
+  <testSet id="service-B">
+    <variables>
+      <variable id="service">service-B</variable> <!-- for generic service info setup xml -->
+    </variables>
+
+    <testSetInclude file="../generic-service-info.xml" />
+  </testSet>
+</XmlResponseDiffSetup>
+----
+====
+
+.Example Generic TestSet
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="generic service info setup">
+  <testSet id="info" workPath="${service}/">
+    <test id="Read license info">
+      <request method="GET" endpoint="/${service}/info/license" />
+    </test>
+    <test id="Read health info">
+      <request method="GET" endpoint="/${service}/info/health-check" />
+    </test>
+    <test id="Read version info">
+      <request method="GET" endpoint="/${service}/info/version" />
+    </test>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+====
+
+
 == Automatic adaptation of tests when changing versions
 
 Once the comparison test has been created between two versions, it is only useful for as long as it makes sense to test against the reference version. In a scenario where, for example, the last delivered version is used as a reference for the nightly build of the subsequent version currently being developed, this period generally ends with the delivery of a new version and the start of development of a subsequent version.
