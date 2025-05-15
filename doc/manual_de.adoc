@@ -28,7 +28,7 @@ Die Software kann lokal aber auch in einer Build-Pipeline eingesetzt werden. Die
 Im Folgenden nennen wir unsere zu überprüfende Software "MyTool". Wir nehmen an, dass MyTool bereits in Version 1.0.0 ausgeliefert wurde.
 Für die Nachfolgeversion 1.1.0 wurde
 
-* ein Fehler behoben (Ticketnummer `MT-001` "firstname wird beim Person-Response nicht geliefert") und
+* ein Fehler korrigiert (Ticketnummer `MT-001` "firstname wird beim Person-Response nicht geliefert") und
 * ein Feature hinzugefügt (Ticketnummer `MT-002` "Neues Person-Attribut hasPet (boolean) aufnehmen").
 
 Nun soll die Nachfolgeversion dahingehend überprüft werden, dass die Funktionalität von MyTool aus der Vorgängerversion noch genauso besteht wie vorher, mit Ausnahme der beiden erwarteten Abweichungen.
@@ -44,7 +44,7 @@ Dabei gilt die MyTool Vorgängerversion 1.0.0 als "Referenz", während die Nachf
 
 In der Realität kommt es nicht selten vor, dass Rückgabewerte Instanz-spezifisch sind. Dies betrifft häufig technische IDs (die z.B. als UUID serverseitig vergeben werden), aber auch Zeitstempel können aufgrund der leicht unterschiedlich laufenden Systemuhren der Server als Server-individuell angenommen werden.
 
-Um vermeintliche, technisch bedingte Unterschiede von tatsächlichen, implementierungsbedingten Unterschieden trennen zu können, ohne diese einzeln identifizieren und im Test ausklammern zu müssen, kann optional eine "Kontroll"-Instanz betrieben werden. Die Kontroll-Instanz ist dabei zur Referenz-Instanz identisch. Ist eine Kontroll-Instanz verfügbar, so ermittelt ResponseDiff zunächst die Unterschiede zwischen Referenz und Kontrolle. Diese werden als technische Unterschiede (whiteNoise) im nachfolgenden Vergleich zwischen der Referenz und dem Kandidaten automatisch ignoriert.
+Um vermeintliche, technisch bedingte Unterschiede von tatsächlichen, implementierungsbedingten Unterschieden trennen zu können, ohne diese einzeln identifizieren und im Test ausklammern zu müssen, kann optional eine Kontroll-Instanz betrieben werden. Die Kontroll-Instanz ist dabei zur Referenz-Instanz identisch. Ist eine Kontroll-Instanz verfügbar, so ermittelt ResponseDiff zunächst die Unterschiede zwischen Referenz und Kontrolle. Diese werden als technische Unterschiede (whiteNoise) im nachfolgenden Vergleich zwischen der Referenz und dem Kandidaten automatisch ignoriert.
 
 image::img/infrastructure_00.png[]
 
@@ -136,9 +136,9 @@ Schauen wir uns das Setup nun etwas genauer an:
 
 <4> Der Test kann optional auf ein oder mehrere assoziierte Tickets verweisen (`ticketReference`). Links zum Ticketsystem werden im Report dargestellt. Wird mehr als ein Ticket referenziert, so müssen die Referenzen Komma-separiert hintereinander aufgeführt werden.
 
-<5> Im `request` wird definiert, mittels welcher HTTP-Methode (`method`) der angegebene Service-Endpunkt (`endpoint`) aufgerufen wird, welche Aufrufparameter (`parameters`) der Endpunkt-URL angehangen werden sollen und welche Header (`headers`) zu setzen sind.
+<5> Im `request`-Block wird definiert, mittels welcher HTTP-Methode (`method`) der angegebene Service-Endpunkt (`endpoint`) aufgerufen wird, welche Aufrufparameter (`parameters`) der Endpunkt-URL angehangen werden sollen und welche Header (`headers`) zu setzen sind.
 
-<6> Im `response` kommt nun für die hier gelieferten Antworten der oben registrierte ResponseFilter zum Einsatz. Sollten im Abschnitt `filters` mehr als ein Filter genannt sein, so werden diese in der angegebenen Reihenfolge auf der eingehenden Antwort angewendet.
+<6> Im `response`-Block kommt nun für die hier gelieferten Antworten der oben registrierte ResponseFilter zum Einsatz. Sollten im Abschnitt `filters` mehr als ein Filter genannt sein, so werden diese in der angegebenen Reihenfolge auf der eingehenden Antwort angewendet.
 
 <7> In den verschiedenen `ignore`-Blöcken werden nun bestimmte Aspekte vom Vergleich ausgeschlossen. Sie werden folglich nicht im Report aufgeführt. Die Angabe, welche Stellen der Antwort ignoriert werden sollen, erfolgt über per JSONPath-Syntax.
 
@@ -148,7 +148,7 @@ Schauen wir uns das Setup nun etwas genauer an:
 
 <8> Da wir eine konkrete Personen-Id im Aufruf verwendet haben, können wir aber auch noch mittels `expected` einen Funktionstest realisieren.
 
-<9> Wir erwarten, dass der HTTP Status der Antwort 200 (`OK`) ist,
+<9> Wir erwarten, dass der HTTP-Status der Antwort 200 (`OK`) ist,
 <10> der `content-type`-Header den Wert `application/json` hat und
 <11> dass die Werte `firstname` und `hasPet` (definiert in `values`) ganz konkrete Ausprägungen haben. Die Angabe, an welcher Stelle der Antwort welcher Wert erwartete wird, erfolgt über per JSONPath-Syntax.
 ====
@@ -213,7 +213,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `referenceServiceUrl`: Optionale URL der Referenz-Instanz (z.B. "http://localhost:10510/my-tool")
 * `referenceFilePath`: Optionaler Verweis auf einen "alten" XML-Report, der als Referenz verwendet werden soll, falls keine `referenceServiceUrl` angegeben wurde.
 * `controlServiceUrl`: Optionale URL der Kontroll-Instanz (z.B. "http://localhost:10520/my-tool")
-* `responseTimeoutMs`: Optionaler Timeout (als Ganzzahl) für den Empfang von Antworten. (default ist 1000)
+* `responseTimeoutMs`: Optionales Timeout (als Ganzzahl) für den Empfang von Antworten. (default ist 1000)
 * `ticketServiceUrl`: Optionale URL zum Ticketsystem, so dass die Ticketnummer nur noch angehangen werden muss (z.B. "http://localhost/tickets/")
 * `xmlFilePath`: Mandatorische Angabe der XML-Datei, welche das zu testende Setup beinhaltet. Der Pfad kann relativ zum optional angegebenen `rootPath` angegeben werden.
 * `testIdPattern`: Optionaler regulärer Ausdruck (in Java RegEx Syntax), um die Ausführung auf einzelne Tests einzuschränken. Wird nichts oder null übergeben, so werden alle Tests ausgeführt (default). Andernfalls werden nur diejenigen Tests ausgeführt, deren `id` zum übergebenen Ausdruck passt.
@@ -227,7 +227,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `referenceHeaders`: Optionale Header, die beim Aufruf der Kandidat-Instanz fix verwendet werden sollen. z.B. [ { "name" : "Authorization", "value" : "bearer ..." } ])
 * `controlHeaders`: Optionale Header, die beim Aufruf der Kandidat-Instanz fix verwendet werden sollen. z.B. [ { "name" : "Authorization", "value" : "bearer ..." } ])
 * `epsilon`: Optionaler Epsilon-Wert für Zahlenvergleiche, bei denen kein spezielles Epsilon im Test angegeben wurde. (default ist 0.00000001)
-* `exitWithExitCode`: Optionales Flag, ob Abweichungen durch einen Exit code ungleich 0 angezeigt werden sollen `true` (default), oder nicht `false`.
+* `exitWithExitCode`: Optionales Flag, ob Abweichungen durch einen Exit code ungleich 0 angezeigt werden sollen (`true`), oder nicht (`false`). (default ist `true`)
 ====
 
 ==== Exit-Code
@@ -274,7 +274,7 @@ Wenn in der Transformation nicht alle Tests berücksichtigt werden sollen (z.B.,
 
 Dadurch, dass der zu verwendende Transformator konfiguriert wird, können eigene Transformatoren verwendet werden.
 
-Die folgenden XSLT Transformatoren stehen aktuell zur Verfügung:
+Die folgenden XSLT-Transformatoren stehen aktuell zur Verfügung:
 
 ===== AsciiDoc (default)
 Name der Transformatordatei: `report-to-adoc.xslt`
@@ -284,7 +284,7 @@ Folgende Werte sind für die `report`-Attribute an den TestSets und Tests vorges
 
 * `success`: Der Test wird im Report berücksichtigt, wenn er erfolgreich war.
 * `fail`: Der Test wird im Report berücksichtigt, wenn er fehlgeschlagenen ist.
-* `skip`: Der Test wird im Report berücksichtigt, wenn er aufgrund von technischen Problemen abgebrochenen wurde, oder aufgrund eines angegebenen `testIdPattern` von der Ausführung ausgenomme wurde.
+* `skip`: Der Test wird im Report berücksichtigt, wenn er aufgrund von technischen Problemen abgebrochenen wurde, oder aufgrund eines angegebenen `testIdPattern` von der Ausführung ausgenommen wurde.
 * `all`: Der Test wird unabhängig des Testergebnisses berücksichtigt.
 * `none`: Der Test wird niemals berücksichtigt.
 
@@ -521,7 +521,7 @@ Darüber hinaus müssen die beiden folgenden Eigenschaften gesetzt sein. Ob die 
 * Der aufzurufende Service-Endpunkt (`endpoint`).
 
 ===== Response
-Ein `response`-Eintrag besteht aus den folgenden, optionale Informationen:
+Ein `response`-Eintrag besteht aus den folgenden, optionalen Informationen:
 
 * Eine Beschreibung (`description`).
 * Eine Deklaration der lokal gültigen Variablen (`variables`).
@@ -567,7 +567,7 @@ Das Einbetten externe Test-Setup erfolgt am Ende eines TestSets nach dem letzten
 ====
 
 === Reihenfolge der Testausführung
-Insbesondere bei *CRUD* Schnittstellen (`Create`, `Read`, `Update`, `Delete`) kann die Ausführungsreihenfolge der Tests relevant sein, wenn beispielsweise zunächst ein Objekt erzeugt werden soll (`Create`), was anschließend abgefragt (`Read`), verändert (`Update`)und schließlich gelöscht (`Delete`) werden soll. Aus diesem Grund bietet ResponseDiff eine Möglichkeit, auf die Ausführungsreihenfolge Einfluss zu nehmen.
+Insbesondere bei *CRUD*-Schnittstellen (`Create`, `Read`, `Update`, `Delete`) kann die Ausführungsreihenfolge der Tests relevant sein, wenn beispielsweise zunächst ein Objekt erzeugt werden soll (`Create`), was anschließend abgefragt (`Read`), verändert (`Update`)und schließlich gelöscht (`Delete`) werden soll. Aus diesem Grund bietet ResponseDiff eine Möglichkeit, auf die Ausführungsreihenfolge Einfluss zu nehmen.
 
 ==== Das `order`-Attribut
 Per default erfolgt die Ausführung der Tests und TestSets in zufälliger Reihenfolge. Ist dies nicht gewünscht, so kann man im umschließenden TestSet das optionale Attribut `order` mit dem Wert `strict` (default ist `random`) setzen.
@@ -583,7 +583,7 @@ Per default erfolgt die Ausführung der Tests und TestSets in zufälliger Reihen
 Diese Einstellung gilt dann für alle im TestSet eingeschlossen TestSets und Tests, es sei denn ein inneres TestSet überschreibt für seine inneren Elemente die äußere Vorgabe. Innerhalb eines TestSets werden die Tests vor den enthaltenen TestSets ausgeführt. Diese Reihenfolge kann nicht verändert werden.
 
 ==== Lokaler Testabbruch
-Hängen Tests von einander ab (beispielsweise, weil erwartet wird, dass Abfrage-Aufrufe nicht funktionieren werden, wenn die Erzeugung eines später abzufragenden Objekts fehlgeschlagen ist), so kann dem durch das Attribut `breakOnFailure` auf Test-Ebene Rechnung getragen werden. Das Attribut würde beim Test, der ein später benötigtes Objekt anlegt auf `true` gesetzt werden (default ist `false`). Schlägt dieser Aufruf dann fehl, so werden alle nachfolgenden Tests und TestSets dieser Gliederungsebene nicht mehr ausgeführt. So übersprungene Tests werden in der Testzusammenfassung als "skipped" notiert.
+Hängen Tests voneinander ab (beispielsweise, weil erwartet wird, dass Abfrage-Aufrufe nicht funktionieren werden, wenn die Erzeugung eines später abzufragenden Objekts fehlgeschlagen ist), so kann dem durch das Attribut `breakOnFailure` auf Test-Ebene Rechnung getragen werden. Das Attribut würde beim Test, der ein später benötigtes Objekt anlegt auf `true` gesetzt werden (default ist `false`). Schlägt dieser Aufruf dann fehl, so werden alle nachfolgenden Tests und TestSets dieser Gliederungsebene nicht mehr ausgeführt. So übersprungene Tests werden in der Testzusammenfassung als "skipped" notiert.
 
 Der Mechanismus kann auf TestSet-Ebene fortgeführt werden, so dass bei einem auf diese Weise abgebrochenen TestSet die nachfolgenden TestSets der selben Gliederungsebene ebenfalls nicht mehr ausgeführt werden.
 
@@ -644,7 +644,7 @@ Eigene Filter können leicht hinzugefügt werden. (vgl. Abschnitt "<<Eigene Filt
 === Umgang mit unterschiedlichen Server-Antworten
 
 ResponseDiff basiert auf der Annahme, dass Antworten im JSON-Format geliefert werden. Für den Fall, dass etwas anderes als JSON geliefert wird, kann jede Antwort optional durch eine individuell konfigurierbare Kette von Antwort-Filtern geschickt werden.
-Wird also ein XML-To-JSON-Filter (z.B. `XmlToJsonResponseFilter`) vorgeschaltet, so kann ResponseDiff anschließend auch Antworten von Dienste analysieren, die XML liefern. Dasselbe gilt für den `TextToJsonResponseFilter`, der einen beliebigen Inhalt in JSON kapselt.
+Wird also ein XML-To-JSON-Filter (z.B. `XmlToJsonResponseFilter`) vorgeschaltet, so kann ResponseDiff anschließend auch Antworten von Diensten analysieren, die XML liefern. Dasselbe gilt für den `TextToJsonResponseFilter`, der einen beliebigen Inhalt in JSON kapselt.
 
 Die konfigurierten Filter werden in der Reihenfolge durchlaufen, in denen sie aufgeführt wurden (`filter`).
 
@@ -657,7 +657,7 @@ Der Filter operiert nur auf JSON-Nachrichten. Nicht-JSON-Nachrichten bleiben unv
 
 Der Filter nimmt drei optionale Konfigurationsparameter entgegen:
 
-* `sortArrays` : Über diesen Parameter wird spezifiziert, ob zu Vergleichzwecken auch Listeneinträge sortiert werden sollen `true`, oder ob die Reihenfolge der Einträge in Listen unverändert bleiben soll `false` (default).
+* `sortArrays` : Über diesen Parameter wird spezifiziert, ob zu Vergleichzwecken auch Listeneinträge sortiert werden sollen (`true`), oder ob die Reihenfolge der Einträge in Listen unverändert bleiben soll (`false`). (default ist `false`).
 * `sortArrays.keys` : Ist die Sortierung von Listeneinträgen durch den Parameter `sortArrays` aktiviert, so gilt diese Einstellung per default für alle Listen im JSON. Die Sortierung muss jedoch meist auf bestimmte Listen eingeschränkt werden. Hierzu müssen über den Parameter `sortArrays.keys` diejenigen Listen namentlich identifiziert werden, deren Einträge sortiert werden sollen (Whitelist). Mehrere Namen werden dabei durch ein Komma voneinander getrennt aufgeführt. Ist das JSON an sich bereits eine Liste und hat somit keinen umschließenden Namen, so muss bei der Angabe einer Whitelist "$" als Synonym für "root" angegeben werden, wenn diese (äußere) Liste ebenfalls sortiert werden soll. Eine Auflistung von ausschließlich nichtexistierenden Namen (oder ein leerer Eintrag) führt dazu, dass entsprechend keine Liste sortiert wird.
 Zusätzlich kann je Name spezifiziert werden, welche Daten konkret zur Sortierung herangezogen werden sollen. Die Pfade zu den zu berücksichtigenden Daten werden als JSONPath in runde Klammern (`'('` und `')'`) und ggfs. durch ein Semikolon (`;`) getrennt angegeben.
 * `storeOriginalResponse` : Über diesen Parameter kann die eingehende Antwort im Filterergebnis gespeichert werden, bevor der Filter seine Arbeit aufnimmt. Die Original-Antwort findet sich in der Ergebnisstruktur unter `originalResponse`. Die Speicherung wird aktiviert, wenn als Parameterwert `true` gesetzt wird (default ist `false`).
@@ -746,7 +746,7 @@ Der Filter nimmt einen optionalen Konfigurationsparameter entgegen:
 
 
 ==== XmlToJsonResponseFilter
-Weiter steht für XML-Antworten (etwa bei SOAP-Requests) der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.XmlToJsonResponseFilter` zur Verfügung. Er berücksichtigt XML Tag-Attribute und das Mischen von Text und weiteren XML-Tags.
+Weiter steht für XML-Antworten (etwa bei SOAP-Requests) der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.XmlToJsonResponseFilter` zur Verfügung. Er berücksichtigt XML-Tagattribute und das Mischen von Text und weiteren XML-Tags.
 
 Der Filter operiert nur auf Nicht-JSON-Nachrichten. JSON-Nachrichten bleiben unverändert.
 
@@ -759,7 +759,7 @@ Der Filter nimmt vier optionale Konfigurationsparameter entgegen:
 
 ==== NormalizeJsonBodyResponseFilter
 
-Für die Verwendung von JSONPath ist es unerlässlich, dass die JSON-Struktur eindeutig geparst werden kann. Diese Annahme ist verletzt, wenn beispielsweise der Name eines JSON Attributs einen Punkt (`.`) enthält, da der Punkt vom JSONPath-Standard als Strukturierungskennzeichen interpretiert wird.
+Für die Verwendung von JSONPath ist es unerlässlich, dass die JSON-Struktur eindeutig geparst werden kann. Diese Annahme ist verletzt, wenn beispielsweise der Name eines JSON-Attributs einen Punkt (`.`) enthält, da der Punkt vom JSONPath-Standard als Strukturierungskennzeichen interpretiert wird.
 
 Der `NormalizeJsonBodyResponseFilter` kann verwendet werden, um eine eingehende Serverantwort zu normalisieren. Hierbei wird versucht, Attribute, die einen Punkt im Namen führen, in Strukturen zu wandeln.
 
@@ -819,7 +819,7 @@ Der Filter kann wie folgt konfiguriert werden:
 Für die Erstellung eigener Request- und Response-Filter bietet ResponseDiff einige Interfaces und abstrakte Basisklassen an.
 
 * `DiffFilter` und `DiffFilterImpl` Behandelt Filterparameter.
-* `DiffRequestFilter` Definiert die Behandlung von Anfragen hinsichtlich dem Nachtragen von Variablen (z.B. bei Massentests).
+* `DiffRequestFilter` Definiert die Behandlung von Anfragen hinsichtlich des Nachtragens von Variablen (z.B. bei Massentests).
 * `DiffResponseFilter` und `DiffResponseFilterImpl` Behandelt Antworten.
 
 Auf diese Weise ist es einfach, eigene, parametrisierbare Filter zu erstellen.
@@ -972,7 +972,7 @@ Keiner der optional übergebenen Parameter wird in Anführungszeichen gesetzt.
 * `${randomDouble( <min>, <max> )}` Es wird ein zufallfälliger Kommawert erzeugt, der größer oder gleich dem angebenen Minimalwert `<min>` und kleiner oder gleich dem angegebenen Maximalwert `<max>` ist. Weitere Parameter werden ignoriert. `min` muss kleiner als `max` sein.
 * `${randomDate()}` Es wird ein Zufallsdatum (beginned ab `1970-01-01` bis `2999-12-31`) erzeugt.
 * `${randomDate( <min> )}` Es wird ein Zufallsdatum erzeugt, das größer oder gleich dem angegebenen Minimalwert `<min>` (in ISO-Format `yyyy-MM-dd`) ist. Statt eines festen Datums kann für `<min>` auch `today` für den aktuellen Tag angegeben werden. `today` selbst kann zudem um einen ganzzahligen Offset (in Tagen) ergänzt werden. Beispiel: `${randomDate( today +3 )}` oder `${randomDate(today-2)}`.
-* `${randomDate( <min>, <max> )}` Es wird ein Zufallsdatum erzeugt, das größer oder gleich dem angegebenen Minimalwert `<min>` (in ISO-Format `yyyy-MM-dd`) und kleiner oder gleich dem angegebene Maximalwert `<max>` (in ISO-Format `yyyy-MM-dd`) ist. `min` muss kleiner als `max` sein. Statt eines festen Datums kann für `<min>` oder `<max>` auch `today` für den aktuellen Tag angegeben werden. `today` selbst kann zudem um einen ganzzahligen Offset (in Tagen) ergänzt werden. Beispiel: `${randomDate( today +3, "2999-12-31" )}` oder `${randomDate(today-2, today + 6)}`.
+* `${randomDate( <min>, <max> )}` Es wird ein Zufallsdatum erzeugt, das größer oder gleich dem angegebenen Minimalwert `<min>` (in ISO-Format `yyyy-MM-dd`) und kleiner oder gleich dem angegebenen Maximalwert `<max>` (in ISO-Format `yyyy-MM-dd`) ist. `min` muss kleiner als `max` sein. Statt eines festen Datums kann für `<min>` oder `<max>` auch `today` für den aktuellen Tag angegeben werden. `today` selbst kann zudem um einen ganzzahligen Offset (in Tagen) ergänzt werden. Beispiel: `${randomDate( today +3, "2999-12-31" )}` oder `${randomDate(today-2, today + 6)}`.
 * `${randomDateTime()}` Es wird ein Zufallszeitstempel (beginned ab `1970-01-01T00:00:00.000` bis `2999-12-31T23:59:59.999`) erzeugt.
 * `${randomDateTime( <min> )}` Es wird ein Zufallszeitstempel erzeugt, das größer oder gleich dem angegebenen Minimalwert `<min>` (in ISO-Format `yyyy-MM-dd HH:mm:SS`) ist. Statt eines festen Zeitstempels kann für `<min>` auch `now` für den aktuellen Zeitstempel angegeben werden. `now` selbst kann zudem um einen ganzzahligen Offset (in Millisekunden) ergänzt werden. Beispiel: `${randomDateTime( now +3000 )}` oder `${randomDateTime(now - 2000)}`.
 * `${randomDateTime( <min>, <max> )}` Es wird ein Zufallszeitstempel erzeugt, das größer oder gleich dem angegebenen Minimalwert `<min>` (in ISO-Format `yyyy-MM-dd HH:mm:SS`) und kleiner oder gleich dem angegebene Maximalwert `<max>` (in ISO-Format `yyyy-MM-dd HH:mm:SS`) ist. `min` muss kleiner als `max` sein. Statt eines festen Zeitstempels kann für `<min>` und `<max>` auch `now` für den aktuellen Zeitstempel angegeben werden. `now` selbst kann zudem um einen ganzzahligen Offset (in Millisekunden) ergänzt werden. Beispiel: `${randomDateTime( now +3000, 2999-12-31T23:59:59.999 )}` oder `${randomDateTime(now-200, now+500000)}`.
@@ -1089,7 +1089,7 @@ Werte werden in Abhängigkeit des jeweiligen Datentyps behandelt. Ist kein Daten
 |
 |`[` oder `]` <Ganzzahl>,<Ganzzahl> `[` oder `]`
 |[x,y] oder [x,y[ oder ]x,y] oder ]x,y[
-| Für Ganzzahlen können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive ode rexklusive gelten sollen.
+| Für Ganzzahlen können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive oder exklusive gelten sollen.
 
 |double
 |epsilon
@@ -1101,7 +1101,7 @@ Werte werden in Abhängigkeit des jeweiligen Datentyps behandelt. Ist kein Daten
 |
 |`[` oder `]` <Dezimalzahl>,<Dezimalzahl> `[` oder `]`
 |[x,y] oder [x,y[ oder ]x,y] oder ]x,y[
-|Für Dezimalzahlen können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive ode rexklusive gelten sollen.
+|Für Dezimalzahlen können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive oder exklusive gelten sollen.
 
 |date
 |epsilon
@@ -1113,7 +1113,7 @@ Werte werden in Abhängigkeit des jeweiligen Datentyps behandelt. Ist kein Daten
 |
 |`[` oder `]` <Datum>,<Datum> `[` oder `]`
 |[x,y] oder [x,y[ oder ]x,y] oder ]x,y[
-|Beim Vergleich von Datumswerten können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive ode rexklusive gelten sollen.
+|Beim Vergleich von Datumswerten können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive oder exklusive gelten sollen.
 
 |datetime
 |epsilon
@@ -1125,7 +1125,7 @@ Werte werden in Abhängigkeit des jeweiligen Datentyps behandelt. Ist kein Daten
 |
 |`[` oder `]` <Zeitstempel>,<zeitstempel> `[` oder `]`
 |[x,y] oder [x,y[ oder ]x,y] oder ]x,y[
-|Beim Vergleich von Zeitstempeln können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive ode rexklusive gelten sollen.
+|Beim Vergleich von Zeitstempeln können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive oder exklusive gelten sollen.
 
 |duration
 |epsilon
@@ -1137,7 +1137,7 @@ Werte werden in Abhängigkeit des jeweiligen Datentyps behandelt. Ist kein Daten
 |
 |`[` oder `]` <Zeitspanne>,<Zeitspanne> `[` oder `]`
 |[x,y] oder [x,y[ oder ]x,y] oder ]x,y[
-|Beim Vergleich von Zeitspannen können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive ode rexklusive gelten sollen.
+|Beim Vergleich von Zeitspannen können Bereiche definiert werden, indem die Unter- und Obergrenze durch ein Komma getrennt angegeben werden und dabei durch die Wahl der eckigen Klammern bestimmt wird, ob die Grenzwerte inklusive oder exklusive gelten sollen.
 
 |boolean
 |
@@ -1245,9 +1245,9 @@ Antwortwerte können sich Instanz-spezifisch unterscheiden, weswegen Sie als zwe
 Optional prüft ResponseDiff, ob ein einzelner Aufruf der Kandidat-Instanz länger als eine erwartete Zeitspanne gedauert hat.
 Die Angabe der Zeitspanne erfolgt im `expected`-Tag innerhalb des `response`-Tags eines Tests. Die Schreibweise erfolgt gemäß link:https://de.wikipedia.org/wiki/ISO_8601[ISO_8601].
 
-Zu beachten ist, das ein `expected`-Block eines äußeren TestSets zwar vererbt wird, das `maxDuration`-Tag hiervon jedoch explizit ausgeschlossen ist.
+Zu beachten ist, dass ein `expected`-Block eines äußeren TestSets zwar vererbt wird, das `maxDuration`-Tag hiervon jedoch explizit ausgeschlossen ist.
 
-Soll die Maximaldauer vieler Aufrufe ein und des selben Tests (ggfs. mit verschiedenen Variablenwerten wie in Abschnitt "<<Massentests in Requests>>" beschrieben) geprüft werden, so kann das `iterations`-Attribut des Tests auf einen Wert größer als eins gesetzt  und ein `overAllExpected`-Block definiert werden, der ein `maxDuration`-Tag aufweist. Ist der Wert des `iterations`-Attributs eins oder kleiner, so wird die übergreifende Ausfühungsdauerprüfung nicht ausgeführt.
+Soll die Maximaldauer vieler Aufrufe ein und desselben Tests (ggfs. mit verschiedenen Variablenwerten wie in Abschnitt "<<Massentests in Requests>>" beschrieben) geprüft werden, so kann das `iterations`-Attribut des Tests auf einen Wert größer als eins gesetzt  und ein `overAllExpected`-Block definiert werden, der ein `maxDuration`-Tag aufweist. Ist der Wert des `iterations`-Attributs eins oder kleiner, so wird die übergreifende Ausführungsdauerprüfung nicht ausgeführt.
 
 Soll die Aufrufdauer mehrerer, verschiedener Aufrufe geprüft werden, so kann innerhalb eines TestSets (analog zum Test) ebenfalls ein `overAllExpected`-Block definiert werden. Gemessen wird dann die Dauer aller, beliebig tief eingeschachtelter Tests.
 
@@ -1255,7 +1255,7 @@ Soll die Aufrufdauer mehrerer, verschiedener Aufrufe geprüft werden, so kann in
 
 [NOTE]
 ====
-ResponseDiff wurde nicht speziell für Performanztest konzipiert. Auch bei einzelnen Tests spieget die gemessene Zeit nicht notwendigerweise die reine Aufrufdauer wider. Daher sollte diese Option lediglich für grobe Zeitanforderungen verwendet werden.
+ResponseDiff wurde nicht speziell für Performanztest konzipiert. Auch bei einzelnen Tests spiegelt die gemessene Zeit nicht notwendigerweise die reine Aufrufdauer wider. Daher sollte diese Option lediglich für grobe Zeitanforderungen verwendet werden.
 
 Insbesondere bei Verwendung eines `overAllExpected`-Blocks bei TestSets wird (technisch bedingt) nicht nur die reine Aufrufdauer des Kandidat-Aufrufs gemessen, sondern auch die Dauern der Aufrufe der Referenz- und ggfs. der Kontroll-Instanzen - zuzüglich der internen Ausführungszeiten zwischen diesen Aufrufen.
 ====
@@ -1414,7 +1414,7 @@ Dynamische Werte (vgl. auch Abschnitt "<<Funktionswerte in Variablen-Definitione
 
 ==== Iterationen
 
-Alles was wir nun noch benötigen, ist die Möglichkeit, einen Test oder ein TestSet mehrfach ausführen zu können.
+Alles, was wir nun noch benötigen, ist die Möglichkeit, einen Test oder ein TestSet mehrfach ausführen zu können.
 
 ResponseDiff erlaubt die Mehrfachausführung sowohl auf TestSet- als auch auf Test-Ebene.
 
@@ -1472,7 +1472,7 @@ Beim Auslesen von Variablenwerten und bei Erwartungswerten kann die komplette Sy
 ====
 JSONPath liefert beim Einsatz von Filtern (`..`-Notation oder `?(@...)`-Arrayfilter) selber Arrays, *auf die jedoch nicht per Index zugegriffen werden kann*, da die link:https://www.ietf.org/archive/id/draft-ietf-jsonpath-base-21.html[JSONPath Spezifikation] dies leider (noch) nicht vorsieht.
 
-Aus diesem Grund bietet ResponseDiff eine proprietäre *Syntax-Erweiterung* (`#<index>`), um auf einzelne Elemente einer Filter-Liste zuzugreifen. Dieser Index-Zugriff kann ausschießlich am Ende des JSONPath stehen. Mehrfache Index-Zugriffe sind nicht zulässig. *Sollte JSONPath die Spezifikationslücke schließen, so wird diese proprietäre Syntax durch den Standard ersetzt werden.*
+Aus diesem Grund bietet ResponseDiff eine proprietäre *Syntax-Erweiterung* (`#<index>`), um auf einzelne Elemente einer Filter-Liste zuzugreifen. Dieser Index-Zugriff kann ausschließlich am Ende des JSONPath stehen. Mehrfache Index-Zugriffe sind nicht zulässig. *Sollte JSONPath die Spezifikationslücke schließen, so wird diese proprietäre Syntax durch den Standard ersetzt werden.*
 Daher wird die Verwendung der regulären Syntax wo immer möglich empfohlen.
 ====
 
@@ -1625,7 +1625,7 @@ Die Komprimierung lässt sich im Allgemeinen mit `HTTP`-Mitteln vermeiden, indem
 Manche Webserver liefern keine `content-length`-Header (z.B. Jetty 12).
 
 Damit der Header für Tests zuverlässig zur Verfügung steht, fügt ResponseDiff ihn in solchen Fällen automatisch hinzu.
-Der Wert entspricht dabei der Länge des empfangenen Byte-Array - also der gegebenfalls komprimierten Daten vor dem Entpacken.
+Der Wert entspricht dabei der Länge des empfangenen Byte-Array - also der gegebenenfalls komprimierten Daten vor dem Entpacken.
 
 
 === Punkte in Attributnamen
@@ -1635,20 +1635,20 @@ Die JSONPath-Syntax erlaubt keine Punkte in Attributnamen, da Punkte als Suchpfa
 Werden Punkte in Attributnamen nicht angepasst, so können irreführende Abweichungen im Test gemeldet werden, die auf einen fehlenden Wert bei der Kandidateninstanz hinweisen (z.B.: " `... expected: ... *but was: null*` "). Die Ursache hierfür ist, dass der Referenzwert mit dem Kandidatenwert oder dem konfigurierten Erwartungswert (`expected`) verglichen wird, wobei hierfür versucht wird, den Wert per JSONPath aus der Kandidatenantwort zu lesen, was aufgrund der abweichenden Struktur fehlschlägt.
 
 
-=== Generische Testsets
+=== Generische TestSets
 
 Bisweilen kommt es vor, dass Tests (fast) identisch für mehrere Services ausgeführt werden sollen. Zum Beispiel ist dies der Fall, wenn verschiedene Services  einheitliche Endpunkte für Healthchecks oder Lizenz- und Versionsinformationen aufweisen.
 
-Es ist möglich, solche Tests in einem zentralen, generischen Testset zu formulieren, das auf die bekannte Weise mittels `testSetInclude` eingebettet wird. Dies reduziert sowohl die Aufwände beim Anlegen der Tests als auch bei gelegentlichen Anpassungen
+Es ist möglich, solche Tests in einem zentralen, generischen TestSet zu formulieren, das auf die bekannte Weise mittels `testSetInclude` eingebettet wird. Dies reduziert sowohl die Aufwände beim Anlegen der Tests als auch bei gelegentlichen Anpassungen
 
-Dabei ist jedoch zu beachten, dass die Einbettung eines generischen Testsets Auswirkungen auf Dateipfade hat, die beispielsweise beim Download verwendet werden. Um  Überschreibungen solcher Dateien zu vermeiden und sie fachlich zu gruppieren, wird empfohlen, das Arbeitsverzeichnis im eingebetteten Testset mittels `workPath` explizit anzugeben. Häufig wird dieses Arbeitsverzeichnis identisch zum Servicenamen sein.
+Dabei ist jedoch zu beachten, dass die Einbettung eines generischen TestSets Auswirkungen auf Dateipfade hat, die beispielsweise beim Download verwendet werden. Um  Überschreibungen solcher Dateien zu vermeiden und sie fachlich zu gruppieren, wird empfohlen, das Arbeitsverzeichnis im eingebetteten TestSet mittels `workPath` explizit anzugeben. Häufig wird dieses Arbeitsverzeichnis identisch zum Servicenamen sein.
 
-Unterschiede, die sich aus dem Kontext der Einbettung ergeben, können in Variablen festgehalten werden. Diese stehen innerhalb des eingebetteten Testsets zur Verfügung.
+Unterschiede, die sich aus dem Kontext der Einbettung ergeben, können in Variablen festgehalten werden. Diese stehen innerhalb des eingebetteten TestSets zur Verfügung.
 
 [CAUTION]
 Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 
-.Beispiel Einbinden eines generischen Testsets
+.Beispiel Einbinden eines generischen TestSets
 ====
 [source]
 ----
@@ -1673,10 +1673,10 @@ Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 ----
 <1> Die TestSets werden im Allgemeinen in getrennten Dateien gehalten werden (z.B.: `service-A/setup.xml` und `service-B/setup.xml`).
 <2> Die Variable "service" ist je TestSet unterschiedlich definiert.
-<3> Die Einbettungen je Service verweisen auf die selbe XML-Datei.
+<3> Die Einbettungen je Service verweisen auf dieselbe XML-Datei.
 ====
 
-.Beispiel Generisches Testset
+.Beispiel Generisches TestSet
 ====
 [source]
 ----
@@ -1702,7 +1702,7 @@ Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 
 == Automatische Anpassung der Tests bei Versionswechsel
 
-Ist der Vergleichstest zwischen zwei Versionen erstellt, so nutzt dieser (nur) solange, wie es sinnvoll ist, gegen die Referenzversion zu testen. In einem Szenario, indem beispielsweise die letzte ausgelieferte Version als Referenz für den NightlyBuild der gerade entwickelten Folgeversion verwendet wird, endet dieser Zeitraum im Allgemeinen mit der Auslieferung einer neuen Version und dem Entwicklungsstart einer Folgeversion.
+Ist der Vergleichstest zwischen zwei Versionen erstellt, so nutzt dieser (nur) so lange, wie es sinnvoll ist, gegen die Referenzversion zu testen. In einem Szenario, indem beispielsweise die letzte ausgelieferte Version als Referenz für den NightlyBuild der gerade entwickelten Folgeversion verwendet wird, endet dieser Zeitraum im Allgemeinen mit der Auslieferung einer neuen Version und dem Entwicklungsstart einer Folgeversion.
 Ist Version 1.0.0 beispielsweise ausgeliefert und es wird an der Folgeversion 1.1.0 gearbeitet, so wird 1.1.0-SNAPSHOT gegen die Referenz 1.0.0 getestet.
 Wurde dann 1.1.0 freigegeben und mit der Entwicklung von 1.2.0 begonnen, so dient 1.1.0 nun als Referenz für den neuen Kandidaten 1.2.0-SNAPSHOT.
 
@@ -1760,8 +1760,8 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `rootPath`: Optionales Basisverzeichnis für nachfolgende relative Pfadangaben (z.B. "C:/home/rkreutz/work/develop/test/responsediff/"). Fehlt der Parameter, so wird das Ausführungsverzeichnis angenommen.
 * `sourceFilePath`: Mandatorischer Pfad der zu kopierenden (Basis) Test-Setups.
 * `targetFolderPath`: Mandatorischer Pfad zum Ordner, in den die Test-Setup-Datei kopuiert werden soll. Die hier genannten Ordner werden bei Bedarf erzeugt.
-* `overwriteTarget`: Optionales Flag, ob eine eventuell bereits existierende Datei überschrieben werden soll `true` oder nicht `false` (default). Ist die Option deaktiviert und existiert die Zieldatei bereits, so bricht das Programm ab (Exit-Code != 0).
-* `disableIgnoreTags`: Optionales Flag, ob `<ignore>`-Tags beim Kopieren auskommentiert werden sollen `true` oder nicht `false` (default). Ist diese Option aktiviert, so können die hinzugefügten XML-Kommentare daran erkannt werden, dass sie mit drei `#`-Zeichen markiert sind. *HINWEIS:* Sollte das auskommentierte `<ignore>`-Tag selbst XML-Kommentare enthalten haben, so müssen diese manuell maskiert werden (etwa als `<!-x- ... -x\->`, um wieder ein valides XML-Dokument zu erhalten.
+* `overwriteTarget`: Optionales Flag, ob eine eventuell bereits existierende Datei überschrieben werden soll (`true`) oder nicht (`false`) (default). Ist die Option deaktiviert und existiert die Zieldatei bereits, so bricht das Programm ab (Exit-Code != 0).
+* `disableIgnoreTags`: Optionales Flag, ob `<ignore>`-Tags beim Kopieren auskommentiert werden sollen (`true`) oder nicht (`false`) (default). Ist diese Option aktiviert, so können die hinzugefügten XML-Kommentare daran erkannt werden, dass sie mit drei `#`-Zeichen markiert sind. *HINWEIS:* Sollte das auskommentierte `<ignore>`-Tag selbst XML-Kommentare enthalten haben, so müssen diese manuell maskiert werden (etwa als `<!-x- ... -x\->`, um wieder ein valides XML-Dokument zu erhalten.
 ====
 
 ==== Exit-Code
@@ -1772,13 +1772,13 @@ Nach der Ausführung wird durch den Exit-Code signalisiert, ob es zu Abweichunge
 
 === Kurze Response-Bodies
 
-Bei der Auswahl von Requests ist es sinnvoll, solche Varianten zu wählen, deren Antworten nicht allzu umfangreich ausfallen. Andernfalls werden im Fehlerfall (bzw. je nach `report`-Einstellung) die erzeugten Reports sehr unfangreich und damit schwerer zu lesen und zu analysieren.
+Bei der Auswahl von Requests ist es sinnvoll, solche Varianten zu wählen, deren Antworten nicht allzu umfangreich ausfallen. Andernfalls werden im Fehlerfall (bzw. je nach `report`-Einstellung) die erzeugten Reports sehr umfangreich und damit schwerer zu lesen und zu analysieren.
 
 === Vergleichsorientierte Verzeichnisstruktur
 
-Eine Strukture `project/vergleich/endpunkt` hat sich als hilfreich erwiesen.
+Eine Struktur `project/vergleich/service/endpunkt` hat sich als hilfreich erwiesen.
 
-* Eigene Dateien je Endpunkt erleichtern paralleles Arbeiten und halten die Dateien knapp und übersichtlich.
+* Eigene Dateien Dienst, weiter aufgeteilt je Endpunkt erleichtern paralleles Arbeiten und halten die Dateien knapp und übersichtlich.
 * Die Vergleichsversionen sind klar strukturiert.
 * Die Historie kann bewahrt werden, so dass jederzeit Regressionstest für Hotfix-Lieferungen gegen die fehlerhafte Version möglich sind. Alle zur Referenz passenden Einstellungen sind dann noch vorhanden und müssen nicht mühevoll und fehlerträchtig rekonstruiert werden.
 
@@ -1867,9 +1867,9 @@ Es mag verlockend erscheinen, `ignore`-Anweisungen für verschiedene Tests zentr
 
 Sollten `ignore`-Anweisungen für mehrere Tests zutreffen, so können diese ggfs. innerhalb eines inneren TestSets gruppiert und so von betroffenen Tests gemeinsam verwendet werden. Hierbei muss im Allgemeinen die Ausführungsreihenfolge der Tests beachtet werden.
 
-Es kann jedoch vorkommen, dass ein Test erwarteterweise fehlschlägt, ohne das dies aber technisch ignoriert werden kann. Das ist der Fall, wenn der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält. In solchen Fällen kann ein `ignore`-Block angelegt werden, bei dem das Attribut `justExplain` auf `true` gesetzt wird (default ist `false`). Dies bewirkt, dass der angegebene Pfad `path` beim Test *nicht ignoriert* wird, jedoch gesondert mit einem Erklärtext (`explanation`) im Report ausgewiesen wird. So werden keine Abweichungen verdeckt, jedoch ist die Erklärung für einen Teil der ausgewiesenen Abweichungen dokumentiert, so dass ein Mensch einfacher überprüfen kann, wie das Fehlschlagen des Tests zu bewerten ist.
+Es kann jedoch vorkommen, dass ein Test erwarteter weise fehlschlägt, ohne dass dies aber technisch ignoriert werden kann. Das ist der Fall, wenn der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält. In solchen Fällen kann ein `ignore`-Block angelegt werden, bei dem das Attribut `justExplain` auf `true` gesetzt wird (default ist `false`). Dies bewirkt, dass der angegebene Pfad `path` beim Test *nicht ignoriert* wird, jedoch gesondert mit einem Erklärtext (`explanation`) im Report ausgewiesen wird. So werden keine Abweichungen verdeckt, jedoch ist die Erklärung für einen Teil der ausgewiesenen Abweichungen dokumentiert, so dass ein Mensch einfacher überprüfen kann, wie das Fehlschlagen des Tests zu bewerten ist.
 
-Zuletzt muss der Fall erwähnt werden, bei dem erwarteterweise Abweichungen auftreten, das Request-Ergebnis jedoch Grundlage für nachfolgende Tests ist (siehe `breakOnFailure`). Können die Abweichungen technisch nicht speziell ignoriert werden, da der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält, so muss hier ein `ignore`-Block angelegt werden, bei dem der JSONPath weniger spezialisiert greift (etwa durch Verwenden eine `*`-Zeichen an geeigneter Stelle). Hierdurch werden zwar möglicherweise einzelne Abweichungen verdeckt, jedoch steht beispielsweise ein im Test erzeugtes Objekt für die nachfolgenden Tests zur Verfügung, die ansonsten aufgrund der `breakOnFailure`-Einstellung alle übersprungen würden. Hier gilt es abzuwägen, welche Variante die aussagekräftigsten Testergebnisse liefert.
+Zuletzt muss der Fall erwähnt werden, bei dem erwartetervweise Abweichungen auftreten, das Request-Ergebnis jedoch Grundlage für nachfolgende Tests ist (siehe `breakOnFailure`). Können die Abweichungen technisch nicht speziell ignoriert werden, da der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält, so muss hier ein `ignore`-Block angelegt werden, bei dem der JSONPath weniger spezialisiert greift (etwa durch Verwenden eine `*`-Zeichen an geeigneter Stelle). Hierdurch werden zwar möglicherweise einzelne Abweichungen verdeckt, jedoch steht beispielsweise ein im Test erzeugtes Objekt für die nachfolgenden Tests zur Verfügung, die ansonsten aufgrund der `breakOnFailure`-Einstellung alle übersprungen würden. Hier gilt es abzuwägen, welche Variante die aussagekräftigsten Testergebnisse liefert.
 
 
 === Test-Server-Infrastruktur
@@ -1889,7 +1889,7 @@ Der nachfolgende Vorschlag für eine Infrastruktur laufender Instanzen bietet gr
 
 | n | Kontroll-Instanz je produktiver Version (optional). | 8011, 8013, 8015, ...
 
-| 1 | On-demand Instanz die für einen beliebigen Entwicklungs-Branch untertägig gestartet werden kann (etwa für fachliche Kontrollen), ohne dass regelmäßige Tests (NightlyBuild vs. Referenz) deswegen umkonfiguriert werden müssen. | 8005
+| 1 | On-demand Instanz, die für einen beliebigen Entwicklungs-Branch untertägig gestartet werden kann (etwa für fachliche Kontrollen), ohne dass regelmäßige Tests (NightlyBuild vs. Referenz) deswegen umkonfiguriert werden müssen. | 8005
 
 |===
 
@@ -1949,7 +1949,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `epsilon`: Bei Zahlenvergleichen wird das optional angegebene epsilon verwendet. (default ist 0.0000001)
 * `ignorePaths`: Optionale, komma-separierte Liste von JSON-Pfaden, die beim Vergleich ignoriert werden sollen. (default ist "")
 * `sortArrays`: Optionales Flag, ob JSON-Arrays vor dem Vergleich sortiert werden sollen (`true`) oder nicht (`false`). (default ist `false`)
-* `sortArraysKeys`: Optionale, komma-separierte Liste von JSON-Array-Keys, die im Fall dass `sortArrays` den Wert `true` gesetzt hat, sortiert werden sollen. Wird nichts oder ein leerer String angegeben, so werden alle JSON-Arrays sortiert. (default ist "")
+* `sortArraysKeys`: Optionale, komma-separierte Liste von JSON-Array-Keys, die im Fall, dass `sortArrays` den Wert `true` gesetzt hat, sortiert werden sollen. Wird nichts oder ein leerer String angegeben, so werden alle JSON-Arrays sortiert. (default ist "")
 ====
 
 ==== Exit-Code

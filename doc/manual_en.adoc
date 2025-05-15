@@ -44,7 +44,7 @@ The previous MyTool version 1.0.0 is the “reference”, while the successor ve
 
 In reality, it is not uncommon for return values to be instance-specific. This often concerns technical IDs (which are assigned as UUIDs on the server side, for example), but timestamps can also be assumed to be server-specific due to the slightly different system clocks of the servers.
 
-In order to be able to separate supposed, technically caused differences from actual, implementation-related differences without having to identify them individually and exclude them from the test, a “control” instance can optionally be operated. The control instance is identical to the reference instance. If a control instance is available, ResponseDiff first determines the differences between the reference and control. These are automatically ignored as technical differences (white noise) in the subsequent comparison between the reference and the candidate.
+In order to be able to separate supposed, technically caused differences from actual, implementation-related differences without having to identify them individually and exclude them from the test, a control instance can optionally be operated. The control instance is identical to the reference instance. If a control instance is available, ResponseDiff first determines the differences between the reference and control. These are automatically ignored as technical differences (white noise) in the subsequent comparison between the reference and the candidate.
 
 image::img/infrastructure_00.png[]
 
@@ -228,7 +228,7 @@ A JSON is expected as configuration as follows (without line breaks):
 * `referenceHeaders`: Optional headers that should be used when calling the candidate instance. e.g. [ { "name" : "Authorization", "value" : "bearer ..." } ])
 * `controlHeaders`: Optional headers that should be used when calling the candidate instance. e.g. [ { "name" : "Authorization", "value" : "bearer ..." } ])
 * `epsilon`: Optional epsilon value for numerical comparisons where no specific epsilon was specified in the test. (default is 0.00000001)
-* `exitWithExitCode`: Optional flag whether deviations with an exit code other than 0 should be displayed `true` (default), or not `false`.
+* `exitWithExitCode`: Optional flag whether deviations with an exit code other than 0 should be displayed (`true`), or not (`false`). (default is `true`)
 ====
 
 ==== Exit code
@@ -658,7 +658,7 @@ The filter operates only on JSON messages. Non-JSON messages remain unchanged.
 
 The filter accepts three optional configuration parameters:
 
-* `sortArrays` : This parameter specifies whether list entries should also be sorted for comparison purposes `true`, or whether the order of the entries in lists should remain unchanged `false` (default).
+* `sortArrays` : This parameter specifies whether list entries should also be sorted for comparison purposes (`true`), or whether the order of the entries in lists should remain unchanged (`false`). (default is `false`).
 * `sortArrays.keys` : If the sorting of list entries is enabled using the `sortArrays` parameter, this setting applies by default to all lists in the JSON. However, sorting usually needs to be restricted to specific lists. To do this, the `sortArrays.keys` parameter must be used to identify the lists whose entries are to be sorted (whitelist). Multiple names are separated by a comma. If the JSON itself is already a list and therefore has no enclosing name, "$" must be specified as a synonym for "root" when specifying a whitelist if this (outer) list is to be sorted as well. A list of only non-existent names (or an empty entry) will result in no list being sorted.
 Additionally, you can specify for each name which data should be used for sorting. The paths to the data to be considered are specified as JSONPaths in round brackets (`'('` and `')'`) and, if necessary, separated by a semicolon (`;`).
 * `storeOriginalResponse` : This parameter allows the incoming response to be saved in the filter result before the filter begins its operation. The original response can be found in the result structure under `originalResponse`. Saving is enabled when the parameter value is set to `true` (default is `false`).
@@ -1764,8 +1764,8 @@ The configuration expected is JSON as follows (without line breaks):
 * `rootPath`: Optional base directory for subsequent relative path specifications (e.g., "C:/home/rkreutz/work/develop/test/responsediff/"). If this parameter is omitted, the execution directory is assumed.
 * `sourceFilePath`: Mandatory path of the (base) test setups to be copied.
 * `targetFolderPath`: Mandatory path to the folder where the test setup file should be copied. The folders specified here will be created as needed.
-* `overwriteTarget`: Optional flag indicating whether a potentially existing file should be overwritten (true) or not (false) (default). If this option is disabled and the target file already exists, the program aborts (exit code != 0).
-* `disableIgnoreTags`: Optional flag to specify whether `<ignore>` tags should be commented out when copied (true) or not (false) (default). If this option is enabled, the added XML comments can be identified by the fact that they are marked with three `#` characters. *NOTE:* If the commented `<ignore>` tag itself contains XML comments, these must be manually escaped (e.g., as `<!-x- ... -x\->`) to obtain a valid XML document again.
+* `overwriteTarget`: Optional flag indicating whether a potentially existing file should be overwritten (`true`) or not (`false`) (default). If this option is disabled and the target file already exists, the program aborts (exit code != 0).
+* `disableIgnoreTags`: Optional flag to specify whether `<ignore>` tags should be commented out when copied (`true`) or not (`false`) (default). If this option is enabled, the added XML comments can be identified by the fact that they are marked with three `#` characters. *NOTE:* If the commented `<ignore>` tag itself contains XML comments, these must be manually escaped (e.g., as `<!-x- ... -x\->`) to obtain a valid XML document again.
 ====
 
 ==== Exit code
@@ -1780,9 +1780,9 @@ When selecting requests, it's a good idea to choose variants whose responses are
 
 === Comparison-oriented directory structure
 
-A structure `project/comparison/endpoint` has proven to be helpful.
+A structure `project/comparison/service/endpoint` has proven to be helpful.
 
-* Separate files for each endpoint facilitate parallel work and keep the files concise and clear.
+* Separate files for each service, further devided by endpoint facilitate parallel work and keep the files concise and clear.
 * The comparison versions are clearly structured.
 * History can be preserved, allowing regression testing of hotfix deliveries against the faulty version at any time. All settings matching the reference are then still available and do not require laborious and error-prone reconstruction.
 
