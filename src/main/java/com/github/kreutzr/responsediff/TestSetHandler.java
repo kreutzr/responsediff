@@ -27,6 +27,8 @@ import org.xml.sax.SAXException;
 import com.github.kreutzr.responsediff.filter.DiffFilter;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
 import com.github.kreutzr.responsediff.tools.CloneHelper;
+import com.github.kreutzr.responsediff.tools.Converter;
+import com.github.kreutzr.responsediff.tools.FormatHelper;
 
 import jakarta.xml.bind.JAXBException;
 
@@ -532,6 +534,8 @@ public class TestSetHandler
     JsonDiff foundDiffs = null;
 
     try {
+      waitBefore( xmlTest.getWaitBefore() );
+
       final Pattern pattern = outerContext.getTestIdPattern();
       if( pattern != null ) {
         if( !pattern.matcher( testId ).matches() ) {
@@ -690,6 +694,38 @@ public class TestSetHandler
         throw new BreakOnFailureException( "Test \"" + testId + "\" terminated unsuccessfully." );
       }
       return;
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Pauses the execution for the given duration.
+   * @param duration The duration as ISO string. May be null.
+   */
+  public static void waitBefore( final String duration )
+  {
+    Duration waitDuration = Duration.ZERO;
+    try {
+      waitDuration = Converter.asDuration( duration, waitDuration, Converter.THROW_CONVERSION_EXCEPTION );
+    }
+    catch( final IllegalArgumentException ex ) {
+      LOG.error( "Unable to parse wait before duration \"" + duration + "\". Not waiting before test execution." );
+    }
+
+    try {
+      if( LOG.isDebugEnabled() ) {
+        LOG.debug( "Waiting before test execution for \"" + waitDuration.toString() + "\"." );
+      }
+
+      Thread.sleep( waitDuration.toMillis() );
+
+      if( LOG.isDebugEnabled() ) {
+        LOG.debug( "Starting test execution after waiting." );
+      }
+    }
+    catch( final InterruptedException ex ) {
+      LOG.warn( "Waiting period interrupted.", ex );
     }
   }
 
@@ -1494,6 +1530,7 @@ public class TestSetHandler
     xmlTest.setId( xmlTestSet.getId() + ID_SEPARATOR + xmlTest.getId() );
 
     xmlTest.setDescription( VariablesHandler.applyVariables( xmlTest.getDescription(), xmlTest.getVariables(), "description of test \"" + testId + "\"", null, testId, fileName ) );
+    xmlTest.setWaitBefore ( VariablesHandler.applyVariables( xmlTest.getWaitBefore(),  xmlTest.getVariables(), "workBefore of test \"" + testId + "\"", null, testId, fileName ) );
 
     // ---------------------------------------------------------------
     // Init request

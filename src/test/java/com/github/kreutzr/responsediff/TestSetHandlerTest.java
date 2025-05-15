@@ -452,4 +452,30 @@ public class TestSetHandlerTest
       ex.printStackTrace();
     }
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatWaitBeforeWorks()
+  {
+    // Given
+
+    // When / Then
+    String durationAsString = null;
+    long now = System.currentTimeMillis();
+    TestSetHandler.waitBefore( durationAsString );
+    assertThat( System.currentTimeMillis() - now ).isLessThan( 5 ); // 5 = almost no execution time
+
+    // When / Then
+    durationAsString = "UNPARSABLE";
+    now = System.currentTimeMillis();
+    TestSetHandler.waitBefore( durationAsString );
+    assertThat( System.currentTimeMillis() - now ).isLessThan( 5 ); // 5 = almost no execution time
+
+    // When / Then
+    durationAsString = "PT3s"; // 3 seconds
+    now = System.currentTimeMillis();
+    TestSetHandler.waitBefore( durationAsString );
+    assertThat( System.currentTimeMillis() - now ).isGreaterThanOrEqualTo( 3000 );
+  }
 }

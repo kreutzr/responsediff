@@ -49,6 +49,7 @@ This is a regular maintenance release.
 * File name extensions of downloaded files are generated from the content type header if not received from the server.
 * Added NormalizeJsonBodyResponseFilter.
 * Added attribute "workPath" to "testSet" tag in setup XML to support generic TestSets.
+* Added attribute "waitBefore" to "test" tag to support asynchronous requests.
 
 === Bug fixes
 

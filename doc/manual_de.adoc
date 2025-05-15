@@ -588,7 +588,19 @@ Hängen Tests voneinander ab (beispielsweise, weil erwartet wird, dass Abfrage-A
 Der Mechanismus kann auf TestSet-Ebene fortgeführt werden, so dass bei einem auf diese Weise abgebrochenen TestSet die nachfolgenden TestSets der selben Gliederungsebene ebenfalls nicht mehr ausgeführt werden.
 
 [CAUTION]
+====
 Das Attribut `breakOnFailure` wird nicht vererbt, sondern gilt ausschließlich lokal. Zudem ist es nur erlaubt, wenn für das umschließende TestSet eine strikte Ausführung konfiguiert ist (`order`-Attribut mit Wert `strict`). Eine unzulässige Kombination der Attribute `breakOnFailue` und `order` führt zu einem sofortigen Programmabbruch.
+====
+
+==== Verzögerte Ausführung
+Bei einer asynchronen Bearbeitung erhält der Aufrufer vom Server sofort eine Antwort, über die kommuniziert wird, unter welcher URL die eigentlich angefragte Antwort bezogen werden kann. Oft ist es so, dass die Erstellung dieser Antwort etwas Zeit benötigt, weswegen eine direkte Abfrage des Ergebnis meist nicht erfolgreich sein wird. Stattdessen ist eine kurze Wartezeit sinnvoll.
+
+Mit dem optionalen `waitBefore`-Attribut kann angegeben werden, wie lange vor Beginn der Ausführung des Tests gewartet werden soll. Die Angabe erfolgt als Zeitspanne gemäß link:https://de.wikipedia.org/wiki/ISO_8601[ISO_8601]. Um sicher zu gehen, dass die angefragte Antwort erfolgreich gelesen wird, kann auch das `iterations`-Attribut (siehe Abschnitt <<Iterationen>> ) eingesetzt werden.
+
+[CAUTION]
+====
+Das Attribut `waitBefore` wird nicht vererbt, sondern gilt ausschließlich lokal.
+====
 
 === Umgang mit Server-Anfragen
 
@@ -1247,11 +1259,14 @@ Die Angabe der Zeitspanne erfolgt im `expected`-Tag innerhalb des `response`-Tag
 
 Zu beachten ist, dass ein `expected`-Block eines äußeren TestSets zwar vererbt wird, das `maxDuration`-Tag hiervon jedoch explizit ausgeschlossen ist.
 
-Soll die Maximaldauer vieler Aufrufe ein und desselben Tests (ggfs. mit verschiedenen Variablenwerten wie in Abschnitt "<<Massentests in Requests>>" beschrieben) geprüft werden, so kann das `iterations`-Attribut des Tests auf einen Wert größer als eins gesetzt  und ein `overAllExpected`-Block definiert werden, der ein `maxDuration`-Tag aufweist. Ist der Wert des `iterations`-Attributs eins oder kleiner, so wird die übergreifende Ausführungsdauerprüfung nicht ausgeführt.
+Soll die Maximaldauer vieler Aufrufe ein und desselben Tests (ggfs. mit verschiedenen Variablenwerten wie in Abschnitt "<<Massentests in Requests>>" beschrieben) geprüft werden, so kann das `iterations`-Attribut des Tests auf einen Wert größer als eins gesetzt und ein `overAllExpected`-Block definiert werden, der ein `maxDuration`-Tag aufweist. Ist der Wert des `iterations`-Attributs eins oder kleiner, so wird die übergreifende Ausführungsdauerprüfung nicht ausgeführt.
 
 Soll die Aufrufdauer mehrerer, verschiedener Aufrufe geprüft werden, so kann innerhalb eines TestSets (analog zum Test) ebenfalls ein `overAllExpected`-Block definiert werden. Gemessen wird dann die Dauer aller, beliebig tief eingeschachtelter Tests.
 
+[CAUTION]
+====
 `overAllExpected`-Blocks werden weder auf Test- noch auf TestSet-Ebene vererbt.
+====
 
 [NOTE]
 ====

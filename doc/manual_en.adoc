@@ -589,7 +589,20 @@ If tests depend on each other (for example, because it is expected that query ca
 The mechanism can be continued at TestSet level, so that if a TestSet is aborted in this way, the subsequent TestSets of the same structure level are also no longer executed.
 
 [CAUTION]
+====
 The `breakOnFailure` attribute is not inherited, but is valid only locally. Furthermore, it is only permitted if strict execution is configured for the enclosing test set (`order` attribute with the value `strict`). An illegal combination of the `breakOnFailue` and `order` attributes leads to an immediate program termination.
+====
+
+==== Delayed execution
+With asynchronous processing, the caller immediately receives a response from the server, which communicates the URL at which the requested response can be obtained. Often, generating this response takes some time, which is why directly querying the result is usually unsuccessful. Instead, a short wait time is recommended.
+
+The optional `waitBefore` attribute can be used to specify how long to wait before starting the test execution. This is specified as a time period according to link: https://de.wikipedia.org/wiki/ISO_8601[ISO_8601]. To ensure that the requested response is successfully read, the `iterations` attribute (see section <<Iterations>> ) can also be used.
+
+[CAUTION]
+====
+The `waitBefore` attribute is not inherited but is only valid locally.
+====
+
 
 === Handling server requests
 
@@ -1252,7 +1265,10 @@ If you want to check the maximum duration of multiple calls to the same test (po
 
 If the call duration of several different calls is to be tested, an `overAllExpected` block can also be defined within a test set (similar to the test). The duration of all tests, nested at any depth, is then measured.
 
+[CAUTION]
+====
 `overAllExpected` blocks are not inherited at either the Test or TestSet level.
+====
 
 [NOTE]
 ====
