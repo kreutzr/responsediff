@@ -56,7 +56,7 @@ public class VariablesHandler
 
     matcher = VARIABLE_GROUP_PATTERN_ENCODED.matcher( text ); // Request endpoint parameters are already URL encoded here
     while( matcher.find() ) {
-      result = handleMatcher( matcher, 6, 3, result, variables, servicePrefix ); // 6="%24%7B", 3="%7D"
+      result = handleMatcher( matcher, 6, 3, result, variables, servicePrefix ); // 6="%24%7B" => "${", 3="%7D" => "}"
     }
 
     return result;
