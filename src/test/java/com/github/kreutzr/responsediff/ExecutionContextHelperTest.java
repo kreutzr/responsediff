@@ -22,14 +22,15 @@ public class ExecutionContextHelperTest
   {
     // Given
     final Set< String > executionContext = new TreeSet<>();
-    executionContext.add( "releasing, some-TOKEN" );
+    executionContext.add( "releasing"  ); // Lower case as in OuterContext
+    executionContext.add( "some-token" ); // Lower case as in OuterContext
 
     // When / Then
     try {
       // Positive check: list
       assertThat( ExecutionContextHelper.matchesExecutionContext( "AAA, releasing, BBB", executionContext, "test", LOG ) ).isTrue();
       // Positive check: case insensitive
-      assertThat( ExecutionContextHelper.matchesExecutionContext( "some-token",          executionContext, "test", LOG ) ).isTrue();
+      assertThat( ExecutionContextHelper.matchesExecutionContext( "some-TOKEN",          executionContext, "test", LOG ) ).isTrue();
       // Negative check
       assertThat( ExecutionContextHelper.matchesExecutionContext( "HELLO",               executionContext, "test", LOG ) ).isFalse();
     }
