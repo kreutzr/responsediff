@@ -50,6 +50,7 @@ This is a regular maintenance release.
 * Added NormalizeJsonBodyResponseFilter.
 * Added attribute "workPath" to "testSet" tag in setup XML to support generic TestSets.
 * Added attribute "waitBefore" to "test" tag to support asynchronous requests.
+* Added attribute "ifExecutionContextContains" to support conditional testing.
 
 === Bug fixes
 

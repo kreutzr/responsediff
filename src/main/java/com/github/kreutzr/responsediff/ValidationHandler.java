@@ -38,16 +38,18 @@ public class ValidationHandler
     * @param referenceResponse The reference response. May be null.
     * @param controlResponse The control response. May be null.
     * @param epsilon The epsilon for decimal comparison. Must not be null.
+    * @param executionContext The executionContext. Must not be null.
     * @param testId The current test id. Must not be null.
     * @return A JsonDiff that holds all white noise differences. Never null.
     * @throws JsonProcessingException
     * @throws JsonMappingException
     */
    static JsonDiff getWhiteNoise(
-       final XmlHttpResponse referenceResponse,
-       final XmlHttpResponse controlResponse,
-       final double epsilon,
-       final String testId
+     final XmlHttpResponse referenceResponse,
+     final XmlHttpResponse controlResponse,
+     final double epsilon,
+     final Set< String > executionContext,
+     final String testId
    )
    throws JsonMappingException, JsonProcessingException
    {
@@ -69,6 +71,7 @@ public class ValidationHandler
        true,              // checkOnlyUnexpected (Do not put mismatches in expected values into whiteNoise!)
        epsilon,
        false,             // reportWhiteNoise
+       executionContext,
        testId
      );
 
@@ -104,6 +107,7 @@ public class ValidationHandler
     * @param checkOnlyUnexpected Flag, if only unexpected changes shall be identified (true) (for whiteNoise computation) or expected values shall be checked, too (false).
     * @param epsilon The epsilon for decimal comparison. Must not be null.
     * @param reportWhiteNoise Flag, if any different value shall be reported (true) or only those that were not discovered to be white noise (differences between reference and control, or expected differences) (false).
+    * @param executionContext The executionContext. Must not be null.
     * @param testId The current test id. Must not be null.
     * @return A JsonDiff object that holds all relevant differences. Never null.
     * @throws JsonProcessingException
@@ -121,6 +125,7 @@ public class ValidationHandler
      final boolean         checkOnlyUnexpected,
      final double          epsilon,
      final boolean         reportWhiteNoise,
+     final Set< String >   executionContext,
      final String          testId
    )
    throws JsonMappingException, JsonProcessingException
@@ -198,6 +203,17 @@ public class ValidationHandler
 
          // Lookup expected headers
          for( final XmlHeader xmlHeader : xmlExpected.getHeaders().getHeader() ) {
+           // Check id execution context matches (if any)
+           if( !ExecutionContextHelper.matchesExecutionContext(
+               xmlHeader.getIfExecutionContextContains(),
+               executionContext,
+               ExecutionContextHelper.CHECK_CONTEXT__TEST_EXPECTATION,
+               LOG
+           ) ) {
+             continue;
+           }
+           relevantDiffs.incrementExpectedCount();
+
            // We allow all checking options for headers as for values => We create a temporary XmlValue from the header and check the XmlValue.
            final XmlValue xmlValue = ToXmlValue.fromHeader( xmlHeader );
            final double localEpsilon = Converter.asDouble( xmlValue.getEpsilon(), epsilon );
@@ -238,6 +254,15 @@ public class ValidationHandler
              final JsonPathHelper jph = new JsonPathHelper( candidateResponse.getBody() ); // This is expensive!
 
              for( final XmlValue xmlValue : xmlExpected.getValues().getValue() ) {
+               // Check id execution context matches (if any)
+               if( !ExecutionContextHelper.matchesExecutionContext(
+                   xmlValue.getIfExecutionContextContains(),
+                   executionContext,
+                   ExecutionContextHelper.CHECK_CONTEXT__TEST_EXPECTATION,
+                   LOG
+               ) ) {
+                 continue;
+               }
                relevantDiffs.incrementExpectedCount();
 
                // Avoid extensive debugging due to tailing spaces!

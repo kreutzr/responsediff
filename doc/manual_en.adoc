@@ -177,6 +177,11 @@ echo $?
 
 A JSON is expected as configuration as follows (without line breaks):
 
+[NOTE]
+====
+It is recommended to set the configuration parameters within a small script. A suggestion for such a script is provided in the `doc` folder. (`start-responseDiff`).
+====
+
 .Example JSON for the call configuration
 ====
 [source,json]
@@ -194,6 +199,7 @@ A JSON is expected as configuration as follows (without line breaks):
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
   "maskAuthorizationHeaderInCurl" : [true|false],
+  "executionContext" : "...",
   "xsltFilePath" : "...",
   "reportFileEnding" : "...",
   "reportConversionFormats" : "...",
@@ -221,6 +227,7 @@ A JSON is expected as configuration as follows (without line breaks):
 * `storeResultPath`: Mandatory specification of the directory in which the test results should be saved as XML. (e.g., "../test-results/")
 * `reportWhiteNoise`: Optional flag indicating whether ignored technical differences (whiteNoise) should also be reported (`true`) or not (`false`). (Default is `false`)
 * `maskAuthorizationHeaderInCurl`: Optional Flag indicating wether values of the `Authentication` header shall be masked (`true`) or not (`false`). (default is `true`)
+* `executionContext`: Optional (comma separated) list of tokens, that are used for conditional test executions (see section <<Conditional Test Execution>>). The choice of tokens is free. The usage of the tokens is case insensitive.
 * `xsltFilePath`: Optional path to an XSLT file to be used to transform the generated XML report. The result of the transformation is saved next to the XML report under the same name (e.g., "reporter/report-to-adoc.xslt" (default) or "reporter/report-to-html.xslt"). **Note:** The transformation file "reporter/report-to-html.xslt" is very rudimentary and serves only as a technical example for creating your own reports. If you actually want to generate a report in HTML format, we recommend not changing the default transformer and the default file extension (`reportFileEnding`) and instead passing the value `html` in the `reportConversionFormats` parameter.
 * `reportFileEnding`: Optional file extension for the transformation result. (default is `adoc`)
 * `reportConversionFormats`: Optional list of target formats into which a generated AsciiDoc report should be converted. The list is comma-separated. The following enumeration values ​​are supported: `pdf`, `html`. This parameter is only considered if the `reportFileEnding` parameter has the value `adoc`. A prerequisite for successful conversion is, of course, that the XSLT file used (see `xsltFilePath` parameter) actually transforms the XML report into AsciiDoc. The result of the AsciiDoc conversion is stored next to the report file.
@@ -1717,6 +1724,42 @@ The `workPath` attribute is not inherited, but is only valid locally.
 ----
 <1> The value of the "service" variable is used as the working directory. This is a suitable heuristic for most applications.
 <2> The endpoint calls differ only in the service name. Using the variable "service" allows the test set to be reused.
+====
+
+=== Conditional Test Execution
+
+In cases where a test should only be executed in special situations (e.g., during a release), an execution context can be defined using the `executionContext` parameter when starting ResponseDiff. If an execution condition is defined within the test setup using `ifExecutionContextContains`, the evaluation only occurs if at least one of the specified tokens is contained in the configured execution context. Multiple tokens are separated by commas. Case differences are irrelevant, and empty conditions (including spaces, tabs, etc.) are ignored.
+The `ifExecutionContextContains` attribute is accepted in the following XML blocks:
+
+* `testSet`
+* `test`
+* `expected/headers/header`
+* `expected/values/value`
+
+.Example Conditional test execution
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="client-management setup">
+  <testSet ifExecutionContextContains=" "> <1>
+
+    <test id="Read version info">
+      <request method="GET" endpoint="/${service}/version" />
+      <response>
+        <expected>
+          <values>
+            <value path="$.project.version" ifExecutionContextContains="releasing" checkInverse="true" match="true">.*SNAPSHOT.*</value> <2>
+          </values>
+        </expected>
+      </response>
+    </test>
+
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> Empty execution conditions are ignored. The test set is therefore executed in any case.
+<2> The test that the value at `$.project.version` must not contain the string "SNAPSHOT" is only performed if the configuration parameter `executionContext` contains the value "releasing" when ResponseDiff is called.
 ====
 
 

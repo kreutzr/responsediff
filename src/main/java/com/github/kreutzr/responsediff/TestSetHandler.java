@@ -28,7 +28,6 @@ import com.github.kreutzr.responsediff.filter.DiffFilter;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
 import com.github.kreutzr.responsediff.tools.CloneHelper;
 import com.github.kreutzr.responsediff.tools.Converter;
-import com.github.kreutzr.responsediff.tools.FormatHelper;
 
 import jakarta.xml.bind.JAXBException;
 
@@ -80,7 +79,8 @@ public class TestSetHandler
       final String                    referenceFilePath,
       final String                    storeReportPath,
       final boolean                   reportWhiteNoise,
-      final boolean                   maskAuthorizationHeaderInCurl
+      final boolean                   maskAuthorizationHeaderInCurl,
+      final String                    executionContextAsString
   )
   throws JAXBException, SAXException, ParseException
   {
@@ -99,7 +99,8 @@ public class TestSetHandler
         epsilon,
         storeReportPath,
         reportWhiteNoise,
-        maskAuthorizationHeaderInCurl
+        maskAuthorizationHeaderInCurl,
+        executionContextAsString
       );
 
     final XmlResponseDiffSetup referenceXmlSetup = referenceFilePath != null
@@ -168,6 +169,16 @@ public class TestSetHandler
   throws BreakOnFailureException, ParseException
   {
     LOG.trace( "handleTestSet()" );
+    final Set< String > executionContext = outerContext.getExecutionContext();
+    // Check id execution context matches (if any)
+    if( !ExecutionContextHelper.matchesExecutionContext(
+        xmlTestSet.getIfExecutionContextContains(),
+        executionContext,
+        ExecutionContextHelper.CHECK_CONTEXT__TEST_EXPECTATION,
+        LOG
+    ) ) {
+      return;
+    }
 
     // Update structure depth
     xmlTestSet.setStructureDepth( structureDepth );
@@ -505,6 +516,16 @@ public class TestSetHandler
     if( LOG.isTraceEnabled() ) {
       LOG.trace( "handleTest( " + xmlTest.getId() + " )" );
     }
+    final Set< String > executionContext = outerContext.getExecutionContext();
+    // Check id execution context matches (if any)
+    if( !ExecutionContextHelper.matchesExecutionContext(
+        xmlTest.getIfExecutionContextContains(),
+        executionContext,
+        ExecutionContextHelper.CHECK_CONTEXT__TEST_EXPECTATION,
+        LOG
+    ) ) {
+      return;
+    }
 
     // Update structure depth
     xmlTest.setStructureDepth( structureDepth );
@@ -582,7 +603,7 @@ public class TestSetHandler
       xmlTest.getResponse().setReferenceResponse( referenceResponse );
 
       // Calculate white noise
-      final JsonDiff whiteNoise = ValidationHandler.getWhiteNoise( referenceResponse, controlResponse, outerContext.getEpsilon(), testId );
+      final JsonDiff whiteNoise = ValidationHandler.getWhiteNoise( referenceResponse, controlResponse, outerContext.getEpsilon(), executionContext, testId );
 
       // Invoke candidate service as late as possible because we measure the time
       xmlResponse.setRequestTime( LocalDateTime.now().toString() );
@@ -606,6 +627,7 @@ public class TestSetHandler
         false, // Not only unexpected changes!
         outerContext.getEpsilon(),
         outerContext.getReportWhiteNoise(),
+        executionContext,
         testId
       );
 

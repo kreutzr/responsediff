@@ -2,6 +2,8 @@ package com.github.kreutzr.responsediff;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import com.github.kreutzr.responsediff.filter.DiffFilter;
@@ -24,6 +26,7 @@ public class OuterContext
   private String storeReportPath_;
   private boolean reportWhiteNoise_;
   private boolean maskAuthorizationHeaderInCurl_;
+  private Set< String > executionContext_;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +43,8 @@ public class OuterContext
     final double            epsilon,
     final String            storeReportPath,
     final boolean           reportWhiteNoise,
-    final boolean           maskAuthorizationHeaderInCurl
+    final boolean           maskAuthorizationHeaderInCurl,
+    final String            executionContextAsString
   )
   {
     candidateServiceUrl_           = candidateServiceUrl;
@@ -56,6 +60,20 @@ public class OuterContext
     storeReportPath_               = storeReportPath;
     reportWhiteNoise_              = reportWhiteNoise;
     maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+    executionContext_              = new TreeSet<>();
+
+    // Parse execution context keys, trim and add them.
+    if( executionContextAsString != null && !executionContextAsString.isBlank() ) {
+      final String[] parts = executionContextAsString.split( "," );
+      for( final String part : parts ) {
+        if( part != null ) {
+          final String trimmedPart = part.trim().toLowerCase();
+          if( !trimmedPart.isEmpty() ) {
+            executionContext_.add( trimmedPart );
+          }
+        }
+      }
+    }
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,5 +256,19 @@ public class OuterContext
   public void setMaskAuthorizationHeaderInCurl_( final boolean maskAuthorizationHeaderInCurl )
   {
     maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public Set< String > getExecutionContext()
+  {
+    return executionContext_;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setExecutionContext( final Set< String > executionContext )
+  {
+    executionContext_ = executionContext;
   }
 }

@@ -16,6 +16,7 @@ public class ResponseDiffConfiguration
   private String            storeResultPath_;
   private boolean           reportWhiteNoise_;
   private boolean           maskAuthorizationHeaderInCurl_ = true;
+  private String            executionContext_;
   private String            ticketServiceUrl_;
   private String            candidateServiceUrl_;
   private List< XmlHeader > candidateHeaders_;
@@ -150,9 +151,23 @@ public class ResponseDiffConfiguration
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  public void setExecutionContext( final String executionContext )
+  {
+	  executionContext_ = executionContext;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public String getExecutionContext()
+  {
+    return executionContext_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   public void setMaskAuthorizationHeaderInCurl( final boolean maskAuthorizationHeaderInCurl )
   {
-	  maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+    maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

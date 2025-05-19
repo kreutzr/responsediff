@@ -50,6 +50,7 @@ public class TestBase
     String  storeResultPath               = "./test-results/";
     boolean reportWhiteNoise              = false;
     boolean maskAuthorizationHeaderInCurl = true;
+    String  executionContextAsString      = null;
     String  ticketServiceUrl              = null;
     Long    responseTimeoutMs             = 1000L;
     Double  epsilon                       = 0.00000001;
@@ -70,6 +71,7 @@ public class TestBase
       storeResultPath,
       reportWhiteNoise,
       maskAuthorizationHeaderInCurl,
+      executionContextAsString,
       ticketServiceUrl,
       CANDIDATE_URL,
       candidateHeaders,

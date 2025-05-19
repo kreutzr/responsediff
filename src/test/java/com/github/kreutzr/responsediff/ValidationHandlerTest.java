@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -189,6 +190,7 @@ public class ValidationHandlerTest
       final Set< String >   ignoreHeaders     = null;
       final double          epsilon           = Constants.EPSILON;
       final boolean         reportWhiteNoise  = false;
+      final Set< String >   executionContext  = new TreeSet<>();
       final String          testId            = "testThatValidateResponseWorks_extern0001";
 
       // When
@@ -204,6 +206,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 
@@ -260,6 +263,7 @@ public class ValidationHandlerTest
       final Set< String >   ignoreHeaders     = null;
       final double          epsilon           = Constants.EPSILON;
       final boolean         reportWhiteNoise  = false;
+      final Set< String >   executionContext  = new TreeSet<>();
       final String          testId            = "testThatValidateResponseWorks_extern0001";
 
       // When
@@ -275,6 +279,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 
@@ -336,6 +341,7 @@ public class ValidationHandlerTest
       final Set< String >   ignoreHeaders     = TestSetHandler.getIgnoreHeaders( xmlResponse );
       final double          epsilon           = Constants.EPSILON;
       final boolean         reportWhiteNoise  = false;
+      final Set< String >   executionContext  = new TreeSet<>();
       final String          testId            = "testThatValidateResponseWorks_extern0001";
 
       // When
@@ -351,6 +357,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise, // NOTE: This is important!
+        executionContext,
         testId
       );
 
@@ -403,6 +410,7 @@ public class ValidationHandlerTest
       final Set< String >   ignoreHeaders     = TestSetHandler.getIgnoreHeaders( xmlResponse );
       final double          epsilon           = Constants.EPSILON;
       final boolean         reportWhiteNoise  = false;
+      final Set< String >   executionContext  = new TreeSet<>();
       final String          testId            = "testThatValidateResponseWorks_extern0001";
 
       // When
@@ -418,6 +426,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise, // NOTE: This is important!
+        executionContext,
         testId
       );
 
@@ -458,6 +467,7 @@ public class ValidationHandlerTest
     final Set< String >   ignoreHeaders     = null;
     final double          epsilon           = Constants.EPSILON;
     final boolean         reportWhiteNoise  = false;
+    final Set< String >   executionContext  = new TreeSet<>();
     final String          testId            = "testThatValidateResponseWorks_extern0001";
 
     // When
@@ -477,6 +487,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 
@@ -505,6 +516,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 
@@ -533,6 +545,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 
@@ -561,6 +574,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 
@@ -592,6 +606,7 @@ public class ValidationHandlerTest
         false,
         epsilon,
         reportWhiteNoise,
+        executionContext,
         testId
       );
 

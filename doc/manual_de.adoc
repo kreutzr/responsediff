@@ -177,6 +177,11 @@ echo $?
 
 Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 
+[NOTE]
+====
+Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen Skripts durchzuführen. Im `doc`-Ordner ist ein Vorschlag für solch ein Skript vorbereitet (`start-responseDiff`).
+====
+
 .Beispiel JSON für die Aufruf-Konfiguration
 ====
 [source,json]
@@ -194,6 +199,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
   "maskAuthorizationHeaderInCurl" : [true|false],
+  "executionContext" : "...",
   "xsltFilePath" : "...",
   "reportFileEnding" : "...",
   "reportConversionFormats" : "...",
@@ -220,6 +226,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `storeResultPath`: Mandatorische Angabe des Verzeichnisses, in dem die Ergebnisse der Tests als XML gespeichert werden sollen. (z.B. "../test-results/")
 * `reportWhiteNoise`: Optionales Flag, ob auch ignorierte, technische Unterschiede (whiteNoise) ausgewiesen werden sollen (`true`) oder nicht (`false`). (default ist `false`)
 * `maskAuthorizationHeaderInCurl`: Optionales Flag, ob Werte des `Authentication`-Headers maskiert werden sollen (`true`) oder nicht (`false`). (default ist `true`)
+* `executionContext`: Optionale Auflistung (Komma-separiert) von Token, die bei bedingten Tests beachtet werden müssen (siehe Abschnitt <<Bedingte Testausführung>>). Die Wahl der Token ist frei. Es wird nicht zwischen Groß- und Kleinschreibung unterschieden.
 * `xsltFilePath`: Optionaler Pfad zu einer XSLT-Datei, die zur Transformation des erzeugten XML-Reports verwendet werden soll. Das Ergebnis der Transformation wird neben dem XML-Report unter gleichem Namen abgelegt (z.B. "reporter/report-to-adoc.xslt" (default) oder "reporter/report-to-html.xslt"). **Beachte:** Die Transformationsdatei "reporter/report-to-html.xslt" ist sehr rudimentär und dient lediglich als technisches Beispiel für die Erstellung eigener Reports. Soll tatsächlich ein Report im HTML-Format erzeugt werden, so wird empfohlen, den Default-Transformer und die Default-Dateiendung (`reportFileEnding`) nicht zu verändern und stattdessen im Parameter `reportConversionFormats` den Wert `html` zu übergeben.
 * `reportFileEnding`: Optionale Dateiendung für das Transformationsergebnis. (default ist `adoc`)
 * `reportConversionFormats`: Optionale Auflistung der Zielformate, in die ein erzeugter AsciiDoc Report konvertiert werden soll. Die Auflistung erfolgt Komma-separiert. Folgende Aufzählungswerte werden unterstützt: `pdf`, `html`. Dieser Parameter wird nur beachtet, wenn der Parameter `reportFileEnding` den Wert `adoc` hat. Voraussetzung für ein Gelingen der Konvertierung ist selbstverständlich, dass die verwendete XSLT-Datei (vgl. Parameter `xsltFilePath`) tatsächlich den XML-Report in AsciiDoc transformiert. Das Ergebnis der AsciiDoc-Konvertierung wird neben der Reportdatei abgelegt.
@@ -1255,7 +1262,7 @@ Antwortwerte können sich Instanz-spezifisch unterscheiden, weswegen Sie als zwe
 
 === Prüfen von Aufrufdauern (`maxDuration`)
 Optional prüft ResponseDiff, ob ein einzelner Aufruf der Kandidat-Instanz länger als eine erwartete Zeitspanne gedauert hat.
-Die Angabe der Zeitspanne erfolgt im `expected`-Tag innerhalb des `response`-Tags eines Tests. Die Schreibweise erfolgt gemäß link:https://de.wikipedia.org/wiki/ISO_8601[ISO_8601].
+Die Angabe der Zeitspanne erfolgt im `expected`-Block innerhalb des `response`-Tags eines Tests. Die Schreibweise erfolgt gemäß link:https://de.wikipedia.org/wiki/ISO_8601[ISO_8601].
 
 Zu beachten ist, dass ein `expected`-Block eines äußeren TestSets zwar vererbt wird, das `maxDuration`-Tag hiervon jedoch explizit ausgeschlossen ist.
 
@@ -1714,6 +1721,42 @@ Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 <2> Die Aufrufe der Endpunkte unterscheiden sich lediglich im Servicenamen. Durch Einsatz der Variable "service" kann das TestSet wiederverwendet werden.
 ====
 
+=== Bedingte Testausführung
+
+In Fällen, in denen die Ausführung einer Prüfung nur in besonderen Situationen (z.B. bei einem Release) ausgeführt werden soll, kann beim Start von ResponseDiff ein Ausführungskontext über den Parameter `executionContext` definiert werden. Ist eine innerhalb des Test-Setups eine Ausführungsbedingung mittels `ifExecutionContextContains` definiert, so erfolgt die Auswertung nur, wenn mindestens eines der angegebenen Tokens im konfigurierten Ausführungskontext enthalten ist. Mehrere Tokens werden durch Kommata getrennt. Abweichungen in der Großkleinschreibung sind unerheblich und leere Bedingungen (inkl. Leerzeichen, Tabs etc.) werden ignoriert.
+Das Attribut `ifExecutionContextContains` wird in folgenden XML-Blocks akzeptiert:
+
+* `testSet`
+* `test`
+* `expected/headers/header`
+* `expected/values/value`
+
+.Beispiel Bedingte Testausführung
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="client-management setup">
+  <testSet ifExecutionContextContains=" "> <1>
+
+    <test id="Read version info">
+      <request method="GET" endpoint="/${service}/version" />
+      <response>
+        <expected>
+          <values>
+            <value path="$.project.version" ifExecutionContextContains="releasing" checkInverse="true" match="true">.*SNAPSHOT.*</value> <2>
+          </values>
+        </expected>
+      </response>
+    </test>
+
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> Leere Ausführungsbedingungen werden ignoriert. Das TestSet wird also in jedem Fall ausgeführt.
+<2> Der Test, dass der Wert unter `$.project.version` die Zeichenkette "SNAPSHOT" nicht enthalten darf, erfolgt nur, wenn beim Aufruf von ResponseDiff der Konfigurationsparameter `executionContext` den Wert "releasing" enthält.
+====
+
 
 == Automatische Anpassung der Tests bei Versionswechsel
 
@@ -1882,9 +1925,9 @@ Es mag verlockend erscheinen, `ignore`-Anweisungen für verschiedene Tests zentr
 
 Sollten `ignore`-Anweisungen für mehrere Tests zutreffen, so können diese ggfs. innerhalb eines inneren TestSets gruppiert und so von betroffenen Tests gemeinsam verwendet werden. Hierbei muss im Allgemeinen die Ausführungsreihenfolge der Tests beachtet werden.
 
-Es kann jedoch vorkommen, dass ein Test erwarteter weise fehlschlägt, ohne dass dies aber technisch ignoriert werden kann. Das ist der Fall, wenn der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält. In solchen Fällen kann ein `ignore`-Block angelegt werden, bei dem das Attribut `justExplain` auf `true` gesetzt wird (default ist `false`). Dies bewirkt, dass der angegebene Pfad `path` beim Test *nicht ignoriert* wird, jedoch gesondert mit einem Erklärtext (`explanation`) im Report ausgewiesen wird. So werden keine Abweichungen verdeckt, jedoch ist die Erklärung für einen Teil der ausgewiesenen Abweichungen dokumentiert, so dass ein Mensch einfacher überprüfen kann, wie das Fehlschlagen des Tests zu bewerten ist.
+Es kann jedoch vorkommen, dass ein Test erwarteterweise fehlschlägt, ohne dass dies aber technisch ignoriert werden kann. Das ist der Fall, wenn der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält. In solchen Fällen kann ein `ignore`-Block angelegt werden, bei dem das Attribut `justExplain` auf `true` gesetzt wird (default ist `false`). Dies bewirkt, dass der angegebene Pfad `path` beim Test *nicht ignoriert* wird, jedoch gesondert mit einem Erklärtext (`explanation`) im Report ausgewiesen wird. So werden keine Abweichungen verdeckt, jedoch ist die Erklärung für einen Teil der ausgewiesenen Abweichungen dokumentiert, so dass ein Mensch einfacher überprüfen kann, wie das Fehlschlagen des Tests zu bewerten ist.
 
-Zuletzt muss der Fall erwähnt werden, bei dem erwartetervweise Abweichungen auftreten, das Request-Ergebnis jedoch Grundlage für nachfolgende Tests ist (siehe `breakOnFailure`). Können die Abweichungen technisch nicht speziell ignoriert werden, da der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält, so muss hier ein `ignore`-Block angelegt werden, bei dem der JSONPath weniger spezialisiert greift (etwa durch Verwenden eine `*`-Zeichen an geeigneter Stelle). Hierdurch werden zwar möglicherweise einzelne Abweichungen verdeckt, jedoch steht beispielsweise ein im Test erzeugtes Objekt für die nachfolgenden Tests zur Verfügung, die ansonsten aufgrund der `breakOnFailure`-Einstellung alle übersprungen würden. Hier gilt es abzuwägen, welche Variante die aussagekräftigsten Testergebnisse liefert.
+Zuletzt muss der Fall erwähnt werden, bei dem erwarteterweise Abweichungen auftreten, das Request-Ergebnis jedoch Grundlage für nachfolgende Tests ist (siehe `breakOnFailure`). Können die Abweichungen technisch nicht speziell ignoriert werden, da der JSONPath Zeichenfolgen wie `..` oder `?(@` enthält, so muss hier ein `ignore`-Block angelegt werden, bei dem der JSONPath weniger spezialisiert greift (etwa durch Verwenden eine `*`-Zeichen an geeigneter Stelle). Hierdurch werden zwar möglicherweise einzelne Abweichungen verdeckt, jedoch steht beispielsweise ein im Test erzeugtes Objekt für die nachfolgenden Tests zur Verfügung, die ansonsten aufgrund der `breakOnFailure`-Einstellung alle übersprungen würden. Hier gilt es abzuwägen, welche Variante die aussagekräftigsten Testergebnisse liefert.
 
 
 === Test-Server-Infrastruktur

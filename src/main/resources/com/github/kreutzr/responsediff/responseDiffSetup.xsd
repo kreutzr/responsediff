@@ -91,13 +91,14 @@
       <xsd:element name="structureDepth"  type="xsd:int"            minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
     </xsd:sequence>
 
-    <xsd:attribute name="id"             type="xsd:string"   use="required" />
-    <xsd:attribute name="report"         type="xsd:string"   use="optional" />
-    <xsd:attribute name="project"        type="xsd:string"   use="optional" />
-    <xsd:attribute name="order"          type="XmlTestOrder" use="optional" />
-    <xsd:attribute name="iterations"     type="xsd:int"      use="optional" />
-    <xsd:attribute name="breakOnFailure" type="xsd:boolean"  use="optional" default="false"/>
-    <xsd:attribute name="workPath"       type="xsd:string"   use="optional" />
+    <xsd:attribute name="id"                         type="xsd:string"   use="required" />
+    <xsd:attribute name="report"                     type="xsd:string"   use="optional" />
+    <xsd:attribute name="project"                    type="xsd:string"   use="optional" />
+    <xsd:attribute name="order"                      type="XmlTestOrder" use="optional" />
+    <xsd:attribute name="iterations"                 type="xsd:int"      use="optional" />
+    <xsd:attribute name="breakOnFailure"             type="xsd:boolean"  use="optional" default="false"/>
+    <xsd:attribute name="workPath"                   type="xsd:string"   use="optional" />
+    <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -235,12 +236,13 @@
       <xsd:element name="structureDepth"  type="xsd:int"            minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
     </xsd:sequence>
 
-    <xsd:attribute name="id"              type="xsd:string"  use="required" />
-    <xsd:attribute name="report"          type="xsd:string"  use="optional" />
-    <xsd:attribute name="ticketReference" type="xsd:string"  use="optional" />
-    <xsd:attribute name="iterations"      type="xsd:int"     use="optional" />
-    <xsd:attribute name="breakOnFailure"  type="xsd:boolean" use="optional" default="false"/>
-    <xsd:attribute name="waitBefore"      type="xsd:string"  use="optional" />
+    <xsd:attribute name="id"                         type="xsd:string"  use="required" />
+    <xsd:attribute name="report"                     type="xsd:string"  use="optional" />
+    <xsd:attribute name="ticketReference"            type="xsd:string"  use="optional" />
+    <xsd:attribute name="iterations"                 type="xsd:int"     use="optional" />
+    <xsd:attribute name="breakOnFailure"             type="xsd:boolean" use="optional" default="false"/>
+    <xsd:attribute name="waitBefore"                 type="xsd:string"  use="optional" />
+    <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -294,16 +296,17 @@
   <xsd:complexType name="XmlHeader">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
-        <xsd:attribute name="name"            type="xsd:string"   use="required" />
-        <xsd:attribute name="type"            type="XmlValueType" use="optional" default="string"/>
-        <xsd:attribute name="epsilon"         type="xsd:string"   use="optional" />
-        <xsd:attribute name="trim"            type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="ignoreCase"      type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="match"           type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="checkPathExists" type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="checkIsNull"     type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="checkInverse"    type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="ticketReference" type="xsd:string"   use="optional" />
+        <xsd:attribute name="name"                       type="xsd:string"   use="required" />
+        <xsd:attribute name="type"                       type="XmlValueType" use="optional" default="string"/>
+        <xsd:attribute name="epsilon"                    type="xsd:string"   use="optional" />
+        <xsd:attribute name="trim"                       type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ignoreCase"                 type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="match"                      type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkPathExists"            type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkIsNull"                type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkInverse"               type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ticketReference"            type="xsd:string"   use="optional" />
+        <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
@@ -405,16 +408,17 @@
   <xsd:complexType name="XmlValue">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
-        <xsd:attribute name="path"            type="xsd:string"   use="required" />
-        <xsd:attribute name="type"            type="XmlValueType" use="optional" default="string"/>
-        <xsd:attribute name="epsilon"         type="xsd:string"   use="optional" />
-        <xsd:attribute name="trim"            type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="ignoreCase"      type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="match"           type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="checkPathExists" type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="checkIsNull"     type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="checkInverse"    type="xsd:boolean"  use="optional" default="false"/>
-        <xsd:attribute name="ticketReference" type="xsd:string"   use="optional" />
+        <xsd:attribute name="path"                       type="xsd:string"   use="required" />
+        <xsd:attribute name="type"                       type="XmlValueType" use="optional" default="string"/>
+        <xsd:attribute name="epsilon"                    type="xsd:string"   use="optional" />
+        <xsd:attribute name="trim"                       type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ignoreCase"                 type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="match"                      type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkPathExists"            type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkIsNull"                type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="checkInverse"               type="xsd:boolean"  use="optional" default="false"/>
+        <xsd:attribute name="ticketReference"            type="xsd:string"   use="optional" />
+        <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
