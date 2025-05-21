@@ -13,6 +13,8 @@ set -x
 testXmlFile=$1
 testIdPattern=$2
 
+reportTitle=''
+
 referenceUrl='http://localhost:10500/my-tool/'
 #referenceUrl=''
 #referenceFilePath='old_report.xml'
@@ -45,6 +47,6 @@ candidateToken=$( curl -X POST ${candidateUrl}login -d '{"username":"xxx", "pass
 
 eval echo 'Starting ResponseDiff for test ${testXmlFile}'
 
-java -cp ./responsediff-0.13.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.ResponseDiff "$( eval echo '{ \"candidateServiceUrl\" : \"${candidateUrl}\", \"referenceFilePath\" : \"${referenceFilePath}\", \"referenceServiceUrl\" : \"${referenceUrl}\", \"controlServiceUrl\" : \"${controlUrl}\", \"responseTimeoutMs\": 60000, \"ticketServiceUrl\" : \"${ticketUrl}\", \"xmlFilePath\" : \"${testXmlFile}\", \"testIdPattern\" : \"${testIdPattern}\", \"storeResultPath\" : \"${storePath}\", \"reportWhiteNoise\" : ${reportWhiteNoise}, \"maskAuthorizationHeaderInCurl\" : \"${maskAuthorizationHeaderInCurl}\", \"executionContext\" : \"${executionContext}\", \"xsltFilePath\" : \"${xsltPath}\", \"reportFileEnding\":\"${reportFileEnding}\", \"reportConversionFormats\":\"${reportConversionFormats}\", \"candidateHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${candidateToken}\" } ], \"referenceHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${referenceToken}\" } ], \"controlHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${controlToken}\" } ] }' )"
+java -cp ./responsediff-0.13.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.ResponseDiff "$( eval echo '{ \"candidateServiceUrl\" : \"${candidateUrl}\", \"referenceFilePath\" : \"${referenceFilePath}\", \"referenceServiceUrl\" : \"${referenceUrl}\", \"controlServiceUrl\" : \"${controlUrl}\", \"responseTimeoutMs\": 60000, \"ticketServiceUrl\" : \"${ticketUrl}\", \"xmlFilePath\" : \"${testXmlFile}\", \"reportTitle\" : \"${reportTitle}\", \"testIdPattern\" : \"${testIdPattern}\", \"storeResultPath\" : \"${storePath}\", \"reportWhiteNoise\" : ${reportWhiteNoise}, \"maskAuthorizationHeaderInCurl\" : \"${maskAuthorizationHeaderInCurl}\", \"executionContext\" : \"${executionContext}\", \"xsltFilePath\" : \"${xsltPath}\", \"reportFileEnding\":\"${reportFileEnding}\", \"reportConversionFormats\":\"${reportConversionFormats}\", \"candidateHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${candidateToken}\" } ], \"referenceHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${referenceToken}\" } ], \"controlHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${controlToken}\" } ] }' )"
 
 echo $?

@@ -43,6 +43,7 @@ public class TestBase
   public static void init() throws Exception
   {
     String  xmlFilePath                   = null;
+    String  reportTitle                   = null;
     String  testIdPattern                 = null;
     String  xsltFilePath                  = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
     String  reportFileEnding              = "adoc";
@@ -64,6 +65,7 @@ public class TestBase
     responseDiff_ = new ResponseDiff(
       rootPath_,
       xmlFilePath,
+      reportTitle,
       testIdPattern,
       xsltFilePath,
       reportFileEnding,

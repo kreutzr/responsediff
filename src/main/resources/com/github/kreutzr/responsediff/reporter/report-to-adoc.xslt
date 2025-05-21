@@ -9,8 +9,8 @@
 
   <!-- ========================================================================== -->
 
-<xsl:template match="/XmlResponseDiffSetup"><xsl:call-template name="headline"/> <xsl:value-of select="description"/>
-(<xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="analysis/begin" /></xsl:call-template>)
+<xsl:template match="/XmlResponseDiffSetup"><xsl:call-template name="headline"/> <xsl:choose><xsl:when test="reportTitle != ''"><xsl:value-of select="reportTitle"/></xsl:when><xsl:otherwise><xsl:value-of select="description"/></xsl:otherwise></xsl:choose>
+- <xsl:if test="reportTitle != ''"><xsl:value-of select="description"/> / </xsl:if>( <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="analysis/begin" /></xsl:call-template> ) -
 :doctype: book
 :encoding: utf-8
 :lang: de
@@ -41,8 +41,9 @@
 
 | FileName | <xsl:value-of select="fileName"/>
 
+<xsl:if test="./description != ''">
 | Description | <xsl:value-of select="description"/>
-
+</xsl:if>
 | Order | <xsl:value-of select="./@order"/>
 <xsl:if test="./@breakOnFailure">
 | BreakOnFailure | <xsl:value-of select="./@breakOnFailure"/>
@@ -104,9 +105,12 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 [cols="10h,90"]
 |===
 
+<xsl:if test="./description != ''">
 | Description | <xsl:value-of select="description"/>
-
+</xsl:if>
+<xsl:if test="./@ticketReference != ''">
 | Ticket references | <xsl:call-template name="handle-ticket-reference"><xsl:with-param name="ticketReference" select="./@ticketReference" /><xsl:with-param name="ticketUrl" select="$ticketUrl" /></xsl:call-template>
+</xsl:if>
 <xsl:if test="./@breakOnFailure">
 | BreakOnFailure | <xsl:value-of select="./@breakOnFailure"/>
 </xsl:if>
@@ -180,16 +184,15 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
     substring($isoDateTime,12,2),':',
     substring($isoDateTime,15,2),':',
     substring($isoDateTime,18,2)
-)"/>
-</xsl:template>
+)"/></xsl:template>
 
   <!-- ========================================================================== -->
 
 <xsl:template name="formatDuration">
 <xsl:param name="duration" />
-	<xsl:call-template name="durationStep">
-		<xsl:with-param name="duration"><xsl:value-of select="substring-after(translate($duration,',','.'),'P')"/></xsl:with-param>
-	</xsl:call-template>
+  <xsl:call-template name="durationStep">
+    <xsl:with-param name="duration"><xsl:value-of select="substring-after(translate($duration,',','.'),'P')"/></xsl:with-param>
+  </xsl:call-template>
 </xsl:template>
 
 

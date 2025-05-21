@@ -11,6 +11,7 @@
     <xsd:complexType>
       <xsd:sequence>
         <xsd:element name="ticketServiceUrl" type="xsd:string"        minOccurs="0" maxOccurs="1" />
+        <xsd:element name="reportTitle"      type="xsd:string"        minOccurs="0" maxOccurs="1" />
         <xsd:element name="description"      type="xsd:string"        minOccurs="0" maxOccurs="1" />
         <xsd:element name="filterRegistry"   type="XmlFilterRegistry" minOccurs="0" maxOccurs="1" />
         <xsd:element name="variables"        type="XmlVariables"      minOccurs="0" maxOccurs="1" />

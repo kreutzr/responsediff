@@ -195,6 +195,7 @@ It is recommended to set the configuration parameters within a small script. A s
   "responseTimeoutMs" : ...,
   "ticketServiceUrl" : "...",
   "xmlFilePath" : "...",
+  "reportTitle" : "...",
   "testIdPattern" : "...",
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
@@ -223,6 +224,7 @@ It is recommended to set the configuration parameters within a small script. A s
 * `responseTimeoutMs`: Optional timeout (as an integer) for receiving responses. (default is 1000)
 * `ticketServiceUrl`: Optional URL to the ticket system, so that the ticket number only needs to be appended (e.g. "http://localhost/tickets/")
 * `xmlFilePath`: Mandatory specification of the XML file containing the setup to be tested. The path can be specified relative to the optionally specified `rootPath`.
+* `reportTitle`: Optional text that shall be used as report title when set. If not set the `description` text of the `XmlResponseDiffSetup` block is used as default. If set, the `description` is used as subtitle.
 * `testIdPattern`: Optional regular expression (in Java RegEx syntax) to restrict execution to specific tests. If nothing or null is passed, all tests are executed (default). Otherwise, only those tests whose `id` matches the passed expression are executed.
 * `storeResultPath`: Mandatory specification of the directory in which the test results should be saved as XML. (e.g., "../test-results/")
 * `reportWhiteNoise`: Optional flag indicating whether ignored technical differences (whiteNoise) should also be reported (`true`) or not (`false`). (Default is `false`)

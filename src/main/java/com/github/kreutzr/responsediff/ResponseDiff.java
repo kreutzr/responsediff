@@ -36,6 +36,7 @@ public class ResponseDiff
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   private final String                    reportTitle_;
    private final String                    testIdPattern_;
    private final String                    xsltFilePath_;
    private final String                    reportFileEnding_;
@@ -65,6 +66,7 @@ public class ResponseDiff
     * Constructor
     * @param rootPath The root path from where all relative file paths start. Must not be null.
     * @param xmlFilePath The configuration file (XML) that describes the test setup.
+    * @param reportTitle The report title. May be null.
     * @param testIdPattern The id pattern of the tests to execute. May be null. (default null means that all tests are executed)
     * @param xsltFilePath The path to the XSLT file to use. May be null.
     * @param reportFileEnding The file ending of the report that may be created by XSLT at the the given xsltFilePath.
@@ -87,6 +89,7 @@ public class ResponseDiff
    public ResponseDiff(
      final String            rootPath,
      final String            xmlFilePath,
+     final String            reportTitle,
      final String            testIdPattern,
      final String            xsltFilePath,
      final String            reportFileEnding,
@@ -109,6 +112,7 @@ public class ResponseDiff
    )
    throws Exception
    {
+     reportTitle_                   = reportTitle;
      testIdPattern_                 = testIdPattern;
      xsltFilePath_                  = ( xsltFilePath == null ) ? null : rootPath + xsltFilePath;
      reportFileEnding_              = reportFileEnding;
@@ -181,6 +185,7 @@ public class ResponseDiff
 
    /**
     * Allows to change the XML test setup.
+    * <br/><b>NOTE:</b> This (re-)sets xmlTestSetup_ as a <b>side effect</b>!
     * @param xmlFilePath The configuration file (XML) that describes the test setup.
     * @throws Exception
     */
@@ -212,6 +217,9 @@ public class ResponseDiff
 //}
 
      xmlTestSetup_.setTicketServiceUrl( ticketServiceUrl_ );
+     if( reportTitle_ != null ) {
+       xmlTestSetup_.setReportTitle( reportTitle_ );
+     }
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,6 +264,9 @@ public class ResponseDiff
      final Pattern testIdPattern = testIdPattern_ != null
        ? Pattern.compile( testIdPattern_ )
        : null;
+
+     LOG.info( "Starting test processing." );
+
      TestSetHandler.processTestSetup(
        testIdPattern,
        xmlTestSetup_,
@@ -275,6 +286,8 @@ public class ResponseDiff
        executionContextAsString_
      );
 
+     LOG.info( "Storing XML report." );
+
      // Store test setup with all analysis results
      final String xmlReportFileName = XmlFileHandler.storeXmlReport( xmlTestSetup_, storeReportPath_, null );
 
@@ -290,6 +303,8 @@ public class ResponseDiff
        }
 
        if( doc != null ) {
+         LOG.info( "Transforming XML report to \"" + reportFileEnding_ + "\"." );
+
          int pos = xmlReportFileName.lastIndexOf( '.' );
          final String reportFilePath = xmlReportFileName.substring( 0, pos+1 ) + reportFileEnding_;
          XsltProcessor.process( doc, xsltFilePath_, reportFilePath );
@@ -303,6 +318,8 @@ public class ResponseDiff
              if( targetFormat.isEmpty() ) {
                continue;
              }
+
+             LOG.info( "Converting \"adoc\" report to \"" + targetFormat + "\"." );
 
              pos = reportFilePath.lastIndexOf( "." );
              final String targetFilePath = reportFilePath.substring(0, pos+1 ) + targetFormat;
@@ -333,6 +350,8 @@ public class ResponseDiff
          }
        }
      }
+
+     LOG.info( "Finished." );
 
      if( exitWithExitCode_ ) {
        // Terminate with exit code.
@@ -379,6 +398,7 @@ public class ResponseDiff
 
      String   rootPath                      = new File( "" ).getAbsolutePath() + File.separator;
      String   xmlFilePath                   = null;
+     String   reportTitle                   = null;
      String   testIdPattern                 = null;
      String   xsltFilePath                  = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
      String   reportFileEnding              = "adoc";
@@ -400,6 +420,7 @@ public class ResponseDiff
      // Read parameters from configuration
      rootPath                      = Converter.asString ( config.getRootPath(),                      rootPath );
      xmlFilePath                   = Converter.asString ( config.getXmlFilePath(),                   xmlFilePath );
+     reportTitle                   = Converter.asString ( config.getReportTitle(),                   reportTitle );
      testIdPattern                 = Converter.asString ( config.getTestIdPattern(),                 testIdPattern );
      xsltFilePath                  = Converter.asString ( config.getXsltFilePath(),                  xsltFilePath );
      reportFileEnding              = Converter.asString ( config.getReportFileEnding(),              reportFileEnding );
@@ -461,6 +482,7 @@ public class ResponseDiff
        final ResponseDiff responseDiff = new ResponseDiff(
          rootPath,
          xmlFilePath,
+         reportTitle,
          testIdPattern,
          xsltFilePath,
          reportFileEnding,

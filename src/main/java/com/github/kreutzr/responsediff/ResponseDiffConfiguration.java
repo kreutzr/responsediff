@@ -9,6 +9,7 @@ public class ResponseDiffConfiguration
 {
   private String            rootPath_;
   private String            xmlFilePath_;
+  private String            reportTitle_;
   private String            testIdPattern_;
   private String            xsltFilePath_;
   private String            reportFileEnding_;
@@ -56,6 +57,20 @@ public class ResponseDiffConfiguration
   public void setXmlFilePath( final String xmlFilePath )
   {
     xmlFilePath_ = xmlFilePath;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public String getReportTitle()
+  {
+    return reportTitle_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setReportTitle( final String reportTitle )
+  {
+    reportTitle_ = reportTitle;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

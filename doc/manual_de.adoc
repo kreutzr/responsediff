@@ -195,6 +195,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
   "responseTimeoutMs" : ...,
   "ticketServiceUrl" : "...",
   "xmlFilePath" : "...",
+  "reportTitle" : "...",
   "testIdPattern" : "...",
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
@@ -222,6 +223,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
 * `responseTimeoutMs`: Optionales Timeout (als Ganzzahl) für den Empfang von Antworten. (default ist 1000)
 * `ticketServiceUrl`: Optionale URL zum Ticketsystem, so dass die Ticketnummer nur noch angehangen werden muss (z.B. "http://localhost/tickets/")
 * `xmlFilePath`: Mandatorische Angabe der XML-Datei, welche das zu testende Setup beinhaltet. Der Pfad kann relativ zum optional angegebenen `rootPath` angegeben werden.
+* `reportTitle`: Optionaler Text, der als Reporttitel verwendet werden soll. Per Default wird die `description` aus dem `XmlResponseDiffSetup`-Block verwendet. Ist der Parameter gesetzt, so wird die `description` als Untertitel verwendet.
 * `testIdPattern`: Optionaler regulärer Ausdruck (in Java RegEx Syntax), um die Ausführung auf einzelne Tests einzuschränken. Wird nichts oder null übergeben, so werden alle Tests ausgeführt (default). Andernfalls werden nur diejenigen Tests ausgeführt, deren `id` zum übergebenen Ausdruck passt.
 * `storeResultPath`: Mandatorische Angabe des Verzeichnisses, in dem die Ergebnisse der Tests als XML gespeichert werden sollen. (z.B. "../test-results/")
 * `reportWhiteNoise`: Optionales Flag, ob auch ignorierte, technische Unterschiede (whiteNoise) ausgewiesen werden sollen (`true`) oder nicht (`false`). (default ist `false`)
