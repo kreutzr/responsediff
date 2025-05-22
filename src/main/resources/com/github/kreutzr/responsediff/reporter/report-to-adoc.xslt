@@ -36,7 +36,7 @@
 <xsl:with-param name="delimiter" select="' / '" />
 </xsl:call-template>
 
-[cols="10h,90"]
+[cols="15h,85"]
 |===
 
 | FileName | <xsl:value-of select="fileName"/>
@@ -102,11 +102,14 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:variable name="ticketUrl"><xsl:value-of select="/XmlResponseDiffSetup/ticketServiceUrl" /></xsl:variable>
 
-[cols="10h,90"]
+[cols="15h,85"]
 |===
 
 <xsl:if test="./description != ''">
 | Description | <xsl:value-of select="description"/>
+</xsl:if>
+<xsl:if test="./@waitBefore != ''">
+| Wait before | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="./@waitBefore" /></xsl:call-template>
 </xsl:if>
 <xsl:if test="./@ticketReference != ''">
 | Ticket references | <xsl:call-template name="handle-ticket-reference"><xsl:with-param name="ticketReference" select="./@ticketReference" /><xsl:with-param name="ticketUrl" select="$ticketUrl" /></xsl:call-template>
@@ -257,7 +260,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:template match="analysis">
 <xsl:param name="isTest" />
 *Analysis*
-[cols="10h,23,10h,23,10h,24"]
+[cols="15h,18,15h,18,15h,19"]
 |===
 | Measure | Value | Measure | Value | Measure | Value
 
@@ -286,7 +289,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 *Candidate HTTP Response*
 
 Headers:
-[cols="20,80"]
+[cols="15,85"]
 |===
 | Name | Value
 
@@ -317,7 +320,7 @@ Body:
 *Original candidate HTTP Response*
 
 Headers:
-[cols="20,80"]
+[cols="15,85"]
 |===
 | Name | Value
 
@@ -348,7 +351,7 @@ Body:
 *Reference HTTP Response*
 
 Headers:
-[cols="20,80"]
+[cols="15,85"]
 |===
 | Name | Value
 
@@ -386,7 +389,7 @@ Body:
 <xsl:if test="../response/ignore[@justExplain='true']">
 
 *Error explanations*
-[cols="25,75"]
+[cols="15,85"]
 |===
 | JsonPath | Message
 
@@ -408,7 +411,7 @@ Body:
 <xsl:template match="messages">
 
 *Error messages*
-[cols="10,15,75"]
+[cols="15,18,67"]
 |===
 | Level | JsonPath | Message
 

@@ -48,10 +48,10 @@ This is a regular maintenance release.
 * Added optional parameter "maskAuthorizationHeaderInCurl" to responseDiff configuration.
 * Added optional parameter "reportTitle" to responseDiff configuration.
 * File name extensions of downloaded files are generated from the content type header if not received from the server.
-* Added NormalizeJsonBodyResponseFilter.
-* Added attribute "workPath" to "testSet" tag in setup XML to support generic TestSets.
-* Added attribute "waitBefore" to "test" tag to support asynchronous requests.
-* Added attribute "ifExecutionContextContains" to support conditional testing.
+* Added NormalizeJsonBodyResponseFilter to handle JSON attribute keys that contain dots (e.g., "project.id").
+* Added optional attribute "workPath" to "testSet" tag in setup XML to support generic TestSets.
+* Added optional attribute "waitBefore" to "test" tag to support asynchronous requests.
+* Added optional attribute "ifExecutionContextContains" to support conditional testing.
 
 === Bug fixes
 
