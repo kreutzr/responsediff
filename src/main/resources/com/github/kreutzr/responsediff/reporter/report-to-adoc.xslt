@@ -17,7 +17,7 @@
 :toc: left
 :toclevels: 5
 :icons: font
-:icon-set: fa-solid
+:icon-set: fas
 
 <xsl:apply-templates select="analysis">
 <xsl:with-param name="isTest">false</xsl:with-param>
@@ -142,7 +142,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:template name="headlineIcon"><xsl:param name="result" /><xsl:choose>
 <xsl:when test="$result='success'"> icon:check[]</xsl:when>
-<xsl:when test="$result='fail'"> icon:warning[]</xsl:when>
+<xsl:when test="$result='fail'"> icon:bomb[]</xsl:when>
 <xsl:when test="$result='skip'"> icon:ban[]</xsl:when>
 </xsl:choose>
 </xsl:template>
