@@ -955,7 +955,7 @@ public class ValidationHandler
                expectationMismatch = handleInverse( expectationMismatch, checkInverse );
              }
              else {
-               errorMessage = "String expected to match: (trim=" + xmlValue.isTrim() + ", ignoreCase=" + xmlValue.isIgnoreCase() + ")  ### " + expect + " but was: " + actual;
+               errorMessage = "String expected to match: (trim=" + xmlValue.isTrim() + ", ignoreCase=" + xmlValue.isIgnoreCase() + ") ### " + expect + " but was: " + actual;
 
                if( actual != null ) { // Avoid Pattern error because passed value is null
                  final Pattern pattern = xmlValue.isIgnoreCase()

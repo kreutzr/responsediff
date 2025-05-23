@@ -57,6 +57,7 @@ This is a regular maintenance release.
 
 * Fixed handling of compressed files.
 * Fixed issue when including setup files within same folder.
+* Fixed issue with missing images in HTML manuals.
 
 === External libraries
 

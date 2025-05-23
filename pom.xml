@@ -678,7 +678,9 @@
                   <backend>html5</backend>
                   <attributes>
                     <source-highlighter>coderay</source-highlighter>
+                    <!--
                     <imagesdir>doc/img</imagesdir>
+                    -->
                     <toc>top</toc>
                     <icons>font</icons>
                   </attributes>
