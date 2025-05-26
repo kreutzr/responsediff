@@ -964,7 +964,11 @@ public class ValidationHandler
                  final Matcher matcher = pattern.matcher( actual );
 
                  if( !matcher.matches() ) {
+//LOG.error("### RKR ### " + actual + " did NOT match " + expect );
                    expectationMismatch = true;
+                 }
+                 else {
+//LOG.error("### RKR ### " + actual + " did match " + expect  + " , mismatch=" + expectationMismatch );
                  }
                }
                else {
@@ -1180,4 +1184,30 @@ public class ValidationHandler
        }
      }
    }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /* Activate for testing regex.
+    *
+   public static void main( final String[] args )
+   {
+     final String text1 ="application/hal+json";
+     final String text2 ="application/api+json";
+     final String text3 ="APPLICATION/json";
+
+     try {
+       final Pattern pattern = Pattern.compile( "^application/((hal|api)\\+)?json$", Pattern.CASE_INSENSITIVE );
+       final Matcher matcher1 = pattern.matcher( text1 );
+       final Matcher matcher2 = pattern.matcher( text2 );
+       final Matcher matcher3 = pattern.matcher( text3 );
+
+       System.out.println( "1 matches " + matcher1.matches() );
+       System.out.println( "2 matches " + matcher2.matches() );
+       System.out.println( "3 matches " + matcher3.matches() );
+     }
+     catch( final Throwable ex ) {
+       ex.printStackTrace();
+     }
+   }
+   **/
 }
