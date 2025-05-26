@@ -26,12 +26,15 @@
 
     <test id="Test C">
       <response>
-      <filters>
-        <filter id="ccc"/>
-      </filters>
+	      <filters>
+	        <filter id="ccc"/>
+	      </filters>
         <ignore>
           <header>CCC</header>
           <explanation>CCC</explanation>
+        </ignore>
+        <ignore>
+          <header>MMM</header>
         </ignore>
         <expected>
             <httpStatus>204</httpStatus>

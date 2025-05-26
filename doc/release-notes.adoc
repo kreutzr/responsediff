@@ -59,6 +59,7 @@ This is a regular maintenance release.
 * Fixed issue when including setup files within same folder.
 * Fixed issue with missing images in HTML manuals.
 * Fixed issue when following a complete URL from the "location" header when receiving a 303 (Redirect) HTTP status.
+* Fixed issue: Inherited expected values and ignores could be overridden but they must not! Fixed ignoring of expected values and expectation of ignored values.
 
 === External libraries
 

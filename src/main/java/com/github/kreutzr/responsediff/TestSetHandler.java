@@ -1484,7 +1484,7 @@ public class TestSetHandler
       xmlRequest.setVariables  ( joinVariables  ( xmlRequest.getVariables(),   xmlTestSetRequest.getVariables(),   testId, "Joining request variables of test set \"" + xmlTestSet.getId() + "\" into request variables of test set child  \"" + xmlTestSetChild.getId() + "\"" ) );
       xmlRequest.setFilters    ( joinFilters    ( xmlRequest.getFilters(),     xmlTestSetRequest.getFilters(),     testId ) );
       xmlRequest.setParameters ( joinParameters ( xmlRequest.getParameters(),  xmlTestSetRequest.getParameters(),  testId ) );
-      xmlRequest.setHeaders    ( joinHeaders    ( xmlRequest.getHeaders(),     xmlTestSetRequest.getHeaders(),     testId ) );
+      xmlRequest.setHeaders    ( joinHeaders    ( xmlRequest.getHeaders(),     xmlTestSetRequest.getHeaders(),     testId, null ) );
       xmlRequest.setBody       ( joinString     ( xmlRequest.getBody(),        xmlTestSetRequest.getBody(),        testId ) );
       xmlRequest.setUploadParts( joinUploadParts( xmlRequest.getUploadParts(), xmlTestSetRequest.getUploadParts(), testId ) );
       xmlRequest.setMethod     ( joinMethod     ( xmlRequest.getMethod(),      xmlTestSetRequest.getMethod(),      testId ) );
@@ -1507,8 +1507,8 @@ public class TestSetHandler
       xmlResponse.setDescription( joinString   ( xmlResponse.getDescription(), xmlTestSetResponse.getDescription(), testId ) );
       xmlResponse.setVariables  ( joinVariables( xmlResponse.getVariables(),   xmlTestSetResponse.getVariables(),   testId, "Joining response variables of test set \"" + xmlTestSet.getId() + "\" into response variables of test set child \"" + xmlTestSetChild.getId()+ "\""  ) );
       xmlResponse.setFilters    ( joinFilters  ( xmlResponse.getFilters(),     xmlTestSetResponse.getFilters(),     testId ) );
-      xmlResponse.setExpected   ( joinExpected ( xmlResponse.getExpected(),    xmlTestSetResponse.getExpected(),    testId ) );
-      joinedIgnores =             joinIgnores  ( xmlResponse.getIgnore(),      xmlTestSetResponse.getIgnore(),      testId );
+      xmlResponse.setExpected   ( joinExpected ( xmlResponse.getExpected(),    xmlTestSetResponse.getExpected(),    testId, xmlResponse.getIgnore() ) );
+      joinedIgnores =             joinIgnores  ( xmlResponse.getIgnore(),      xmlTestSetResponse.getIgnore(),      testId, xmlResponse.getExpected() );
       xmlResponse.getIgnore().clear();
       xmlResponse.getIgnore().addAll( joinedIgnores );
 
@@ -1568,7 +1568,7 @@ public class TestSetHandler
       xmlRequest.setVariables  ( joinVariables  ( xmlRequest.getVariables(),   xmlTestSetRequest.getVariables(),   testId, "Joining request variables of test set \"" + xmlTestSet.getId() + "\" into request variables of test \"" + xmlTest.getId()+ "\""  ) );
       xmlRequest.setFilters    ( joinFilters    ( xmlRequest.getFilters(),     xmlTestSetRequest.getFilters(),     testId ) );
       xmlRequest.setParameters ( joinParameters ( xmlRequest.getParameters(),  xmlTestSetRequest.getParameters(),  testId ) );
-      xmlRequest.setHeaders    ( joinHeaders    ( xmlRequest.getHeaders(),     xmlTestSetRequest.getHeaders(),     testId ) );
+      xmlRequest.setHeaders    ( joinHeaders    ( xmlRequest.getHeaders(),     xmlTestSetRequest.getHeaders(),     testId, null ) );
       xmlRequest.setBody       ( joinString     ( xmlRequest.getBody(),        xmlTestSetRequest.getBody(),        testId ) );
       xmlRequest.setUploadParts( joinUploadParts( xmlRequest.getUploadParts(), xmlTestSetRequest.getUploadParts(), testId ) );
       xmlRequest.setMethod     ( joinMethod     ( xmlRequest.getMethod(),      xmlTestSetRequest.getMethod(),      testId ) );
@@ -1593,8 +1593,8 @@ public class TestSetHandler
 // NOTE: We only read variables from the response but NEVER overwrite variables
 //      xmlResponse.setVariables  ( joinVariables( xmlResponse.getVariables(),   xmlTestSetResponse.getVariables(),   testId ) );
       xmlResponse.setFilters    ( joinFilters  ( xmlResponse.getFilters(),     xmlTestSetResponse.getFilters(),     testId ) );
-      xmlResponse.setExpected   ( joinExpected ( xmlResponse.getExpected(),    xmlTestSetResponse.getExpected(),    testId ) );
-      joinedIgnores =             joinIgnores  ( xmlResponse.getIgnore(),      xmlTestSetResponse.getIgnore(),      testId );
+      xmlResponse.setExpected   ( joinExpected ( xmlResponse.getExpected(),    xmlTestSetResponse.getExpected(),    testId, xmlResponse.getIgnore() ) );
+      joinedIgnores =             joinIgnores  ( xmlResponse.getIgnore(),      xmlTestSetResponse.getIgnore(),      testId, xmlResponse.getExpected() );
       xmlResponse.getIgnore().clear();
       xmlResponse.getIgnore().addAll( joinedIgnores );
 
@@ -1884,29 +1884,40 @@ public class TestSetHandler
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Joins all expected headers from base into target, as long as target has no ignore definition for an expectation entry.
+   * @param target The target XmlHeaders. May be null.
+   * @param base The base XmlHeaders. May be null.
+   * @param testId The current test id. Currently not used.
+   * @param headersToIgnore A set of ignores. May be null.
+   * @return The joined XmlHeaders. If no headers are defined, null is returned.
+   */
   private static XmlHeaders joinHeaders(
     final XmlHeaders target,
     final XmlHeaders base,
-    final String testId
+    final String testId,
+    final Set< String > headersToIgnore
   )
   {
-    if( target == null || target.getHeader().isEmpty() ) {
-      return base;
-    }
-    if( base == null || base.getHeader().isEmpty() ) {
-      return target;
-    }
+//LOG.error( "### testID=" + testId + ", target="+ ToJson.fromHeaders( target, true ) + ", base=" + ToJson.fromHeaders( base, true ) );
 
     final Map< String, XmlHeader > xmlHeadersByName = new TreeMap<>();
 
     // Join XmlHeaders
     if( base != null ) {
       for( final XmlHeader xmlHeader : base.getHeader() ) {
-        xmlHeadersByName.put( xmlHeader.getName(), xmlHeader );
+        if( headersToIgnore == null || !headersToIgnore.contains( xmlHeader.getName() ) )  {
+//LOG.error("### RKR ### Adding expected header from base: " + xmlHeader.getName() + " ignore=" + headersToIgnore );
+          xmlHeadersByName.put( xmlHeader.getName(), xmlHeader );
+        }
+        else {
+//LOG.error("### RKR ### Skipped adding expected header from base: " + xmlHeader.getName() + " ignore=" + headersToIgnore );
+        }
       }
     }
     if( target != null ) {
       for( final XmlHeader xmlHeader : target.getHeader() ) {
+//LOG.error("### RKR ### Adding expected header from target: " + xmlHeader.getName() + " ignore=" + headersToIgnore );
         xmlHeadersByName.put( xmlHeader.getName(), xmlHeader );
       }
     }
@@ -1916,8 +1927,11 @@ public class TestSetHandler
     for( final String name : xmlHeadersByName.keySet() ) {
       xmlHeaders.getHeader().add( xmlHeadersByName.get( name ) );
     }
+//LOG.error( "### ### testID=" + testId + ", target="+ ToJson.fromHeaders( target, true ) + ", base=" + ToJson.fromHeaders( base, true ) );
 
-    return xmlHeaders;
+    return xmlHeaders.getHeader().isEmpty()
+      ? null
+      : xmlHeaders;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1988,65 +2002,93 @@ public class TestSetHandler
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Joins all expectations from base into the target, as long target has no ignore definition for an expectation entry.
+   * @param target The target XmlExpect. May be null.
+   * @param base The base XmlExpect. May be null.
+   * @param testId The current test id. Currently not used.
+   * @param targetIgnores A list of ignores. May be null.
+   * @return The joined XmlExpect. May be null.
+   */
   private static XmlExpected joinExpected(
     final XmlExpected target,
     final XmlExpected base,
-    final String testId
+    final String testId,
+    final List< XmlIgnore > targetIgnores
   )
   {
-    if( target == null ) {
-      return base;
-    }
-    if( base == null ) {
-      return target;
+    final XmlExpected result = target != null
+      ? target
+      : new XmlExpected();
+
+    if( result.getHttpStatus() == null && base != null ) {
+      result.setHttpStatus( base.getHttpStatus() );
     }
 
-    if( target.getHttpStatus() == null ) {
-      target.setHttpStatus( base.getHttpStatus() );
-    }
-    target.setHeaders( joinHeaders( target.getHeaders(), base.getHeaders(), testId ) );
-    target.setValues ( joinValues ( target.getValues(),  base.getValues(),  testId ) );
-    target.setBody   ( joinBody   ( target.getBody(),    base.getBody(),    testId ) );
+    final Set< String > headersToIgnore = new HashSet<>();
+    final Set< String > pathsToIgnore = new HashSet<>();
+    if( targetIgnores != null ) {
+      for( final XmlIgnore xmlIgnore : targetIgnores ) {
+        final String headerToIgnore = xmlIgnore.getHeader();
+        if( headerToIgnore != null ) {
+          headersToIgnore.add( headerToIgnore );
+          continue; // There is either a header or a path to ignore per ignore entry.
+        }
 
-    return target;
+        final String pathToIgnore = xmlIgnore.getPath();
+        if( pathToIgnore != null ) {
+          pathsToIgnore.add( pathToIgnore );
+        }
+      }
+    }
+
+    result.setHeaders( joinHeaders( result.getHeaders(), base != null ? base.getHeaders() : null, testId, headersToIgnore ) );
+    result.setValues ( joinValues ( result.getValues(),  base != null ? base.getValues()  : null,  testId, pathsToIgnore ) );
+    result.setBody   ( joinBody   ( result.getBody(),    base != null ? base.getBody()    : null,    testId ) );
+
+//LOG.error( "RKR testID=" + testId + ", joined expected headers="  + ToJson.fromHeaders( result.getHeaders(), true ) );
+
+    return result;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Joins all expected values from base into target, as long as target has no ignore definition for an expectation entry.
+   * @param target The target XmlValues. May be null.
+   * @param base The base XmlValues. May be null.
+   * @param testId The current test id. Currently not used.
+   * @param pathsToIgnore A set of ignores. May be null.
+   * @return The joined XmlValues. If no headers are defined, null is returned.
+   */
   private static XmlValues joinValues(
     final XmlValues target,
     final XmlValues base,
-    final String testId
+    final String testId,
+    final Set< String > pathsToIgnore
   )
   {
-    if( target == null || target.getValue().isEmpty() ) {
-      return base;
-    }
-    if( base == null || base.getValue().isEmpty() ) {
-      return target;
-    }
-
-    final Map< String, XmlValue > xmlValueByPath = new TreeMap<>();
+    final XmlValues xmlValues = new XmlValues();
 
     // Join XmlValues
     if( base != null ) {
       for( final XmlValue xmlValue : base.getValue() ) {
-        xmlValueByPath.put( xmlValue.getPath(), xmlValue );
+        if( pathsToIgnore == null || !pathsToIgnore.contains( xmlValue.getPath() ) ) {
+//LOG.error("### RKR ### Adding expected value from base: " + xmlValue.getPath() + " ignore=" + pathsToIgnore );
+          xmlValues.getValue().add( xmlValue );
+        }
+        else {
+//LOG.error("### RKR ### Skipped adding expected value from base: " + xmlValue.getPath() + " ignore=" + pathsToIgnore );
+        }
       }
     }
     if( target != null ) {
-      for( final XmlValue xmlValue : target.getValue() ) {
-        xmlValueByPath.put( xmlValue.getPath(), xmlValue );
-      }
+      xmlValues.getValue().addAll( target.getValue() );
     }
 
-    // Convert to XmlValues
-    final XmlValues xmlValues = new XmlValues();
-    for( final String path : xmlValueByPath.keySet() ) {
-      xmlValues.getValue().add( xmlValueByPath.get( path ) );
-    }
-
-    return xmlValues;
+    return xmlValues.getValue().isEmpty()
+      ? null
+      : xmlValues;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2065,10 +2107,19 @@ public class TestSetHandler
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Joins the base ignores into the target, as long as target has no expected definition for the ignore entry.
+   * @param target The target list of XmlIgnores. May be null.
+   * @param base The base list of XmlIgnores. May be null.
+   * @param testId The current test id. Currently not used.
+   * @param targetExpected The target expectations. May be null.
+   * @return The joined list of ignores.
+   */
   private static List< XmlIgnore > joinIgnores(
     final List< XmlIgnore > target,
     final List< XmlIgnore > base,
-    final String testId
+    final String testId,
+    final XmlExpected targetExpected
   )
   {
     // NOTE: Since we return a List<>, no short cut for return values as in joinExpected and joinValues is allowed here.
@@ -2077,14 +2128,39 @@ public class TestSetHandler
     final Map< String, XmlIgnore > xmlIgnoreByHeader = new TreeMap<>();
     final Map< String, XmlIgnore > xmlIgnoreByPath   = new TreeMap<>();
 
+    final Set< String > headersToExpect = new HashSet<>();
+    final Set< String > pathsToExpect = new HashSet<>();
+    if( targetExpected != null ) {
+      if( targetExpected.getHeaders() != null ) {
+        for( final XmlHeader xmlHeader : targetExpected.getHeaders().getHeader() ) {
+          final String headerToExpect = xmlHeader.getName();
+          if( headerToExpect != null ) {
+            headersToExpect.add( headerToExpect );
+          }
+        }
+      }
+      if( targetExpected.getValues() != null ) {
+        for( final XmlValue xmlValue : targetExpected.getValues().getValue() ) {
+          final String pathToExpect = xmlValue.getPath();
+          if( pathToExpect != null ) {
+            pathsToExpect.add( pathToExpect );
+          }
+        }
+      }
+    }
+
     // Join XmlIgnore
     if( base != null ) {
       for( final XmlIgnore xmlIgnore : base ) {
         if( xmlIgnore.getHeader() != null ) {
-          xmlIgnoreByHeader.put( xmlIgnore.getHeader(), xmlIgnore );
+          if( !headersToExpect.contains( xmlIgnore.getHeader() ) ) {
+            xmlIgnoreByHeader.put( xmlIgnore.getHeader(), xmlIgnore );
+          }
         }
         else if( xmlIgnore.getPath() != null ) {
-          xmlIgnoreByPath.put( xmlIgnore.getPath(), xmlIgnore );
+          if( !pathsToExpect.contains( xmlIgnore.getPath() ) ) {
+            xmlIgnoreByPath.put( xmlIgnore.getPath(), xmlIgnore );
+          }
         }
       }
     }

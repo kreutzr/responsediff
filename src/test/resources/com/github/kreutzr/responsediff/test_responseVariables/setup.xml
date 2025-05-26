@@ -24,7 +24,7 @@
     </test>
 
     <test id="Step 02 - Use response variables">
-      <request endpoint="my-endpoint?step1_key=${HEADER__CONTENT_TYPE}">
+      <request endpoint="my-endpoint?step1_key=${STEP1_KEY}">
         <headers>
           <header name="content-type">${HEADER__CONTENT_TYPE}</header>
         </headers>

@@ -238,10 +238,11 @@ public class TestInitializationTest extends TestBase
       assertThat( xmlTestSet_01   .getTest().get( 0 ).getResponse().getIgnore().get( 0 ).getHeader() ).isEqualTo( "BBB" );
 
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getId() ).isEqualTo( "TestSet 00 / TestSet 00-01 / Test C" );
-      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore() ).hasSize( 3 );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore() ).hasSize( 4 );
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore().get( 0 ).getHeader() ).isEqualTo( "CCC" );
-      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore().get( 1 ).getHeader() ).isEqualTo( "XXX" );
-      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore().get( 2 ).getHeader() ).isEqualTo( "ZZZ" );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore().get( 1 ).getHeader() ).isEqualTo( "MMM" );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore().get( 2 ).getHeader() ).isEqualTo( "XXX" );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getIgnore().get( 3 ).getHeader() ).isEqualTo( "ZZZ" );
     }
   }
 
@@ -320,9 +321,11 @@ public class TestInitializationTest extends TestBase
       assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getHeaders().getHeader().get( 0 ).getValue() ).isEqualTo( "EEE" );
       assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getHeaders().getHeader().get( 1 ).getName()  ).isEqualTo( "FFF" );
       assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getHeaders().getHeader().get( 1 ).getValue() ).isEqualTo( "FFF" );
-      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue() ).hasSize( 1 );
-      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 0 ).getPath() ).isEqualTo( "MMM" );
-      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 0 ).getValue() ).isEqualTo( "MMMMMM" );
+      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue() ).hasSize( 2 );
+      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 0 ).getPath()  ).isEqualTo( "MMM" );
+      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 0 ).getValue() ).isEqualTo( "MMM" );
+      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 1 ).getPath()  ).isEqualTo( "MMM" );   // We allow checking more than one criteria per path (e.g. x > 1 and x < 2)
+      assertThat( xmlTestSet_00   .getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 1 ).getValue() ).isEqualTo( "MMMMMM" );
 
       assertThat( xmlTestSet_01   .getTest().get( 0 ).getId() ).isEqualTo( "TestSet 01 / Test B" );
       assertThat( xmlTestSet_01   .getTest().get( 0 ).getResponse().getExpected().getHttpStatus().getValue() ).isEqualTo( 202 );
@@ -344,11 +347,13 @@ public class TestInitializationTest extends TestBase
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getHeaders().getHeader().get( 2 ).getValue() ).isEqualTo( "GGG" );
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getHeaders().getHeader().get( 3 ).getName()  ).isEqualTo( "HHH" );
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getHeaders().getHeader().get( 3 ).getValue() ).isEqualTo( "HHH" );
-      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue() ).hasSize( 2 );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue() ).hasSize( 3 );
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 0 ).getPath() ).isEqualTo( "MMM" );
       assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 0 ).getValue() ).isEqualTo( "MMM" );
-      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 1 ).getPath() ).isEqualTo( "NNN" );
-      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 1 ).getValue() ).isEqualTo( "NNNNNN" );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 1 ).getPath()  ).isEqualTo( "NNN" );   // We allow checking more than one criteria per path (e.g. x > 1 and x < 2)
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 1 ).getValue() ).isEqualTo( "NNN" );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 2 ).getPath() ).isEqualTo( "NNN" );
+      assertThat( xmlTestSet_00_01.getTest().get( 0 ).getResponse().getExpected().getValues().getValue().get( 2 ).getValue() ).isEqualTo( "NNNNNN" );
     }
   }
 }
