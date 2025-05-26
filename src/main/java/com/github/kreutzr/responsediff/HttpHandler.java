@@ -272,15 +272,22 @@ public class HttpHandler
       final String testFileName,
       final String serviceUrl
   ) {
+    final StringBuilder sb = new StringBuilder();
+
     // NOTE: A variable (e.g. from location header) may have a leading "/".
     String endPoint = VariablesHandler.applyVariables( xmlRequest.getEndpoint(), xmlRequest.getVariables(), "serviceUrl", serviceId, testId, testFileName );
-    if( !endPoint.startsWith( "/" ) ) {
-      endPoint = "/" + endPoint;
-    }
 
-    final StringBuilder sb = new StringBuilder()
-      .append( serviceUrl )
-      .append( endPoint );
+    final String endPointProtocol = endPoint.substring(0, (Math.min( endPoint.length(), 4 ) ) ).toLowerCase(); // Required to follow redirects (we assume that the configured default headers ("candidateHeaders", "referenceHeaders", "controlHeaders") are to be set identically.
+    if( !endPointProtocol.startsWith( "http" ) ) {
+      if( !endPoint.startsWith( "/" ) ) {
+        endPoint = "/" + endPoint;
+      }
+      sb.append( serviceUrl );
+    }
+    else {
+      // In case of a test end point with an absolute URL (e.g., because we read the "location" header from a redirect (303) response), we do not use the service URL.
+    }
+    sb.append( endPoint );
 
     // Add parameters to serviceUrl (if any)
     if( xmlRequest.getParameters() != null ) {

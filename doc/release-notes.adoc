@@ -58,6 +58,7 @@ This is a regular maintenance release.
 * Fixed handling of compressed files.
 * Fixed issue when including setup files within same folder.
 * Fixed issue with missing images in HTML manuals.
+* Fixed issue when following a complete URL from the "location" header when receiving a 303 (Redirect) HTTP status.
 
 === External libraries
 
