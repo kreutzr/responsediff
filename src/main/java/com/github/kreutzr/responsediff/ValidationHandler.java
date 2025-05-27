@@ -964,11 +964,9 @@ public class ValidationHandler
                  final Matcher matcher = pattern.matcher( actual );
 
                  if( !matcher.matches() ) {
-//LOG.error("### RKR ### " + actual + " did NOT match " + expect );
                    expectationMismatch = true;
                  }
                  else {
-//LOG.error("### RKR ### " + actual + " did match " + expect  + " , mismatch=" + expectationMismatch );
                  }
                }
                else {
@@ -1191,11 +1189,13 @@ public class ValidationHandler
     *
    public static void main( final String[] args )
    {
-     final String text1 ="application/hal+json";
+     final String text1 ="application/hal+JSON";
      final String text2 ="application/api+json";
      final String text3 ="APPLICATION/json";
 
      try {
+       // NOTE: The "\\" before the "+" is required due to Java String declaration syntax.
+       //       For RegEx provided within ResponseDiff XML files only one "\" must be set!
        final Pattern pattern = Pattern.compile( "^application/((hal|api)\\+)?json$", Pattern.CASE_INSENSITIVE );
        final Matcher matcher1 = pattern.matcher( text1 );
        final Matcher matcher2 = pattern.matcher( text2 );
