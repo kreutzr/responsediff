@@ -26,6 +26,7 @@ public class OuterContext
   private String storeReportPath_;
   private boolean reportWhiteNoise_;
   private boolean maskAuthorizationHeaderInCurl_;
+  private boolean reportControlResponse_;
   private Set< String > executionContext_;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +45,7 @@ public class OuterContext
     final String            storeReportPath,
     final boolean           reportWhiteNoise,
     final boolean           maskAuthorizationHeaderInCurl,
+    final boolean           reportControlResponse,
     final String            executionContextAsString
   )
   {
@@ -60,6 +62,7 @@ public class OuterContext
     storeReportPath_               = storeReportPath;
     reportWhiteNoise_              = reportWhiteNoise;
     maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+    reportControlResponse_         = reportControlResponse;
     executionContext_              = new TreeSet<>();
 
     // Parse execution context keys, trim and add them.
@@ -256,6 +259,20 @@ public class OuterContext
   public void setMaskAuthorizationHeaderInCurl_( final boolean maskAuthorizationHeaderInCurl )
   {
     maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public boolean getReportControlResponse()
+  {
+    return reportControlResponse_;
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setReportControlResponse( final boolean reportControlResponse )
+  {
+    reportControlResponse_ = reportControlResponse;
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

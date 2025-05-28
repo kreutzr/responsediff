@@ -150,6 +150,7 @@
       <xsd:element name="expected"          type="XmlExpected"     minOccurs="0" maxOccurs="1" />
       <xsd:element name="httpResponse"      type="XmlHttpResponse" minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
       <xsd:element name="referenceResponse" type="XmlHttpResponse" minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+      <xsd:element name="controlResponse"   type="XmlHttpResponse" minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
       <xsd:element name="requestTime"       type="xsd:string"      minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
     </xsd:sequence>
 

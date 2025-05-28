@@ -200,6 +200,7 @@ It is recommended to set the configuration parameters within a small script. A s
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
   "maskAuthorizationHeaderInCurl" : [true|false],
+  "reportControlResponse" : [true|false],
   "executionContext" : "...",
   "xsltFilePath" : "...",
   "reportFileEnding" : "...",
@@ -228,7 +229,8 @@ It is recommended to set the configuration parameters within a small script. A s
 * `testIdPattern`: Optional regular expression (in Java RegEx syntax) to restrict execution to specific tests. If nothing or null is passed, all tests are executed (default). Otherwise, only those tests whose `id` matches the passed expression are executed.
 * `storeResultPath`: Mandatory specification of the directory in which the test results should be saved as XML. (e.g., "../test-results/")
 * `reportWhiteNoise`: Optional flag indicating whether ignored technical differences (whiteNoise) should also be reported (`true`) or not (`false`). (Default is `false`)
-* `maskAuthorizationHeaderInCurl`: Optional Flag indicating wether values of the `Authentication` header shall be masked (`true`) or not (`false`). (default is `true`)
+* `maskAuthorizationHeaderInCurl`: Optional Flag indicating whether values of the `Authentication` header shall be masked (`true`) or not (`false`). (default is `true`)
+* `reportControlResponse`: Optional Flag indicating whether additionally to the response of the candidate and reference instances the response of the control instance shall be included to the exported XML file, too (`true`) or not (`false'). (default is `false`)
 * `executionContext`: Optional (comma separated) list of tokens, that are used for conditional test executions (see section <<Conditional Test Execution>>). The choice of tokens is free. The usage of the tokens is case insensitive.
 * `xsltFilePath`: Optional path to an XSLT file to be used to transform the generated XML report. The result of the transformation is saved next to the XML report under the same name (e.g., "reporter/report-to-adoc.xslt" (default) or "reporter/report-to-html.xslt"). **Note:** The transformation file "reporter/report-to-html.xslt" is very rudimentary and serves only as a technical example for creating your own reports. If you actually want to generate a report in HTML format, we recommend not changing the default transformer and the default file extension (`reportFileEnding`) and instead passing the value `html` in the `reportConversionFormats` parameter.
 * `reportFileEnding`: Optional file extension for the transformation result. (default is `adoc`)

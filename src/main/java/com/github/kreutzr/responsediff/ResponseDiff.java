@@ -44,6 +44,7 @@ public class ResponseDiff
    private final String                    storeReportPath_;
    private final boolean                   reportWhiteNoise_;
    private final boolean                   maskAuthorizationHeaderInCurl_;
+   private final boolean                   reportControlResponse_;
    private final String                    executionContextAsString_;
    private final String                    ticketServiceUrl_;
    private final String                    candidateServiceUrl_;
@@ -97,6 +98,7 @@ public class ResponseDiff
      final String            storeReportPath,
      final boolean           reportWhiteNoise,
      final boolean           maskAuthorizationHeaderInCurl,
+     final boolean           reportControlResponse,
      final String            executionContextAsString,
      final String            ticketServiceUrl,
      final String            candidateServiceUrl,
@@ -122,6 +124,7 @@ public class ResponseDiff
                                     + getTimeStampFolder();
      reportWhiteNoise_              = reportWhiteNoise;
      maskAuthorizationHeaderInCurl_ = maskAuthorizationHeaderInCurl;
+     reportControlResponse_         = reportControlResponse;
      executionContextAsString_      = executionContextAsString;
      ticketServiceUrl_              = ticketServiceUrl;
      candidateServiceUrl_           = unifyUrl( candidateServiceUrl );
@@ -283,6 +286,7 @@ public class ResponseDiff
        storeReportPath_,
        reportWhiteNoise_,
        maskAuthorizationHeaderInCurl_,
+       reportControlResponse_,
        executionContextAsString_
      );
 
@@ -406,6 +410,7 @@ public class ResponseDiff
      String   storeResultPath               = "../test-results/";
      Boolean  reportWhiteNoise              = false;
      Boolean  maskAuthorizationHeaderInCurl = true;
+     Boolean  reportControlResponse         = false;
      String   executionContextAsString      = null;
      String   ticketServiceUrl              = null;
      String   candidateServiceUrl           = null;
@@ -428,6 +433,7 @@ public class ResponseDiff
      storeResultPath               = Converter.asString ( config.getStoreResultPath(),               storeResultPath );
      reportWhiteNoise              = Converter.asBoolean( config.getReportWhiteNoise(),              reportWhiteNoise );
      maskAuthorizationHeaderInCurl = Converter.asBoolean( config.getMaskAuthorizationHeaderInCurl(), maskAuthorizationHeaderInCurl );
+     reportControlResponse         = Converter.asBoolean( config.getReportControlResponse(),         reportControlResponse );
      executionContextAsString      = Converter.asString ( config.getExecutionContext(),              executionContextAsString );
      ticketServiceUrl              = Converter.asString ( config.getTicketServiceUrl(),              ticketServiceUrl );
      candidateServiceUrl           = Converter.asString ( config.getCandidateServiceUrl(),           candidateServiceUrl );
@@ -490,6 +496,7 @@ public class ResponseDiff
          storeResultPath,
          reportWhiteNoise,
          maskAuthorizationHeaderInCurl,
+         reportControlResponse,
          executionContextAsString,
          ticketServiceUrl,
          candidateServiceUrl,

@@ -17,6 +17,7 @@ public class ResponseDiffConfiguration
   private String            storeResultPath_;
   private boolean           reportWhiteNoise_;
   private boolean           maskAuthorizationHeaderInCurl_ = true;
+  private boolean           reportControlResponse_ = false;
   private String            executionContext_;
   private String            ticketServiceUrl_;
   private String            candidateServiceUrl_;
@@ -162,6 +163,20 @@ public class ResponseDiffConfiguration
   public boolean getMaskAuthorizationHeaderInCurl()
   {
     return maskAuthorizationHeaderInCurl_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public boolean getReportControlResponse()
+  {
+    return reportControlResponse_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setReportControlResponse( final boolean reportControlResponse )
+  {
+    reportControlResponse_ = reportControlResponse;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

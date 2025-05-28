@@ -200,6 +200,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
   "maskAuthorizationHeaderInCurl" : [true|false],
+  "reportControlResponse" : [true|false],
   "executionContext" : "...",
   "xsltFilePath" : "...",
   "reportFileEnding" : "...",
@@ -228,6 +229,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
 * `storeResultPath`: Mandatorische Angabe des Verzeichnisses, in dem die Ergebnisse der Tests als XML gespeichert werden sollen. (z.B. "../test-results/")
 * `reportWhiteNoise`: Optionales Flag, ob auch ignorierte, technische Unterschiede (whiteNoise) ausgewiesen werden sollen (`true`) oder nicht (`false`). (default ist `false`)
 * `maskAuthorizationHeaderInCurl`: Optionales Flag, ob Werte des `Authentication`-Headers maskiert werden sollen (`true`) oder nicht (`false`). (default ist `true`)
+* `reportControlResponse`: Optionales Flag, ob in der ausgeleiteten XML-Datei neben den Antworten der Kandidat- und Referenz-Instanzen auch die Antwort der Kontroll-Instanz enthalten sein soll ('true') oder nicht ('false'). (default ist `false')
 * `executionContext`: Optionale Auflistung (Komma-separiert) von Token, die bei bedingten Tests beachtet werden müssen (siehe Abschnitt <<Bedingte Testausführung>>). Die Wahl der Token ist frei. Es wird nicht zwischen Groß- und Kleinschreibung unterschieden.
 * `xsltFilePath`: Optionaler Pfad zu einer XSLT-Datei, die zur Transformation des erzeugten XML-Reports verwendet werden soll. Das Ergebnis der Transformation wird neben dem XML-Report unter gleichem Namen abgelegt (z.B. "reporter/report-to-adoc.xslt" (default) oder "reporter/report-to-html.xslt"). **Beachte:** Die Transformationsdatei "reporter/report-to-html.xslt" ist sehr rudimentär und dient lediglich als technisches Beispiel für die Erstellung eigener Reports. Soll tatsächlich ein Report im HTML-Format erzeugt werden, so wird empfohlen, den Default-Transformer und die Default-Dateiendung (`reportFileEnding`) nicht zu verändern und stattdessen im Parameter `reportConversionFormats` den Wert `html` zu übergeben.
 * `reportFileEnding`: Optionale Dateiendung für das Transformationsergebnis. (default ist `adoc`)

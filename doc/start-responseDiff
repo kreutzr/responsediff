@@ -35,6 +35,7 @@ reportConversionFormats="html,pdf"
 storePath='../test-results/'
 reportWhiteNoise='false'
 maskAuthorizationHeaderInCurl='true'
+reportControlResponse='false'
 executionContext=''
 
 referenceToken=$( curl -X POST ${referenceUrl}login -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s )
@@ -47,6 +48,6 @@ candidateToken=$( curl -X POST ${candidateUrl}login -d '{"username":"xxx", "pass
 
 eval echo 'Starting ResponseDiff for test ${testXmlFile}'
 
-java -cp ./responsediff-0.13.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.ResponseDiff "$( eval echo '{ \"candidateServiceUrl\" : \"${candidateUrl}\", \"referenceFilePath\" : \"${referenceFilePath}\", \"referenceServiceUrl\" : \"${referenceUrl}\", \"controlServiceUrl\" : \"${controlUrl}\", \"responseTimeoutMs\": 60000, \"ticketServiceUrl\" : \"${ticketUrl}\", \"xmlFilePath\" : \"${testXmlFile}\", \"reportTitle\" : \"${reportTitle}\", \"testIdPattern\" : \"${testIdPattern}\", \"storeResultPath\" : \"${storePath}\", \"reportWhiteNoise\" : ${reportWhiteNoise}, \"maskAuthorizationHeaderInCurl\" : \"${maskAuthorizationHeaderInCurl}\", \"executionContext\" : \"${executionContext}\", \"xsltFilePath\" : \"${xsltPath}\", \"reportFileEnding\":\"${reportFileEnding}\", \"reportConversionFormats\":\"${reportConversionFormats}\", \"candidateHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${candidateToken}\" } ], \"referenceHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${referenceToken}\" } ], \"controlHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${controlToken}\" } ] }' )"
+java -cp ./responsediff-0.13.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.ResponseDiff "$( eval echo '{ \"candidateServiceUrl\" : \"${candidateUrl}\", \"referenceFilePath\" : \"${referenceFilePath}\", \"referenceServiceUrl\" : \"${referenceUrl}\", \"controlServiceUrl\" : \"${controlUrl}\", \"responseTimeoutMs\": 60000, \"ticketServiceUrl\" : \"${ticketUrl}\", \"xmlFilePath\" : \"${testXmlFile}\", \"reportTitle\" : \"${reportTitle}\", \"testIdPattern\" : \"${testIdPattern}\", \"storeResultPath\" : \"${storePath}\", \"reportWhiteNoise\" : ${reportWhiteNoise}, \"maskAuthorizationHeaderInCurl\" : \"${maskAuthorizationHeaderInCurl}\", \"reportControlResponse\" : \"${reportControlResponse}\", \"executionContext\" : \"${executionContext}\", \"xsltFilePath\" : \"${xsltPath}\", \"reportFileEnding\":\"${reportFileEnding}\", \"reportConversionFormats\":\"${reportConversionFormats}\", \"candidateHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${candidateToken}\" } ], \"referenceHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${referenceToken}\" } ], \"controlHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${controlToken}\" } ] }' )"
 
 echo $?

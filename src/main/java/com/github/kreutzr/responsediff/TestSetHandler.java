@@ -80,6 +80,7 @@ public class TestSetHandler
       final String                    storeReportPath,
       final boolean                   reportWhiteNoise,
       final boolean                   maskAuthorizationHeaderInCurl,
+      final boolean                   reportControlResponse,
       final String                    executionContextAsString
   )
   throws JAXBException, SAXException, ParseException
@@ -100,6 +101,7 @@ public class TestSetHandler
         storeReportPath,
         reportWhiteNoise,
         maskAuthorizationHeaderInCurl,
+        reportControlResponse,
         executionContextAsString
       );
 
@@ -599,8 +601,11 @@ public class TestSetHandler
         referenceResponse = HttpHandler.createXmlHttpResponse( xmlRequest, xmlResponse, REFERENCE, testId, testFileName, referenceXmlSetup );
       }
 
-      // Add reference response for comparison
+      // Add reference (and optionally control) response for comparison
       xmlTest.getResponse().setReferenceResponse( referenceResponse );
+      if( outerContext.getReportControlResponse() ) {
+        xmlTest.getResponse().setControlResponse  ( controlResponse );
+      }
 
       // Calculate white noise
       final JsonDiff whiteNoise = ValidationHandler.getWhiteNoise( referenceResponse, controlResponse, outerContext.getEpsilon(), executionContext, testId );
