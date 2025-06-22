@@ -5,7 +5,7 @@
 
 image::img/responsediff-logo_320x160.png[ResponseDiff]
 
-== V1.0.2 (2025-xx-xx)
+== V1.0.3 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
 
@@ -30,6 +30,31 @@ This is a regular maintenance release.
 * ...
  
  
+== V1.0.2 (2025-xx-xx)
+=== Type
+This is a regular maintenance release.
+
+=== Hints
+
+* ...
+
+=== Features / Changes
+
+* ...
+
+=== Bug fixes
+
+* ...
+
+=== External libraries
+
+* ...
+
+=== Known issues
+
+* ...
+
+
 == V1.0.1 (2025-06-22)
 === Type
 This is a regular maintenance release.
