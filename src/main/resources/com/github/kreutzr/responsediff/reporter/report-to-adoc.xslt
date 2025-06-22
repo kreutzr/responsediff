@@ -136,6 +136,8 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:apply-templates select="response/referenceResponse"/>
 
+<xsl:apply-templates select="response/controlResponse"/>
+
 </xsl:template>
 
 <!-- ========================================================================== -->
@@ -349,6 +351,37 @@ Body:
 
 <xsl:template match="referenceResponse">
 *Reference HTTP Response*
+
+Headers:
+[cols="15,85"]
+|===
+| Name | Value
+
+<xsl:apply-templates select="headers/header" />
+|===
+
+<xsl:choose>
+<xsl:when test="download">
+Download:
+
+xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="download/size" /> bytes)
+
+</xsl:when>
+<xsl:otherwise>
+Body:
+[source,json]
+----
+<xsl:value-of select="body" />
+----
+</xsl:otherwise>
+</xsl:choose>
+
+</xsl:template>
+
+  <!-- ========================================================================== -->
+
+<xsl:template match="controlResponse">
+*Control HTTP Response*
 
 Headers:
 [cols="15,85"]

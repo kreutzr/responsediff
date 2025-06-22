@@ -5,6 +5,31 @@
 
 image::img/responsediff-logo_320x160.png[ResponseDiff]
 
+== V1.0.2 (2025-xx-xx)
+=== Type
+This is a regular maintenance release.
+
+=== Hints
+
+* ...
+
+=== Features / Changes
+
+* ...
+
+=== Bug fixes
+
+* ...
+
+=== External libraries
+
+* ...
+
+=== Known issues
+
+* ...
+ 
+ 
 == V1.0.1 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
@@ -21,6 +46,7 @@ This is a regular maintenance release.
 
 * Fixed issue of unnecessary "null" folders when downloading without having the "workPath" attribute set in the test set XML tag.
 * Fixed some typos in manuals.
+* Fixed issue in AsciiDoc report when "reportControlResponse" in responseDiff configuration is enabled.
 
 === External libraries
 
