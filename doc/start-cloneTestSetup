@@ -16,6 +16,6 @@ disableIgnoreTags='true';
 
 eval echo 'Starting CloneTestSetup'
 
-java -cp ./responsediff-1.0.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.CloneTestSetup "$( eval echo '{ \"sourceFilePath\" : \"${sourceFilePath}\", \"targetFolderPath\" : \"${targetFolderPath}\", \"overwriteTarget\" : ${overwriteTarget}, \"disableIgnoreTags\": \"${disableIgnoreTags}\" }' )"
+java -cp ./responsediff-1.0.1.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.CloneTestSetup "$( eval echo '{ \"sourceFilePath\" : \"${sourceFilePath}\", \"targetFolderPath\" : \"${targetFolderPath}\", \"overwriteTarget\" : ${overwriteTarget}, \"disableIgnoreTags\": \"${disableIgnoreTags}\" }' )"
 
 echo $?

@@ -30,17 +30,13 @@ This is a regular maintenance release.
 * ...
  
  
-== V1.0.1 (2025-xx-xx)
+== V1.0.1 (2025-06-22)
 === Type
 This is a regular maintenance release.
 
-=== Hints
-
-* ...
-
 === Features / Changes
 
-* ...
+* Provided responsediff-demo project at github for an easy start.
 
 === Bug fixes
 
@@ -48,14 +44,6 @@ This is a regular maintenance release.
 * Fixed some typos in manuals.
 * Fixed issue in AsciiDoc report when "reportControlResponse" in responseDiff configuration is enabled.
 
-=== External libraries
-
-* ...
-
-=== Known issues
-
-* ...
- 
  
 == V1.0.0 (2025-06-16)
 === Type

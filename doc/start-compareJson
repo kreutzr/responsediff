@@ -23,6 +23,6 @@ sortArraysKeys=''
 
 eval echo 'Starting CompareJson for files ${referenceFilePath} ${candidateFilePath}'
 
-java -cp ./responsediff-1.0.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.CompareJson "$( eval echo '{ \"referenceFilePath\" : \"${referenceFilePath}\", \"candidateFilePath\" : \"${candidateFilePath}\", \"storeResultPath\" : \"${storeResultPath}\", \"trim\" : ${trim}, \"ignoreCase\" : \"${ignoreCase}\", \"epsilon\" : ${epsilon}, \"ignorePaths\" : \"${ignorePaths}\", \"sortArrays\" : ${sortArrays}, \"sortArraysKeys\" : \"${sortArraysKeys}\" }' )"
+java -cp ./responsediff-1.0.1.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.CompareJson "$( eval echo '{ \"referenceFilePath\" : \"${referenceFilePath}\", \"candidateFilePath\" : \"${candidateFilePath}\", \"storeResultPath\" : \"${storeResultPath}\", \"trim\" : ${trim}, \"ignoreCase\" : \"${ignoreCase}\", \"epsilon\" : ${epsilon}, \"ignorePaths\" : \"${ignorePaths}\", \"sortArrays\" : ${sortArrays}, \"sortArraysKeys\" : \"${sortArraysKeys}\" }' )"
 
 echo $?
