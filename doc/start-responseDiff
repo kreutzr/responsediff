@@ -8,22 +8,22 @@
 # ./start-responseDiff src/test/resources/com/github/kreutzr/responsediff/tms-rest-api-test.xml ".*Create.*"
 #
 # ==============================================================================================
-set -x
+#set -x
 
 testXmlFile=$1
 testIdPattern=$2
 
 reportTitle=''
 
-referenceUrl='http://localhost:10500/my-tool/'
+referenceUrl='http://localhost:3000/v1.0.0/'
 #referenceUrl=''
 #referenceFilePath='old_report.xml'
 #referenceFilePath=''
 
-controlUrl='http://localhost:10510/my-tool/'
+controlUrl='http://localhost:3000/v1.0.0-control/'
 #controlUrl=''
 
-#candidateUrl='http://localhost:10520/my-tool/'
+candidateUrl='http://localhost:3000/v2.0.0/'
 
 ticketUrl='http://localhost/browse/'
 #xsltPath="reporter/report-to-html.xslt"
@@ -32,7 +32,7 @@ xsltPath="reporter/report-to-adoc.xslt"
 reportFileEnding="adoc"
 reportConversionFormats="html,pdf"
 
-storePath='../test-results/'
+storePath='./test-results/'
 reportWhiteNoise='false'
 maskAuthorizationHeaderInCurl='true'
 reportControlResponse='false'
