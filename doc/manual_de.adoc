@@ -817,7 +817,7 @@ Der Filter kann wie folgt konfiguriert werden:
     <filter id="xmlToJson" clazz="com.github.kreutzr.responsediff.filter.response.XmlToJsonResponseFilter">
       <parameters>
          <parameter id="contentType">application/vnd.api+json</parameter>
-         <parameter id="preserverOrder">true</parameter>
+         <parameter id="preserveOrder">true</parameter>
          <parameter id="skipAttributes">false</parameter>
          <parameter id="storeOriginalResponse">true</parameter>
       </parameters>
@@ -1996,7 +1996,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
   "epsilon" : ...,
   "ignorePaths" : "...",
   "sortArrays" : ...,
-  "sortArraysKeys" : "..."
+  "sortArrays.keys" : "..."
 }
 ----
 ====
@@ -2011,7 +2011,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 * `epsilon`: Bei Zahlenvergleichen wird das optional angegebene epsilon verwendet. (default ist 0.0000001)
 * `ignorePaths`: Optionale, komma-separierte Liste von JSON-Pfaden, die beim Vergleich ignoriert werden sollen. (default ist "")
 * `sortArrays`: Optionales Flag, ob JSON-Arrays vor dem Vergleich sortiert werden sollen (`true`) oder nicht (`false`). (default ist `false`)
-* `sortArraysKeys`: Optionale, komma-separierte Liste von JSON-Array-Keys, die im Fall, dass `sortArrays` den Wert `true` gesetzt hat, sortiert werden sollen. Wird nichts oder ein leerer String angegeben, so werden alle JSON-Arrays sortiert. (default ist "")
+* `sortArrays.keys`: Optionale, komma-separierte Liste von JSON-Array-Keys, die im Fall, dass `sortArrays` den Wert `true` gesetzt hat, sortiert werden sollen. Wird nichts oder ein leerer String angegeben, so werden alle JSON-Arrays sortiert. (default ist "")
 ====
 
 ==== Exit-Code

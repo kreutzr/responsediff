@@ -749,12 +749,15 @@ public class HttpHandler
 
     // Read body and store to file
     String relativeTestSetPath = testSetPath + testSetWorkPath;
+//LOG.error( "### RKR ###: relativeTestSetPath=" + relativeTestSetPath );
     relativeTestSetPath = relativeTestSetPath + ( ( relativeTestSetPath.endsWith( "\\" ) || relativeTestSetPath.endsWith( "/" )) ? "" : File.separator ); // Assure there is a tailing file separator
+//LOG.error( "### RKR ###: relativeTestSetPath=" + relativeTestSetPath );
     final String folderPath = storeReportPath + relativeTestSetPath; // This is an absolute path
+//LOG.error( "### RKR ###: folderPath=" + folderPath );
 
     Files.createDirectories( Path.of( folderPath ) ); // Make sure path structure exists
     final String filePath = folderPath + fileName;
-//LOG.error( "### RKR ###: filePath="        + filePath );
+//LOG.error( "### RKR ###: filePath=" + filePath );
     try {
       Files.write( Path.of( filePath ), bytes, StandardOpenOption.CREATE );  // Error with "file=/export/home/rkreutz/work/develop/test/aixigo-responsediff/src/test/resources/poc/goals-and-constraints/../info.xml"
     }

@@ -19,7 +19,8 @@ This is a regular maintenance release.
 
 === Bug fixes
 
-* ...
+* Fixed issue of unnecessary "null" folders when downloading without having the "workPath" attribute set in the test set XML tag.
+* Fixed some typos in manuals.
 
 === External libraries
 

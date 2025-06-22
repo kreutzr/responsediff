@@ -550,7 +550,7 @@ public class TestSetHandler
     final String            storeReportPath        = outerContext.getStroreReportPath();
     final Set< String >     ignorePaths            = getIgnorePaths  ( xmlResponse, xmlTest );
     final Set< String >     ignoreHeaders          = getIgnoreHeaders( xmlResponse );
-    final String            testSetWorkPath        = VariablesHandler.applyVariables( xmlTestSet.getWorkPath(), xmlRequest.getVariables(), "workPath for test \"" + testId + "\"", null, testId, testFileName );
+    final String            testSetWorkPath        = VariablesHandler.applyVariables( Converter.asString( xmlTestSet.getWorkPath(), "" ), xmlRequest.getVariables(), "workPath for test \"" + testId + "\"", null, testId, testFileName );
 
     boolean  skipped    = false;
     boolean  hasError   = false;
