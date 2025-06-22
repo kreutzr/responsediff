@@ -15,4 +15,4 @@ The entire raw data (variables, requests and respones) is made available for **f
 
 The **release-notes** can be found [here](doc/release-notes.adoc).
 
-A simple getting started project is provided [here](https://github.com/kreutzr/responsediff-demo). The start script "start-responsediff" from the "doc" folder can be used for an immediate start.
+A simple **getting started project** is provided [here](https://github.com/kreutzr/responsediff-demo). The start script "start-responsediff" from the "doc" folder can be used for an immediate start.
