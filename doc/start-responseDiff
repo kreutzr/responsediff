@@ -38,9 +38,9 @@ maskAuthorizationHeaderInCurl='true'
 reportControlResponse='false'
 executionContext=''
 
-referenceToken=$( curl -X POST ${referenceUrl}login -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s )
-controlToken=$(   curl -X POST ${controlUrl}login   -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s )
-candidateToken=$( curl -X POST ${candidateUrl}login -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s )
+referenceToken=$( curl -X POST ${referenceUrl}login -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s | tr -d '\r' | sed -nE 's/.*"uuid":"([^\"]*)".*/\1/p' )
+controlToken=$(   curl -X POST ${controlUrl}login   -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s | tr -d '\r' | sed -nE 's/.*"uuid":"([^\"]*)".*/\1/p' )
+candidateToken=$( curl -X POST ${candidateUrl}login -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s | tr -d '\r' | sed -nE 's/.*"uuid":"([^\"]*)".*/\1/p' )
 
 #eval echo 'Reference: ${referenceUrl} ${referenceToken}'
 #eval echo 'Control:   ${controlUrl}   ${controlToken}'

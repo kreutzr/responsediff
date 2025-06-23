@@ -44,7 +44,7 @@ This is a regular maintenance release.
 
 === Bug fixes
 
-* ...
+* Fixed parsing issue when reading sample token in the example login request within "start-responseDiff" script.
 
 === External libraries
 
@@ -68,6 +68,11 @@ This is a regular maintenance release.
 * Fixed issue of unnecessary "null" folders when downloading without having the "workPath" attribute set in the test set XML tag.
 * Fixed some typos in manuals.
 * Fixed issue in AsciiDoc report when "reportControlResponse" in responseDiff configuration is enabled.
+
+=== Known issues
+
+* The response of the example login request in "doc/start-responseDiff" needs to be parsed. This is already fixed in V1.0.2-SNAPSHOT.
+* The three "start-*" scripts within the "doc/" folder may have "\r" endings. If this causes problems, call "sed -i 's/\r$//' ./doc/<filename>" on each.
 
  
 == V1.0.0 (2025-06-16)
