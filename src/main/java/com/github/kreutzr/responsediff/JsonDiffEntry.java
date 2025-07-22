@@ -8,6 +8,7 @@ public class JsonDiffEntry implements Comparable< JsonDiffEntry >
   private final String      jsonPath_;
   private final String      actual_;
   private final String      expected_;
+  private final String      executionContextConstraint_;
   private       String      message_;
   private       XmlLogLevel logLevel_;
 
@@ -17,13 +18,15 @@ public class JsonDiffEntry implements Comparable< JsonDiffEntry >
       final String jsonPath,
       final String actual,
       final String expected,
+      final String executionContextConstraint,
       final String message
   )
   {
-    jsonPath_ = jsonPath;
-    actual_   = actual;
-    expected_ = expected;
-    message_  = message;
+    jsonPath_                   = jsonPath;
+    actual_                     = actual;
+    expected_                   = expected;
+    executionContextConstraint_ = executionContextConstraint;
+    message_                    = message;
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +48,13 @@ public class JsonDiffEntry implements Comparable< JsonDiffEntry >
   public String getExpected()
   {
     return expected_;
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public String getExecutionContextConstraint()
+  {
+    return executionContextConstraint_;
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,9 +101,8 @@ public class JsonDiffEntry implements Comparable< JsonDiffEntry >
   @Override
   public String toString()
   {
-    final StringBuilder sb = new StringBuilder( "{" );
-
-    sb.append( "\"jsonPath\":\""   ).append( jsonPath_ )
+    final StringBuilder sb = new StringBuilder( "{" )
+      .append( "\"jsonPath\":\""     ).append( jsonPath_ )
       .append( "\", \"expected\":\"" ).append( expected_ )
       .append( "\", \"actual\":\""   ).append( actual_ )
       .append( "\"}" );

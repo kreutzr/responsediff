@@ -180,6 +180,7 @@ public class ValidationHandler
                jsonPath,
                ""+actual, // actual
                ""+expect, // expected
+               xmlTest.getIfExecutionContextContains(), // executionContextConstraint
                message    // message
            );
            relevantDiffs  .getChanges().add( jsonDiffEntry );
@@ -190,6 +191,7 @@ public class ValidationHandler
                jsonPath,
                ""+actual, // actual
                ""+expect, // expected
+               null,      // executionContextConstraint
                EXPECTED_VALUE_TOKEN // message
            ) );
          }
@@ -240,8 +242,9 @@ public class ValidationHandler
            final String maximumDurationString = maximumDuration.toString();
            relevantDiffs.getChanges().add( new JsonDiffEntry(
                "", // jsonPath
-               requestDurationString,
-               maximumDurationString,
+               requestDurationString, // actual
+               maximumDurationString, // expected
+               null,                  // executionContextConstraint
                "Maximum request duration expected: " + maximumDurationString + " but was: " + requestDurationString
            ) );
          }
@@ -279,7 +282,7 @@ public class ValidationHandler
            }
            else {
              final String errorMessage = "Values expected but body is empty or not JSON.";
-             relevantDiffs.getChanges().add( new JsonDiffEntry( "$", "", "", errorMessage ) );
+             relevantDiffs.getChanges().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
            }
          }
 
@@ -293,19 +296,19 @@ public class ValidationHandler
            if( xmlBody.isNoBody() ) {
              if( candidateResponse.getBody() != null && !candidateResponse.getBody().trim().isEmpty() ) {
                final String errorMessage = "Body expected: null or empty but was: not empty";
-               relevantDiffs.getAdditions().add( new JsonDiffEntry( "$", "", "", errorMessage ) );
+               relevantDiffs.getAdditions().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
              }
            }
            else {
              if( candidateResponse.getBody() == null || candidateResponse.getBody().trim().isEmpty() ) {
                final String errorMessage = "Body expected: not null nor empty but was: null or empty";
-               relevantDiffs.getDeletions().add( new JsonDiffEntry( "$", "", "", errorMessage ) );
+               relevantDiffs.getDeletions().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
              }
              else {
                // NEEDS FIX B: Be more tolerant here (ignore any white spaces and line breaks)
                if( !xmlBody.getValue().equals( candidateResponse.getBody() ) ) {
                  final String errorMessage = "Body expected: " + xmlBody.getValue() + " + but was: " + candidateResponse.getBody();
-                 relevantDiffs.getChanges().add( new JsonDiffEntry( "$", "", "", errorMessage ) );
+                 relevantDiffs.getChanges().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
                }
              }
            }
@@ -593,7 +596,7 @@ public class ValidationHandler
        expectationMismatch = handleInverse( expectationMismatch, checkInverse );
        actualValue = "" + actual;
        expectValue = "" + expect;
-       checkValue = false;
+       checkValue  = false;
      }
 
      if( xmlValue.isCheckIsNull() && !expectationMismatch ) {
@@ -607,7 +610,7 @@ public class ValidationHandler
        expectationMismatch = handleInverse( expectationMismatch, checkInverse );
        actualValue = "" + actual;
        expectValue = "" + expect;
-       checkValue = false;
+       checkValue  = false;
      }
 
      // Check if either actual or expect is null to avoid NullpointerException in the following code.
@@ -619,7 +622,7 @@ public class ValidationHandler
        expectationMismatch = true;
        actualValue = actualObject == null ? null : "" + actualObject;
        expectValue = xmlValue.getValue();
-       checkValue = false;
+       checkValue  = false;
      }
 
      if( checkValue ) {
@@ -997,6 +1000,7 @@ public class ValidationHandler
          jsonPath,    // jsonPath
          actualValue, // actual
          expectValue, // expected
+         xmlValue.getIfExecutionContextContains(), // executionContextConstraint
          message      // message
      );
 
@@ -1082,6 +1086,7 @@ public class ValidationHandler
            ( subPath != null ) ? ( "$." + subPath + "." + ignorePath ) : ignorePath, // jsonPath
            null,    // actual
            null,    // expected
+           null,    // executionContextConstraint
            reason ) // message
          );
        }

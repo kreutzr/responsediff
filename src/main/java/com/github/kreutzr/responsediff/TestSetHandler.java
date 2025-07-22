@@ -357,7 +357,7 @@ public class TestSetHandler
       }
       catch( final Exception ex ) {
         foundDiffs.getChanges().add( new JsonDiffEntry(
-          "Exception", "", "",
+          "Exception", "", "", null,
           "Error reading " + serviceId + " header variable " + xmlVariable.getId() + " from path " + xmlVariable.getPath() + " ."
         + " (Exception=" + ex.getClass().getName() + ", message=" + ex.getMessage() + ")"
         ) );
@@ -437,7 +437,7 @@ public class TestSetHandler
       }
       catch( final Exception ex ) {
         foundDiffs.getChanges().add( new JsonDiffEntry(
-          "Exception", "", "",
+          "Exception", "", "", null,
           "Error reading " + serviceId + " response variable " + xmlVariable.getId() + " from path " + xmlVariable.getPath() + " ."
         + " (Exception=" + ex.getClass().getName() + ", message=" + ex.getMessage() + ")"
         ) );
@@ -638,7 +638,7 @@ public class TestSetHandler
 
       // Handle headers (read variables and store them in outer variables)
       handleTestHeaders( xmlTestSet, xmlTest, REFERENCE, referenceResponse, foundDiffs );
-      handleTestHeaders( xmlTestSet, xmlTest, CONTROL,   controlResponse, foundDiffs );
+      handleTestHeaders( xmlTestSet, xmlTest, CONTROL,   controlResponse,   foundDiffs );
       handleTestHeaders( xmlTestSet, xmlTest, CANDIDATE, candidateResponse, foundDiffs );
 
       if( !xmlResponse.isHideBody() ) {
@@ -665,7 +665,7 @@ public class TestSetHandler
         foundDiffs = JsonDiff.createDataInstance();
       }
 
-      final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry( "Exception", "", "", ex.getMessage() );
+      final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry( "Exception", "", "", null, ex.getMessage() );
 
       if( ex instanceof TestIgnoredException ) {
         LOG.debug( ex.getMessage() );
@@ -1220,6 +1220,7 @@ public class TestSetHandler
             "",
             totalDurationString,
             maxDurationString,
+            null,
             prefix + "Maximum over all duration expected: " + maxDurationString + " but was: " + totalDurationString
           );
           jsonDiffEntry.setLogLevel( XmlLogLevel.ERROR );
@@ -1431,6 +1432,7 @@ public class TestSetHandler
     xmlMessage.setLevel( diffEntry.getLogLevel() != null ? diffEntry.getLogLevel() : XmlLogLevel.ERROR );
     xmlMessage.setPath( diffEntry.getJsonPath() );
     xmlMessage.setValue( diffEntry.getMessage() );
+    xmlMessage.setExecutionContextConstraint( diffEntry.getExecutionContextConstraint() );
     return xmlMessage;
   }
 
@@ -1518,6 +1520,8 @@ public class TestSetHandler
       xmlResponse.getIgnore().addAll( joinedIgnores );
 
       xmlResponse.setDescription( VariablesHandler.applyVariables( xmlResponse.getDescription(), xmlResponse.getVariables(), "response description of testset \"" + testId + "\"", null, testId, xmlTestSet.getFileName() ) );
+
+      // NOTE: We might want to inherit "ifExecutionContextContains" strings to XmlTest and further to XmlValue and XmlHeader
     }
   }
 
@@ -1605,6 +1609,8 @@ public class TestSetHandler
 
       xmlResponse.setDescription( VariablesHandler.applyVariables( xmlResponse.getDescription(), xmlResponse.getVariables(), "response description of test \"" + testId + "\"", null, testId, fileName ) );
     }
+
+    // NOTE: We might want to inherit "ifExecutionContextContains" strings to XmlValue and XmlHeader
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

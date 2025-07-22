@@ -456,7 +456,7 @@ Body:
 
 <xsl:template match="message">
 
-| <xsl:value-of select="./@level" />
+| <xsl:value-of select="./@level" /><xsl:if test="./@executionContextConstraint != ''"> (context="<xsl:value-of select="./@executionContextConstraint" />")</xsl:if>
 | <xsl:value-of select="./@path" />
 | <xsl:value-of select="text()" />
 </xsl:template>

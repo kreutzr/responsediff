@@ -190,8 +190,9 @@
   <xsd:complexType name="XmlMessage">
     <xsd:simpleContent>
        <xsd:extension base="xsd:string">
-           <xsd:attribute name="level" type="XmlLogLevel" use="required" />
-           <xsd:attribute name="path"  type="xsd:string"  use="optional" />
+           <xsd:attribute name="level"                      type="XmlLogLevel" use="required" />
+           <xsd:attribute name="path"                       type="xsd:string"  use="optional" />
+           <xsd:attribute name="executionContextConstraint" type="xsd:string"  use="optional" />
        </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>

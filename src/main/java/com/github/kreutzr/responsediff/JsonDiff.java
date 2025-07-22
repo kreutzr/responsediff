@@ -335,7 +335,7 @@ public class JsonDiff
          .append( "Expected type: " ).append( refType.name() )
          .append( " but was: " ).append( canType.name() );
 
-      changes_.add( new JsonDiffEntry( path, canType.name(), refType.name(), sb.toString() ) );
+      changes_.add( new JsonDiffEntry( path, canType.name(), refType.name(), null, sb.toString() ) );
       return;
     }
 
@@ -378,13 +378,13 @@ public class JsonDiff
     }
     if( canLength < refLength ) {
       while( i < refLength ) {
-        deletions_.add( new JsonDiffEntry( getArrayPath( path, i ), ""+canLength, ""+refLength, "Array entry was deleted." ) );
+        deletions_.add( new JsonDiffEntry( getArrayPath( path, i ), ""+canLength, ""+refLength, null, "Array entry was deleted." ) );
         i++;
       }
     }
     else if( canLength > refLength ) {
       while( i < canLength ) {
-        additions_.add( new JsonDiffEntry( getArrayPath( path, i ), ""+canLength, ""+refLength, "Array entry was added." ) );
+        additions_.add( new JsonDiffEntry( getArrayPath( path, i ), ""+canLength, ""+refLength, null, "Array entry was added." ) );
         i++;
       }
     }
@@ -413,10 +413,10 @@ public class JsonDiff
     final Set< String > refOnly = new TreeSet< String >( refKeys ); refOnly.removeAll( common );
 
     for( final String child : canOnly ) {
-      additions_.add( new JsonDiffEntry( getMapPath( path, child ), child, null, "Map entry was added." ) );
+      additions_.add( new JsonDiffEntry( getMapPath( path, child ), child, null, null, "Map entry was added." ) );
     }
     for( final String child : refOnly ) {
-      deletions_.add( new JsonDiffEntry( getMapPath( path, child ), null, child, "Map entry was deleted."  ) );
+      deletions_.add( new JsonDiffEntry( getMapPath( path, child ), null, child, null, "Map entry was deleted."  ) );
     }
     for( final String child : common ) {
       iterate( candidate.get( child ), reference.get( child ), getMapPath( path, child ) );
@@ -461,7 +461,7 @@ public class JsonDiff
          .append( "Boolean value expected: " ).append( ref )
          .append( " but was: " ).append( can );
 
-      changes_.add( new JsonDiffEntry( path, ""+can, ""+ref, sb.toString() ) );
+      changes_.add( new JsonDiffEntry( path, ""+can, ""+ref, null, sb.toString() ) );
     }
   }
 
@@ -477,7 +477,7 @@ public class JsonDiff
          .append( "Number value expected: " ).append( ref )
          .append( " but was: " ).append( can );
 
-      changes_.add( new JsonDiffEntry( path, ""+can, ""+ref, sb.toString() ) );
+      changes_.add( new JsonDiffEntry( path, ""+can, ""+ref, null, sb.toString() ) );
     }
   }
 
@@ -497,7 +497,7 @@ public class JsonDiff
          .append( "\" but was \"" ).append( can )
          .append( "\"" );
 
-      changes_.add( new JsonDiffEntry( path, can, ref, sb.toString() ) );
+      changes_.add( new JsonDiffEntry( path, can, ref, null, sb.toString() ) );
     }
   }
 

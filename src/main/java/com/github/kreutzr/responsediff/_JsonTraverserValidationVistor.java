@@ -107,7 +107,7 @@ public class _JsonTraverserValidationVistor implements JsonTraverserVisitor
         .append( "Type expected: " ).append( expectedType.name() )
         .append( " but was: " ).append( node.getNodeType().name() );
 
-        relevantDiff_.getChanges().add( new JsonDiffEntry( path, "", "", sb.toString() ) );
+        relevantDiff_.getChanges().add( new JsonDiffEntry( path, "", "", null, sb.toString() ) );
       return;
     }
 
@@ -132,7 +132,7 @@ public class _JsonTraverserValidationVistor implements JsonTraverserVisitor
         .append( "Type expected: " ).append( expectedType.name() )
         .append( " but was: " ).append( node.getNodeType().name() );
 
-        relevantDiff_.getChanges().add( new JsonDiffEntry( path, "", "", sb.toString() ) );
+        relevantDiff_.getChanges().add( new JsonDiffEntry( path, "", "", null, sb.toString() ) );
       return;
     }
 
@@ -158,7 +158,7 @@ public class _JsonTraverserValidationVistor implements JsonTraverserVisitor
          .append( "Type expected: " ).append( expectedType )
          .append( " but was: " ).append( node.getNodeType().name() );
 
-         relevantDiff_.getChanges().add( new JsonDiffEntry( path, "", "", sb.toString() ) );
+         relevantDiff_.getChanges().add( new JsonDiffEntry( path, "", "", null, sb.toString() ) );
        return;
      }
 

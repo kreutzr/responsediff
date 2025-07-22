@@ -9,7 +9,7 @@ import org.slf4j.Logger;
  */
 public class ExecutionContextHelper
 {
-  public static final String CHECK_CONTEXT__TEST_EXPECTATION = "test exepctation";
+  public static final String CHECK_CONTEXT__TEST_EXPECTATION = "test expectation";
   public static final String CHECK_CONTEXT__TEST             = "test";
   public static final String CHECK_CONTEXT__TESTSET          = "testset";
 

@@ -40,7 +40,7 @@ This is a regular maintenance release.
 
 === Features / Changes
 
-* ...
+* For tests with attribute "ifExecutionContextContains" set, this context is rendered in the report.
 
 === Bug fixes
 
