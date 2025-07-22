@@ -759,13 +759,14 @@ In solchen Fällen empfiehlt es sich, eine möglichst starke Kombination aus and
 
 
 ==== TextToJsonResponseFilter
-Für Text-Antworten (etwa bei einem Bearer-Token) steht der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.TextToJsonResponseFilter` zur Verfügung. Er umschließt die gesamte Server-Antwort mit einem rudimentären JSON. Das JSON hat entweder diese `{"body":"<text>"}` oder diese `{"body":null}` Form.
+Für Text-Antworten (etwa bei einem Bearer-Token) steht der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.TextToJsonResponseFilter` zur Verfügung. Er umschließt die gesamte Server-Antwort mit einem rudimentären JSON. Das JSON hat entweder diese `{"body":"<text>"}` oder diese `{"body":null}` Form. Mit auf `true` gesetztem Konfigurationsparameter `splitIntoLines` nimmt das JSON endweder diese `{"body":{"lines":["<line1>","<line2>,...]}}` oder diese `{"body":{"lines":null}}` Form an.
 
 Der Filter operiert nur auf Nicht-JSON-Nachrichten. JSON-Nachrichten bleiben unverändert.
 
 Der Filter nimmt einen optionalen Konfigurationsparameter entgegen:
 
 * `contentType` : Mit diesem Parameter kann der `Content-Type`-Header der in JSON gewandelten Antwort vorgegeben werden (default ist `application/json`).
+* `splitIntoLines`: Mit diesem optionalen Parameter können die Textzeilen separat behandelt werden (default ist `false`).
 
 
 ==== XmlToJsonResponseFilter
@@ -812,6 +813,7 @@ Der Filter kann wie folgt konfiguriert werden:
     <filter id="textToJson" clazz="com.github.kreutzr.responsediff.filter.response.TextToJsonResponseFilter">
       <parameters>
          <parameter id="contentType">application/vnd.api+json</parameter>
+         <parameter id="splitIntoLines">true</parameter>
       </parameters>
     </filter>
     <filter id="xmlToJson" clazz="com.github.kreutzr.responsediff.filter.response.XmlToJsonResponseFilter">

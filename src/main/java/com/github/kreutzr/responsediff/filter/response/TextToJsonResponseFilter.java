@@ -1,12 +1,14 @@
 package com.github.kreutzr.responsediff.filter.response;
 
+import java.util.Scanner;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.kreutzr.responsediff.HttpHandler;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
 import com.github.kreutzr.responsediff.filter.DiffResponseFilterImpl;
-
+import com.github.kreutzr.responsediff.tools.Converter;
 import com.github.kreutzr.responsediff.XmlHttpResponse;
 
 /**
@@ -30,9 +32,22 @@ import com.github.kreutzr.responsediff.XmlHttpResponse;
  * <pre>
  * { "body" : null }
  * </pre>
+ * <p/>
+ * With the parameter "splitIntoLines" set to "true the result body will look like this:
+ * <pre>
+ * { "body" : { lines : [ "<1st line>", "2nd line", ... ] } }
+ * </pre>
+ * or
+ * <pre>
+ * { "body" : { lines : null } }
+ * </pre>
  */
 public class TextToJsonResponseFilter extends DiffResponseFilterImpl
 {
+  public static final String PARAMETER_NAME__SPLIT_INTO_LINES = "splitIntoLines";
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   private static final Logger LOG = LoggerFactory.getLogger( TextToJsonResponseFilter.class );
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,6 +57,7 @@ public class TextToJsonResponseFilter extends DiffResponseFilterImpl
   {
     super.registerFilterParameterNames();
     registerFilterParameterName( PARAMETER_NAME__CONTENT_TYPE );
+    registerFilterParameterName( PARAMETER_NAME__SPLIT_INTO_LINES );
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,21 +75,70 @@ public class TextToJsonResponseFilter extends DiffResponseFilterImpl
     super.apply( xmlHttpResponse );
 
     try {
-      final StringBuilder sb = new StringBuilder( "{\"body\":" );
-      if( xmlHttpResponse.getBody() == null ) {
-        sb.append( "null}" );
-      }
-      else {
-        sb.append( "\"" )
-        .append( xmlHttpResponse.getBody().replace( "\"", "\\\"" ) ) // Mask quotes
-        .append( "\"}" );
-      }
+      final boolean splitIntoLines = Converter.asBoolean(
+        getFilterParameter( PARAMETER_NAME__SPLIT_INTO_LINES ),
+        false
+      );
 
-      xmlHttpResponse.setBody( sb.toString() );
+      String body = splitIntoLines
+        ? getBodyAsLines ( xmlHttpResponse.getBody() )
+        : getCompleteBody( xmlHttpResponse.getBody() );
+
+      xmlHttpResponse.setBody( body );
       setContentTypeHeader( xmlHttpResponse, HttpHandler.HEADER_VALUE__CONTENT_TYPE__JSON );
     }
     catch( final Exception ex ) {
       throw new DiffFilterException( ex );
     }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private static String getBodyAsLines( final String body )
+  {
+    final StringBuilder sb = new StringBuilder( "{\"body\":{\"lines\":" );
+
+    if( body == null ) {
+      sb.append( "null}}" );
+    }
+    else {
+      sb.append( "[" );
+      try (Scanner scanner = new Scanner( body )) {
+        while( scanner.hasNextLine() ) {
+          sb.append( "\"" )
+          .append( scanner.nextLine()
+            .replace( "\"", "\\\"" ) // Mask quotes
+          )
+          .append( "\"" );
+
+          if( scanner.hasNextLine() ) {
+            sb.append( ", " );
+          }
+        }
+      }
+      sb.append( "]}}" );
+    }
+
+    return sb.toString();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private static String getCompleteBody( final String body )
+  {
+    final StringBuilder sb = new StringBuilder( "{\"body\":" );
+    if( body == null ) {
+      sb.append( "null}" );
+    }
+    else {
+      sb.append( "\"" )
+      .append( body
+        .replace( "\"", "\\\"" ) // Mask quotes
+        .replace( "\n", ""     ) // Mask line breaks (required for JSON)
+      )
+      .append( "\"}" );
+    }
+
+    return sb.toString();
   }
 }
