@@ -47,8 +47,9 @@ This is a regular maintenance release.
 === Bug fixes
 
 * Fixed parsing issue when reading sample token in the example login request within "start-responseDiff" script.
-* Fixed issue with TextToJsonResponseFilter when reading multiline texts.
+* Fixed issue with TextToJsonResponseFilter when reading multi-line texts.
 * Regular expressions are masked in the report to avoid confusing AsciiDoc.
+* Fixed error message text when the expected value is described as a regular expression and the actual value is unexpectedly null.
 
 === External libraries
 

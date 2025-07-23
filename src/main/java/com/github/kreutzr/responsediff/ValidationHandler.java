@@ -618,7 +618,9 @@ public class ValidationHandler
         && ( ( actualObject == null && xmlValue.getValue() != null )
           || ( actualObject != null && xmlValue.getValue() == null ) )
      ) {
-       message = "Object expected: " + xmlValue.getValue() + " but was: " + actualObject;
+       message = ( !xmlValue.isMatch() )
+         ? "Object expected: (trim=" + xmlValue.isTrim() + ", ignoreCase=" + xmlValue.isIgnoreCase() + ") " + xmlValue.getValue() + " but was: " + actualObject
+         : "Object expected to match: (trim=" + xmlValue.isTrim() + ", ignoreCase=" + xmlValue.isIgnoreCase() + ") " + xmlValue.getValue() + " but was: " + actualObject;
        expectationMismatch = true;
        actualValue = actualObject == null ? null : "" + actualObject;
        expectValue = xmlValue.getValue();

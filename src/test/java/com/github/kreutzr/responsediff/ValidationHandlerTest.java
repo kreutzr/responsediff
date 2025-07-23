@@ -290,7 +290,7 @@ public class ValidationHandlerTest
       assertThat( differences.getChanges() ).hasSize( 7 );
       assertThat( differences.getChanges().get( 0 ).getActual() ).isEqualTo( "Not exists" );
       assertThat( differences.getChanges().get( 1 ).getActual() ).isNull();
-      assertThat( differences.getChanges().get( 1 ).getMessage() ).isEqualTo( "Object expected: X but was: null" );
+      assertThat( differences.getChanges().get( 1 ).getMessage() ).isEqualTo( "Object expected: (trim=false, ignoreCase=false) X but was: null" );
       assertThat( differences.getChanges().get( 2 ).getActual() ).isEqualTo( "TYPE_MISMATCH_IN_TEST_DEFINITION" );
       assertThat( differences.getChanges().get( 3 ).getActual() ).isEqualTo( "Z" );
       assertThat( differences.getChanges().get( 4 ).getActual() ).isEqualTo( "Z" );
