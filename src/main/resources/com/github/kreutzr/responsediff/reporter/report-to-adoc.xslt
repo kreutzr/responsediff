@@ -257,17 +257,24 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
   <xsl:param name="input"/>
   <xsl:param name="search-string"/>
   <xsl:param name="replace-string"/>
+  <xsl:param name="only-first"/>
   <xsl:choose>
     <!-- Check if input contains search-string -->
     <xsl:when test="$search-string and contains($input,$search-string)">
       <!-- Keep head, replace first occurance and keep tail. -->
       <xsl:value-of select="substring-before($input,$search-string)"/>
       <xsl:value-of select="$replace-string"/>
-      <xsl:call-template name="search-and-replace">
-        <xsl:with-param name="input" select="substring-after($input,$search-string)"/>
-        <xsl:with-param name="search-string" select="$search-string"/>
-        <xsl:with-param name="replace-string" select="$replace-string"/>
-      </xsl:call-template>
+      <xsl:if test="$only-first='false'">
+        <xsl:call-template name="search-and-replace">
+          <xsl:with-param name="input" select="substring-after($input,$search-string)"/>
+          <xsl:with-param name="search-string" select="$search-string"/>
+          <xsl:with-param name="replace-string" select="$replace-string"/>
+        </xsl:call-template>
+      </xsl:if>
+      <xsl:if test="$only-first='true'">
+        <!-- No (further) occurances of search-string. Therefore return current value. -->
+        <xsl:value-of select="substring-after($input,$search-string)"/>
+      </xsl:if>
     </xsl:when>
     <xsl:otherwise>
       <!-- No (further) occurances of search-string. Therefore return current value. -->
@@ -448,10 +455,11 @@ Body:
 
 | <xsl:value-of select="./@level" /><xsl:if test="./@executionContextConstraint != ''"> (context="<xsl:value-of select="./@executionContextConstraint" />")</xsl:if>
 | <xsl:value-of select="./@path" />
-| <xsl:call-template name="search-and-replace"> <!-- Replace "*" of regular expressions to avoid confusing AsciiDoc. -->
+| <xsl:call-template name="search-and-replace"> <!-- Replace first "*" of regular expressions to avoid confusing AsciiDoc. -->
   <xsl:with-param name="input" select="text()"/>
   <xsl:with-param name="search-string">*</xsl:with-param>
   <xsl:with-param name="replace-string">\*</xsl:with-param>
+  <xsl:with-param name="only-first">true</xsl:with-param>
 </xsl:call-template>
 <xsl:apply-templates select="../../../response/ignore[@justExplain='true']">
   <xsl:with-param name="path"><xsl:value-of select="./@path" /></xsl:with-param>
