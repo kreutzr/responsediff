@@ -19,9 +19,7 @@
 :icons: font
 :icon-set: fas
 
-<xsl:apply-templates select="analysis">
-<xsl:with-param name="isTest">false</xsl:with-param>
-</xsl:apply-templates>
+<xsl:apply-templates select="analysis"/>
 
 <xsl:apply-templates select="testSet"/>
 
@@ -50,9 +48,7 @@
 </xsl:if>
 |===
 
-<xsl:apply-templates select="analysis">
-<xsl:with-param name="isTest">false</xsl:with-param>
-</xsl:apply-templates>
+<xsl:apply-templates select="analysis"/>
 
 <xsl:apply-templates select="test"/>
 
@@ -124,9 +120,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:value-of select="request/curl"/>
 ----
 
-<xsl:apply-templates select="analysis">
-<xsl:with-param name="isTest">true</xsl:with-param>
-</xsl:apply-templates>
+<xsl:apply-templates select="analysis"/>
 
 <xsl:apply-templates select="response/httpResponse"/>
 
@@ -259,8 +253,32 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
   <!-- ========================================================================== -->
 
+<xsl:template name="search-and-replace">
+  <xsl:param name="input"/>
+  <xsl:param name="search-string"/>
+  <xsl:param name="replace-string"/>
+  <xsl:choose>
+    <!-- Check if input contains search-string -->
+    <xsl:when test="$search-string and contains($input,$search-string)">
+      <!-- Keep head, replace first occurance and keep tail. -->
+      <xsl:value-of select="substring-before($input,$search-string)"/>
+      <xsl:value-of select="$replace-string"/>
+      <xsl:call-template name="search-and-replace">
+        <xsl:with-param name="input" select="substring-after($input,$search-string)"/>
+        <xsl:with-param name="search-string" select="$search-string"/>
+        <xsl:with-param name="replace-string" select="$replace-string"/>
+      </xsl:call-template>
+    </xsl:when>
+    <xsl:otherwise>
+      <!-- No (further) occurances of search-string. Therefore return current value. -->
+      <xsl:value-of select="$input"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+  <!-- ========================================================================== -->
+
 <xsl:template match="analysis">
-<xsl:param name="isTest" />
 *Analysis*
 [cols="15h,18,15h,18,15h,19"]
 |===
@@ -272,15 +290,10 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 | avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template>  | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
 
 </xsl:if>
-| success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" /> | skip        | <xsl:value-of select="skipCount" />
+| success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" />    | skip        | <xsl:value-of select="skipCount" />
 
 | total       | <xsl:value-of select="totalCount" />   | expectations| <xsl:value-of select="expectedCount" />|             |
 |===
-
-
-<xsl:if test="$isTest='true'">
-<xsl:call-template name="handleIgnores" />
-</xsl:if>
 
 <xsl:apply-templates select="messages" />
 </xsl:template>
@@ -418,29 +431,6 @@ Body:
 
   <!-- ========================================================================== -->
 
-<xsl:template name="handleIgnores">
-<xsl:if test="../response/ignore[@justExplain='true']">
-
-*Error explanations*
-[cols="15,85"]
-|===
-| JsonPath | Message
-
-  <xsl:apply-templates select="../response/ignore[@justExplain='true']" />
-|===
-</xsl:if>
-</xsl:template>
-
-  <!-- ========================================================================== -->
-
-<xsl:template match="ignore">
-
-| <xsl:value-of select="header"/><xsl:value-of select="path"/>
-| <xsl:value-of select="explanation"/>
-</xsl:template>
-
-  <!-- ========================================================================== -->
-
 <xsl:template match="messages">
 
 *Error messages*
@@ -458,7 +448,25 @@ Body:
 
 | <xsl:value-of select="./@level" /><xsl:if test="./@executionContextConstraint != ''"> (context="<xsl:value-of select="./@executionContextConstraint" />")</xsl:if>
 | <xsl:value-of select="./@path" />
-| <xsl:value-of select="text()" />
+| <xsl:call-template name="search-and-replace"> <!-- Replace "*" of regular expressions to avoid confusing AsciiDoc. -->
+  <xsl:with-param name="input" select="text()"/>
+  <xsl:with-param name="search-string">*</xsl:with-param>
+  <xsl:with-param name="replace-string">\*</xsl:with-param>
+</xsl:call-template>
+<xsl:apply-templates select="../../../response/ignore[@justExplain='true']">
+  <xsl:with-param name="path"><xsl:value-of select="./@path" /></xsl:with-param>
+</xsl:apply-templates>
+</xsl:template>
+
+  <!-- ========================================================================== -->
+
+<xsl:template match="ignore">
+<xsl:param name="path"/>
+<xsl:if test="./path=$path">
+ +
+*Explanation* : +
+<xsl:value-of select="./explanation"/>
+</xsl:if>
 </xsl:template>
 
   <!-- ========================================================================== -->

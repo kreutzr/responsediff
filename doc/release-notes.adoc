@@ -42,11 +42,13 @@ This is a regular maintenance release.
 
 * For tests with attribute "ifExecutionContextContains" set, this context is rendered in the report.
 * Added optional parameter "splitIntoLines" to TextToJsonResponseFilter.
+* Error explanations are rendered in the report together with the error message itself.
 
 === Bug fixes
 
 * Fixed parsing issue when reading sample token in the example login request within "start-responseDiff" script.
 * Fixed issue with TextToJsonResponseFilter when reading multiline texts.
+* Regular expressions are masked in the report to avoid confusing AsciiDoc.
 
 === External libraries
 
