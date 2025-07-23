@@ -5,7 +5,7 @@
 
 image::img/responsediff-logo_320x160.png[ResponseDiff]
 
-== V1.0.3 (2025-xx-xx)
+== V1.1.2 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
 
@@ -30,13 +30,34 @@ This is a regular maintenance release.
 * ...
 
 
-== V1.0.2 (2025-xx-xx)
+== V1.1.1 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
 
 === Hints
 
 * ...
+
+=== Features / Changes
+
+* ...
+
+=== Bug fixes
+
+* ...
+
+=== External libraries
+
+* ...
+
+=== Known issues
+
+* ...
+
+
+== V1.1.0 (2025-07-23)
+=== Type
+This is a regular maintenance release.
 
 === Features / Changes
 
@@ -48,16 +69,8 @@ This is a regular maintenance release.
 
 * Fixed parsing issue when reading sample token in the example login request within "start-responseDiff" script.
 * Fixed issue with TextToJsonResponseFilter when reading multi-line texts.
-* Regular expressions are masked in the report to avoid confusing AsciiDoc.
+* Fixed masking regular expressions in the report to avoid confusing AsciiDoc.
 * Fixed error message text when the expected value is described as a regular expression and the actual value is unexpectedly null.
-
-=== External libraries
-
-* ...
-
-=== Known issues
-
-* ...
 
 
 == V1.0.1 (2025-06-22)

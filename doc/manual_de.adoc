@@ -1,4 +1,4 @@
-= ResponseDiff - Version 1.0.2-SNAPSHOT
+= ResponseDiff - Version 1.1.0
 :encoding: utf-8
 :lang: de
 :toc: left
