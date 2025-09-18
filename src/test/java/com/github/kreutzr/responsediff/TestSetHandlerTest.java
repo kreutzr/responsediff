@@ -464,13 +464,13 @@ public class TestSetHandlerTest
     String durationAsString = null;
     long now = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
-    assertThat( System.currentTimeMillis() - now ).isLessThan( 5 ); // 5 = almost no execution time
+    assertThat( System.currentTimeMillis() - now ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
 
     // When / Then
     durationAsString = "UNPARSABLE";
     now = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
-    assertThat( System.currentTimeMillis() - now ).isLessThan( 5 ); // 5 = almost no execution time
+    assertThat( System.currentTimeMillis() - now ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
 
     // When / Then
     durationAsString = "PT3s"; // 3 seconds
