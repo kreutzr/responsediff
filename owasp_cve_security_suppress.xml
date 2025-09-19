@@ -2,6 +2,8 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
   <suppress>
     <!-- This comes with asciidoctorj 3.0.0. The former version 2.5.13 is also affected. 3.0.0 is the most recent version (2025-09-18). -->
+    <!-- Excluding jruby from asciidoctorj and adding it in version 9.14.4.0 (most recent version as of 2025-09-19)) led to the same CVE. -->
+    <!-- Further excluding jline from jruby-stdlib and adding it in version 3.30.6 did not work for some reason and displayed the CVE reported for jruby-stdlib 9.14.4.0 . -->
     <notes><![CDATA[
       file name: jruby-stdlib-9.4.8.0.jar: jline-2.14.6.jar
       ]]></notes>

@@ -57,7 +57,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <!-- Versions -->
-    <version.asciidoctorj>3.0.0</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE! -->
+    <version.asciidoctorj>3.0.0</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.14.4.0 ! -->
     <version.asciidoctorj-pdf>2.3.19</version.asciidoctorj-pdf>
     <version.assertj>3.27.4</version.assertj>
     <version.glassfish.jaxb-runtime>4.0.5</version.glassfish.jaxb-runtime>
@@ -499,11 +499,24 @@
               <rule>APPROVE</rule>
               <value>Apache-2.0</value>
             </dependencyPolicy>
+
+            <dependencyPolicy>
+              <type>LICENSE_NAME</type>
+              <rule>APPROVE</rule>
+              <value>The BSD License</value>
+            </dependencyPolicy>
+
             <dependencyPolicy>
               <type>LICENSE_NAME</type>
               <rule>APPROVE</rule>
               <value>Eclipse Distribution License - v 1.0</value>
             </dependencyPolicy>
+            <dependencyPolicy>
+              <type>LICENSE_NAME</type>
+              <rule>APPROVE</rule>
+              <value>EPL-2.0</value>
+            </dependencyPolicy>
+
             <dependencyPolicy>
               <type>LICENSE_NAME</type>
               <rule>APPROVE</rule>
