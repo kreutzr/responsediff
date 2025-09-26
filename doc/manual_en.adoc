@@ -300,6 +300,11 @@ The following values ​​are provided for the `report` attributes on the test 
 * `all`: The test is considered regardless of the test result.
 * `none`: The test is never considered.
 
+====== HTML from AsciiDoc
+It is easy to create a HTML report from a created AsciiDoc report. Simply append (comma separated) `html` to the configuration parameter `reportConversionFormats` (see section "<<Configuration>>"). Note that a huge HTML report may bring a browser to its limits. In such cases creating a PDF report is more suitable.
+
+====== PDF from AsciiDoc
+As for HTML it is easy to create a PDF report from a created AsciiDoc report. Simply append (comma separated) `pdf` to the configuration parameter `reportConversionFormats` (see section "<<Configuration>>").
 
 ===== HTML
 Transformer file name: `report-to-html.xslt`

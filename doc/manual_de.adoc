@@ -299,6 +299,11 @@ Folgende Werte sind für die `report`-Attribute an den TestSets und Tests vorges
 * `all`: Der Test wird unabhängig des Testergebnisses berücksichtigt.
 * `none`: Der Test wird niemals berücksichtigt.
 
+====== HTML via AsciiDoc
+Es ist einfach, einen HTML-Report aus einem erzeugten AsciiDoc-Report zu erzeugen. Es reicht `html` (Komma-separiert) dem Wert des Konfigurationsparameters `reportConversionFormats` anzuhängen (siehe Abschnit "<<Konfiguration>>"). Es ist zu beachten, dass ein umfangreicher HTML-Report ggfs. einen Browser an seine Grenzen bringen kann. In diesen Fällen ist es geeigneter, einen PDF-Report zu erzeugen.
+
+====== PDF via AsciiDoc
+Wie für HTML ist es einfach, einen PDF-Report aus einem erzeugten AsciiDoc-Report zu erzeugen. Es reicht `pdf` (Komma-separiert) dem Wert des Konfigurationsparameters `reportConversionFormats` anzuhängen (siehe Abschnit "<<Konfiguration>>").
 
 ===== HTML
 Name der Transformatordatei: `report-to-html.xslt`
