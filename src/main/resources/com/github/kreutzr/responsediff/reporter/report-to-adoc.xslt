@@ -128,10 +128,11 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:apply-templates select="response/httpResponse/originalResponse" />
 </xsl:if>
 
+<xsl:if test="analysis/successCount!=1">
 <xsl:apply-templates select="response/referenceResponse"/>
 
 <xsl:apply-templates select="response/controlResponse"/>
-
+</xsl:if>
 </xsl:template>
 
 <!-- ========================================================================== -->
