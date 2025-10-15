@@ -98,6 +98,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:variable name="ticketUrl"><xsl:value-of select="/XmlResponseDiffSetup/ticketServiceUrl" /></xsl:variable>
 
+<xsl:if test="( (./description != '') or (./@waitBefore != '') or (./@ticketReference != '') or (./@breakOnFailure) )">
 [cols="15h,85"]
 |===
 
@@ -114,6 +115,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 | BreakOnFailure | <xsl:value-of select="./@breakOnFailure"/>
 </xsl:if>
 |===
+</xsl:if>
 
 [source,curl]
 ----
@@ -247,8 +249,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 </xsl:when>
 <!-- Seconds -->
 <xsl:when test="contains($duration,'S')">
-<xsl:value-of select="substring-before($duration,'S')"/> [sec]
-</xsl:when>
+<xsl:value-of select="substring-before($duration,'S')"/> [sec]</xsl:when>
 </xsl:choose>
 </xsl:template>
 
@@ -295,7 +296,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 | begin       | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="begin" /></xsl:call-template> | end | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="end" /></xsl:call-template> | duration    | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="duration" /></xsl:call-template> 
 
 <xsl:if test="(avgDuration != '') and (minDuration != '') and (maxDuration != '')">
-| avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template>  | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
+| avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template> | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
 
 </xsl:if>
 | success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" />    | skip        | <xsl:value-of select="skipCount" />
