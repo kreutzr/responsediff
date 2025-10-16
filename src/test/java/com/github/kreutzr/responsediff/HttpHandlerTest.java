@@ -66,6 +66,7 @@ public class HttpHandlerTest
      // When / Then
      assertThat( HttpHandler.isJsonResponse( HttpHandler.HEADER_VALUE__CONTENT_TYPE__JSON     ) ).isTrue();
      assertThat( HttpHandler.isJsonResponse( HttpHandler.HEADER_VALUE__CONTENT_TYPE__JSON_API ) ).isTrue();
+     assertThat( HttpHandler.isJsonResponse( HttpHandler.HEADER_VALUE__CONTENT_TYPE__JSON_API + ";ext=\"https://jsonapi.org/ext/atomic\"" ) ).isTrue();
      assertThat( HttpHandler.isJsonResponse( "application/text" ) ).isFalse();
    }
 

@@ -931,9 +931,9 @@ public class HttpHandler
       return false;
     }
 
-    // -----------------------------------------
+    // ---------------------------------------------------------
     // Mime types of HATEOAS JSON formats:
-    // -----------------------------------------
+    // ---------------------------------------------------------
     // application/hal+json
     // application/prs.hal-forms+json
     // application/vnd.siren+json
@@ -941,8 +941,8 @@ public class HttpHandler
     // application/vnd.api+json
     // application/vnd.amundsen-uber+json
     //
-    // May be followed e.g. by "; charset=utf-8"
-    // -----------------------------------------
+    // May be followed e.g. by "; charset=utf-8" or "; ext=..."
+    // ---------------------------------------------------------
 
     final String contentTypeLower = contentType.toLowerCase();
     return contentTypeLower.matches( HEADER_VALUE__CONTENT_TYPE__JSON_PATTERN );
