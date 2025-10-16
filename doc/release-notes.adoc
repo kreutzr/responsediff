@@ -52,6 +52,7 @@ This is a regular maintenance release.
 * Upgrade asciidoctorj-pdf from 2.3.19 to 2.3.20
 * Upgrade assertj from 3.27.4 to 3.27.6
 * Upgrade glassfis jaxb-runtime from 4.0.5 to 4.0.6
+* Upgrade junit-jupiter from 5.14.0 to 6.0.0
 * Upgrade jsonsmart from 2.5.2 to 2.6.0
 * Upgrade junit-jupiter from 5.13.4 to 5.14.0
 * Upgrade log4j from 2.25.1 to 2.25.2
