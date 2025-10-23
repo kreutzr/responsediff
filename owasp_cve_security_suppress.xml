@@ -10,6 +10,27 @@
     <packageUrl regex="true">^pkg:maven/jline/jline@.*$</packageUrl>
     <cve>CVE-2023-50572</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+      file name: jruby-stdlib-9.4.8.0.jar
+      ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jruby/jruby-stdlib@.*$</packageUrl>
+    <cve>CVE-2025-46551</cve>
+    </suppress>
+    <suppress>
+    <notes><![CDATA[
+      file name: jruby-9.4.8.0.jar
+      ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jruby/jruby@.*$</packageUrl>
+    <cve>CVE-2025-46551</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+      file name: jruby-base-9.4.8.0.jar
+      ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jruby/jruby-base@.*$</packageUrl>
+    <cve>CVE-2025-46551</cve>
+  </suppress>
 
   <!-- Add suppressions here -->
 </suppressions>
