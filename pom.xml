@@ -746,9 +746,10 @@
             <!-- OWASP (vulnerability check) -->
             <groupId>org.owasp</groupId>
             <artifactId>dependency-check-maven</artifactId>
-            <version>12.1.6</version>
+            <version>12.1.8</version>
             <configuration>
               <failBuildOnCVSS>4</failBuildOnCVSS>
+              <failBuildOnUnusedSuppressionRule>true</failBuildOnUnusedSuppressionRule>
               <cveValidForHours>24</cveValidForHours>
               <!--
               Skip artifacts not bundled in distribution (Provided and Runtime scope)

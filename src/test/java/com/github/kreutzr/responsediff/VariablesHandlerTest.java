@@ -12,7 +12,7 @@ public class VariablesHandlerTest
   public void testThatUrlVariablesAreReplaced()
   {
     // Given
-    final String       text         = "http://my-server:${PORT}/my-service/${ENDPOINT}/?id=${ID}&value=${UNKNOWN}";
+    final String       text         = "http://my-server:${PORT}/my-service/${ENDPOINT}/?id=${ID}&value=${UNKNOWN}&portcopy=${PORT_COPY}&recursive=${RECURSIVE}";
     final XmlVariables xmlVariables = new XmlVariables();
     final String       source       = "serviceUrl";
     final String       serviceId    = TestSetHandler.CANDIDATE;
@@ -37,6 +37,20 @@ public class VariablesHandlerTest
       "someId",
       null
     ) );
+    // Allow to use variables with (other) variables defined within the same "variables" XML-block
+    xmlVariables.getVariable().add( createXmlVariable(
+      "PORT_COPY",
+      XmlValueType.INT,
+      "${PORT}",
+      null
+    ) );
+    // Assure that infinite recursion is avoided
+    xmlVariables.getVariable().add( createXmlVariable(
+      "RECURSIVE",
+      XmlValueType.INT,
+      "${RECURSIVE}",
+      null
+    ) );
 
     // When
     final String result = VariablesHandler.applyVariables(
@@ -49,7 +63,7 @@ public class VariablesHandlerTest
     );
 
     // Then
-    assertThat( result ).isEqualTo( "http://my-server:1234/my-service/someEndpoint/?id=someId&value=${UNKNOWN}" );
+    assertThat( result ).isEqualTo( "http://my-server:1234/my-service/someEndpoint/?id=someId&value=${UNKNOWN}&portcopy=1234&recursive=${RECURSIVE}" );
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -606,7 +606,7 @@ The mechanism can be continued at TestSet level, so that if a TestSet is aborted
 
 [CAUTION]
 ====
-The `breakOnFailure` attribute is not inherited, but is valid only locally. Furthermore, it is only permitted if strict execution is configured for the enclosing test set (`order` attribute with the value `strict`). An illegal combination of the `breakOnFailue` and `order` attributes leads to an immediate program termination.
+The `breakOnFailure` attribute is not inherited, but is valid only locally. Furthermore, it is only permitted if strict execution is configured for the enclosing test set (`order` attribute with the value `strict`). An illegal combination of the `breakOnFailure` and `order` attributes leads to an immediate program termination.
 ====
 
 ==== Delayed execution
@@ -924,10 +924,11 @@ This is done simply by specifying the `id` (as a tag attribute) and the value as
 [source,xml]
 ----
 <variables>
-  <variable id="personId" type="long">1000000000000000</variable>
+  <variable id="personId"  type="long">1000000000000000</variable>
+  <variable id="idCopy"    type="long">${personId}</variable>
   <variable id="randomInt" type="int" >${randomInteger()}</variable>
-  <variable id="today" type="date">${nowDate()}</variable>
-  <variable id="tomorrow" type="date">${nowDate(1)}</variable>
+  <variable id="today"     type="date">${nowDate()}</variable>
+  <variable id="tomorrow"  type="date">${nowDate(1)}</variable>
   <variable id="yesterday" type="date">${nowDate(-1)}</variable>
   <variable id="todayNoon" type="datetime">${nowDate()}T12:00:00</variable>
   ...
@@ -1885,7 +1886,7 @@ Since errors in the setup of the test scenario will lead to subsequent errors, i
 ----
 <XmlResponseDiffSetup ...>
   <testSet id="Complex data" order="strict">
-    <testSet id=before" breakOnFailue="true">
+    <testSet id="before" breakOnFailure="true">
       ...
     </testSet>
     <testSet id=test">

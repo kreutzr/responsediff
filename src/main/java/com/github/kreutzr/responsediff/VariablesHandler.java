@@ -49,14 +49,19 @@ public class VariablesHandler
       ? serviceId.trim() + "."
       : null;
 
-    Matcher matcher = VARIABLE_GROUP_PATTERN.matcher( text );
+    Matcher matcher = VARIABLE_GROUP_PATTERN.matcher( result );
     while( matcher.find() ) {
       result = handleMatcher( matcher, 2, 1, result, variables, servicePrefix ); // 2="${", 1="}"
     }
 
-    matcher = VARIABLE_GROUP_PATTERN_ENCODED.matcher( text ); // Request endpoint parameters are already URL encoded here
+    matcher = VARIABLE_GROUP_PATTERN_ENCODED.matcher( result ); // Handle e.g., request endpoint parameters which are already URL encoded here
     while( matcher.find() ) {
       result = handleMatcher( matcher, 6, 3, result, variables, servicePrefix ); // 6="%24%7B" => "${", 3="%7D" => "}"
+    }
+
+    // Allow to use variables with (other) variables defined within the same "variables" XML-block
+    if( !result.equals( text ) ) {
+      result = applyVariables( result, xmlVariables, source, serviceId, testId, testFileName );
     }
 
     return result;

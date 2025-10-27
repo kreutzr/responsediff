@@ -605,7 +605,7 @@ Der Mechanismus kann auf TestSet-Ebene fortgeführt werden, so dass bei einem au
 
 [CAUTION]
 ====
-Das Attribut `breakOnFailure` wird nicht vererbt, sondern gilt ausschließlich lokal. Zudem ist es nur erlaubt, wenn für das umschließende TestSet eine strikte Ausführung konfiguiert ist (`order`-Attribut mit Wert `strict`). Eine unzulässige Kombination der Attribute `breakOnFailue` und `order` führt zu einem sofortigen Programmabbruch.
+Das Attribut `breakOnFailure` wird nicht vererbt, sondern gilt ausschließlich lokal. Zudem ist es nur erlaubt, wenn für das umschließende TestSet eine strikte Ausführung konfiguiert ist (`order`-Attribut mit Wert `strict`). Eine unzulässige Kombination der Attribute `breakOnFailure` und `order` führt zu einem sofortigen Programmabbruch.
 ====
 
 ==== Verzögerte Ausführung
@@ -923,6 +923,7 @@ Dies erfolgt einfach durch Angabe der `id` (als Tag-Attribut) und des Wertes als
 ----
 <variables>
   <variable id="personId"  type="long">1000000000000000</variable>
+  <variable id="idCopy"    type="long">${personId}</variable>
   <variable id="randomInt" type="int" >${randomInteger()}</variable>
   <variable id="today"     type="date">${nowDate()}</variable>
   <variable id="tomorrow"  type="date">${nowDate(1)}</variable>
@@ -1880,7 +1881,7 @@ Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, 
 ----
 <XmlResponseDiffSetup ...>
   <testSet id="Complex data" order="strict">
-    <testSet id=before" breakOnFailue="true">
+    <testSet id="before" breakOnFailure="true">
       ...
     </testSet>
     <testSet id=test">

@@ -41,6 +41,7 @@ This is a regular maintenance release.
 === Features / Changes
 
 * If responses of candidate and reference (and control) instances do not differ, only the candidate response is shown in the report to avoid redundancies.
+* Allowed to use variables with (other) variables defined within the same "variables" XML-block.
 
 === Bug fixes
 
@@ -48,10 +49,10 @@ This is a regular maintenance release.
 
 === External libraries
 
-* Upgrade "dependency-check-maven" plugin from 12.1.3 to 12.1.6
+* Upgrade "dependency-check-maven" plugin from 12.1.3 to 12.1.8
 * Upgrade asciidoctorj-pdf from 2.3.19 to 2.3.20
 * Upgrade assertj from 3.27.4 to 3.27.6
-* Upgrade glassfis jaxb-runtime from 4.0.5 to 4.0.6
+* Upgrade glassfish.jaxb-runtime from 4.0.5 to 4.0.6
 * Upgrade junit-jupiter from 5.14.0 to 6.0.0
 * Upgrade jsonsmart from 2.5.2 to 2.6.0
 * Upgrade junit-jupiter from 5.13.4 to 5.14.0
@@ -72,7 +73,7 @@ This is a regular maintenance release.
 * Upgrade "dependency-check-maven" plugin from 8.4.3 to 12.1.3
 * Upgrade asciidoctorj from 2.5.13 to 3.0.0
 * Upgrade assertj from 3.26.3 to 3.27.4
-* Upgrade glassfis jaxb-runtime from 4.0.1 to 4.0.5
+* Upgrade glassfish.jaxb-runtime from 4.0.1 to 4.0.5
 * Upgrade jackson-databind form 2.18.2 to 2.20.0
 * Upgrade jakarta.xml.bind-api from 4.0.2 to 4.0.4
 * Upgrade junit-jupiter from 5.11.3 to 5.13.4
