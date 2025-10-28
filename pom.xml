@@ -58,7 +58,7 @@
 
     <!-- Versions -->
     <version.asciidoctorj>3.0.0</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.4.14.0 ! -->
-    <version.asciidoctorj-pdf>2.3.20</version.asciidoctorj-pdf>
+    <version.asciidoctorj-pdf>2.3.21</version.asciidoctorj-pdf>
     <version.assertj>3.27.6</version.assertj>
     <version.glassfish.jaxb-runtime>4.0.6</version.glassfish.jaxb-runtime>
     <version.jackson-databind>2.20.0</version.jackson-databind>
