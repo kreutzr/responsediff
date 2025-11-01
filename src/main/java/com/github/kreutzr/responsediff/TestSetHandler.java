@@ -44,7 +44,7 @@ public class TestSetHandler
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Traverses the given xmlTestSetup (depth first order), performs each test and stores the results within the analysis section of each incuded test and test set.
+   * Traverses the given xmlTestSetup (depth first order), performs each test and stores the results within the analysis section of each included test and test set.
    * @param testIdPattern The pattern of the tests to execute. May be null. (default null means that all tests are executed)
    * @param xmlTestSetup The XmlResponseDiffSetup to traverse. Must not be null.
    * @param candidateServiceUrl The URL of the candidate server. Must not be null.
