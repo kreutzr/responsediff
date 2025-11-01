@@ -33,18 +33,24 @@ public class TestInitializationTest extends TestBase
       // ==========================
       final XmlResponseDiffSetup setUp = responseDiff_.getTestSetup();
       final XmlTestSet xmlTestSet_00    = setUp.getTestSet().get( 0 );
-      final XmlTestSet xmlTestSet_00_01 = xmlTestSet_00.getTestSet().get( 0 );
+      final XmlTestSet xmlTestSet_00_in = xmlTestSet_00.getTestSet().get( 0 );
+      final XmlTestSet xmlTestSet_00_01 = xmlTestSet_00.getTestSet().get( 1 );
+      final XmlTestSet xmlTestSet_00_02 = xmlTestSet_00_in.getTestSet().get( 0 );
 
       assertThat( xmlTestSet_00   .getTest() ).hasSize( 1 );
+      assertThat( xmlTestSet_00_in.getTest() ).hasSize( 0 );
       assertThat( xmlTestSet_00_01.getTest() ).hasSize( 1 );
+      assertThat( xmlTestSet_00_02.getTest() ).hasSize( 1 );
 
       // -----------------------------------------------------------------------------------------------------
 
       final XmlTest test_A = xmlTestSet_00   .getTest().get( 0 );
       final XmlTest test_B = xmlTestSet_00_01.getTest().get( 0 );
+      final XmlTest test_C = xmlTestSet_00_02.getTest().get( 0 );
 
       assertThat( test_A.getId() ).isEqualTo( "TestSet 00 / Test A" );
       assertThat( test_B.getId() ).isEqualTo( "TestSet 00 / TestSet 00-01 / Test B" );
+      assertThat( test_C.getId() ).isEqualTo( "TestSet 00 / Set in set / TestSet 00-02 / Test C" );
 
       // -----------------------------------------------------------------------------------------------------
 
@@ -54,6 +60,7 @@ public class TestInitializationTest extends TestBase
         final XmlVariables testSet_00_01_Variables = xmlTestSet_00_01.getVariables();
         final XmlVariables test_A_Variables        = test_A          .getVariables();
         final XmlVariables test_B_Variables        = test_B          .getVariables();
+        final XmlVariables test_C_Variables        = test_C          .getVariables();
 
         assertThat( setUp_Variables.getVariable() ).hasSize( 1 );
         assertThat( getVariableValue( setUp_Variables, "var-00" ) ).isEqualTo( "AAA" );
@@ -71,6 +78,11 @@ public class TestInitializationTest extends TestBase
         assertThat( test_B_Variables.getVariable() ).hasSize( 2 );
         assertThat( getVariableValue( test_B_Variables, "var-00" ) ).isEqualTo( "DDD" );
         assertThat( getVariableValue( test_B_Variables, "var-01" ) ).isEqualTo( "EEE" );
+
+        assertThat( test_C_Variables.getVariable() ).hasSize( 3 );
+        assertThat( getVariableValue( test_C_Variables, "var-00"    ) ).isEqualTo( "XXX" );
+        assertThat( getVariableValue( test_C_Variables, "var-01"    ) ).isEqualTo( "YYY" );
+        assertThat( getVariableValue( test_C_Variables, "var-inner" ) ).isEqualTo( "${var-00}" );
       }
 
       // -----------------------------------------------------------------------------------------------------

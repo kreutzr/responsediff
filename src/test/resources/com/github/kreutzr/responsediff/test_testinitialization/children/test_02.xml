@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XmlResponseDiffSetup id="Setup 00-01">
+<XmlResponseDiffSetup id="Setup 00-02">
 
-  <testSet id="TestSet 00-01" report="all">
+  <testSet id="TestSet 00-02" report="all">
     <variables>
-      <variable id="var-00">DDD</variable>
+      <variable id="var-00">XXX</variable>
     </variables>
 
-    <test id="Test B">
+    <test id="Test C">
       <variables>
-        <variable id="var-01">EEE</variable>
+        <variable id="var-01">YYY</variable>
       </variables>
-
+    
       <request endpoint="my-endpoint" >
         <variables>
-          <variable id="var-00">FFF</variable>
+          <variable id="var-00">ZZZ</variable>
         </variables>
       </request>
     </test>

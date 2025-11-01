@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XmlResponseDiffSetup id="ROOR SETUP">
-  <description>Test that static variables are inherited from setup to testSet to test</description>
+<XmlResponseDiffSetup id="ROOT SETUP">
+  <description>Test that static variables are inherited from setup to testSet to test. Test also that testSets within testSets are handled correctly.</description>
 
   <filterRegistry>
     <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter"/>
@@ -54,6 +54,13 @@
            </parameters>
         </request>
      </test>
+
+     <testSet id="Set in set">
+       <variables>
+         <variable id="var-inner">${var-00}</variable>
+       </variables>
+       <testSetInclude file="children/test_02.xml" />
+     </testSet>
 
      <testSetInclude file="children/test_01.xml" />
 

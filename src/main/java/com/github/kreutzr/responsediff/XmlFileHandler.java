@@ -148,44 +148,103 @@ public class XmlFileHandler
        );
      }
 
+     // Prepare XmlTestSet to initialize inner XmlTestSets with setup variables
+     final XmlTestSet dummyTestSet = new XmlTestSet(); // We use this as vehicle to join XmlSetup variables.
+     dummyTestSet.setVariables( setup.getVariables() );
+     dummyTestSet.setId( setup.getId() );
+
      for( final XmlTestSet xmlTestSet : setup.getTestSet() ) {
        // Insert information for debugging and logging
        xmlTestSet.setFileName( xmlFilePath );
        xmlTestSet.setFilePath( testSetPath );
 
-       // Initialize with setup variables
-       final XmlTestSet dummyTestSet = new XmlTestSet(); // We use this as vehicle to join XmlSetup variables.
-       dummyTestSet.setVariables( setup.getVariables() );
-       dummyTestSet.setId( setup.getId() );
-       TestSetHandler.joinVariablesForXmlTestSet( xmlTestSet, dummyTestSet, xmlTestSet.getId() );
-
-       // Read test set inclusions by recursion
-       final List< XmlTestSet > includedTestSets = new ArrayList<>();
-       if( xmlTestSet.getTestSetInclude() != null ) {
-         for( final XmlTestSetInclude xmlTestSetInclude : xmlTestSet.getTestSetInclude() ) {
-           final String absPath         = xmlFile.getAbsolutePath();
-           final String name            = xmlFile.getName();
-           final String includeFileName = absPath.substring( 0, absPath.length() - name.length() ) + xmlTestSetInclude.getFile();
-           final Path   parentPath      = Path.of( xmlTestSetInclude.getFile() ).getParent();
-           final String includeFilePath = testSetPath + ( parentPath != null ? parentPath.toString() + File.separator : "" );
-
-           final XmlResponseDiffSetup includeSetup = readSetup(
-             includeFileName,
-             schema,
-             xmlTestSet,
-             initialize,
-             includeFilePath
-           );
-
-           includedTestSets.addAll( includeSetup.getTestSet() );
-         }
-       }
-       xmlTestSet.getTestSet().addAll( includedTestSets );
+       readInnerTestSets( xmlTestSet, xmlFile, dummyTestSet, schema, initialize, testSetPath );
      }
 
      expandSetupByIterations( setup );
 
      return setup;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Reads the inner test sets (which may contain test sets themselves) and initializes it with parent variables.
+   * @param xmlTestSet The XmlTestSet to use. Must not be null.
+   * @param xmlFile The XML file of the outer setup. Must not be null.
+   * @param xmlTestSetParent The outer XmlTestSet (use to inherit variables from). Must not be null.
+   * @param schema An optional Schema to use for XSD validation. May be null.
+   * @param initialize Flag, if the read XmlSetup shall be initialized (true) or not (false).
+   * @param testSetPath The path of the current TestSet. Must not be null.
+   * @throws JAXBException
+   * @throws SAXException
+   * @throws ParseException
+   */
+  private static void readInnerTestSets(
+    final XmlTestSet xmlTestSet,
+    final File       xmlFile,
+    final XmlTestSet xmlTestSetParent,
+    final Schema     schema,
+    final boolean    initialize,
+    final String     testSetPath
+  )
+  throws JAXBException, SAXException, ParseException
+  {
+    // Initialize with parent variables
+    TestSetHandler.joinVariablesForXmlTestSet( xmlTestSet, xmlTestSetParent, xmlTestSet.getId() );
+
+    // Read inner test sets
+    for( XmlTestSet innerXmlTestSet : xmlTestSet.getTestSet() ) {
+      readInnerTestSets( innerXmlTestSet, xmlFile, xmlTestSet, schema, initialize, testSetPath );
+    }
+
+    // Read included test sets
+    readIncludedTestSets( xmlTestSet, xmlFile, schema, initialize, testSetPath );
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Reads the included test sets (which may contain test sets themselves).
+   * @param xmlTestSet The XmlTestSet to use. Must not be null.
+   * @param xmlFile The XML file of the outer setup. Must not be null.
+   * @param schema An optional Schema to use for XSD validation. May be null.
+   * @param initialize Flag, if the read XmlSetup shall be initialized (true) or not (false).
+   * @param testSetPath The path of the current TestSet. Must not be null.
+   * @throws JAXBException
+   * @throws SAXException
+   * @throws ParseException
+   */  private static void readIncludedTestSets(
+    final XmlTestSet xmlTestSet,
+    final File       xmlFile,
+    final Schema     schema,
+    final boolean    initialize,
+    final String     testSetPath
+  )
+  throws JAXBException, SAXException, ParseException
+  {
+    // Read test set inclusions by recursion
+    final List< XmlTestSet > includedTestSets = new ArrayList<>();
+    if( xmlTestSet.getTestSetInclude() != null ) {
+      for( final XmlTestSetInclude xmlTestSetInclude : xmlTestSet.getTestSetInclude() ) {
+        final String absPath         = xmlFile.getAbsolutePath();
+        final String name            = xmlFile.getName();
+        final String includeFileName = absPath.substring( 0, absPath.length() - name.length() ) + xmlTestSetInclude.getFile();
+        final Path   parentPath      = Path.of( xmlTestSetInclude.getFile() ).getParent();
+        final String includeFilePath = testSetPath + ( parentPath != null ? parentPath.toString() + File.separator : "" );
+
+        final XmlResponseDiffSetup includeSetup = readSetup(
+          includeFileName,
+          schema,
+          xmlTestSet,
+          initialize,
+          includeFilePath
+        );
+
+        includedTestSets.addAll( includeSetup.getTestSet() );
+      }
+      xmlTestSet.getTestSet().addAll( includedTestSets );
+    }
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

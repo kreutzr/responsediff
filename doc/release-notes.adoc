@@ -46,6 +46,7 @@ This is a regular maintenance release.
 === Bug fixes
 
 * Avoided tables without rows when converting XML to adoc via XSLT for tests and thereby avoided warn logs when rending adoc to PDF.
+* Fixed issue that test set includes within inner test sets where not read.
 
 === External libraries
 
