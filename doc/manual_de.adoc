@@ -762,6 +762,12 @@ In solchen Fällen empfiehlt es sich, eine möglichst starke Kombination aus and
 
 ====
 
+[CAUTION]
+====
+Enthält die Anfrage ein eigenes *Sortierkriterium* (z.B. `sort=name`), so ist darauf zu achten, dass die Konfiguration des `SortJsonBodyResponseFilter` die gewünschte Sortierung nicht beeinträchtigt. Oft bietet es sich an, in solchen Fällen die Vererbung von Filtern zu unterdrücken (vgl. das Attribut `inherit` des `filters`-Elements im Abschnitt <<Response>>).
+
+====
+
 
 ==== TextToJsonResponseFilter
 Für Text-Antworten (etwa bei einem Bearer-Token) steht der Filter `com.github.kreutzr.responsediff.XmlHttpResponse.TextToJsonResponseFilter` zur Verfügung. Er umschließt die gesamte Server-Antwort mit einem rudimentären JSON. Das JSON hat entweder diese `{"body":"<text>"}` oder diese `{"body":null}` Form. Mit auf `true` gesetztem Konfigurationsparameter `splitIntoLines` nimmt das JSON endweder diese `{"body":{"lines":["<line1>","<line2>,...]}}` oder diese `{"body":{"lines":null}}` Form an.

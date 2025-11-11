@@ -287,6 +287,9 @@ public class HttpHandler
     else {
       // In case of a test end point with an absolute URL (e.g., because we read the "location" header from a redirect (303) response), we do not use the service URL.
     }
+
+    endPoint = maskSpecialUrlCharacters( endPoint );
+
     sb.append( endPoint );
 
     // Add parameters to serviceUrl (if any)
@@ -421,6 +424,17 @@ public class HttpHandler
     );
 
     return response;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  private static String maskSpecialUrlCharacters( final String endPoint )
+  {
+	return endPoint
+	  .replace( "[", "%5B" )
+	  .replace( "]", "%5D" )
+	  .replace( " ", "%20" )
+	  ;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1221,7 +1235,7 @@ public class HttpHandler
   {
     LOG.trace( "applyResponseFilters()" );
 
-    if( xmlHttpResponse == null || xmlResponse == null || xmlResponse.getFilters() == null ) {
+    if( xmlHttpResponse == null || xmlResponse == null || xmlResponse.getFilters() == null || xmlResponse.getFilters().getFilter().isEmpty() ) {
       return;
     }
 

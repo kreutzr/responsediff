@@ -47,6 +47,7 @@ This is a regular maintenance release.
 
 * Avoided tables without rows when converting XML to adoc via XSLT for tests and thereby avoided warn logs when rending adoc to PDF.
 * Fixed issue that test set includes within inner test sets where not read.
+* Special characters "[", "]" and " " are masked in request as "%5B", "%5D" and "%20".
 
 === External libraries
 
