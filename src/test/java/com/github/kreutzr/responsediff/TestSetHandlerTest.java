@@ -462,20 +462,29 @@ public class TestSetHandlerTest
 
     // When / Then
     String durationAsString = null;
-    long now = System.currentTimeMillis();
+    {
+      // 2025-11-11: Java 21
+      // NOTE: For some reasons invoking TestSetHandler.waitBefore() for the first time costs 500+ millis. => "Heating call".
+      TestSetHandler.waitBefore( durationAsString );
+    }
+    long start = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
-    assertThat( System.currentTimeMillis() - now ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
+    long end = System.currentTimeMillis();
+    assertThat( end - start ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
 
     // When / Then
     durationAsString = "UNPARSABLE";
-    now = System.currentTimeMillis();
+    start = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
-    assertThat( System.currentTimeMillis() - now ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
+    end = System.currentTimeMillis();
+    assertThat( end - start ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
 
     // When / Then
     durationAsString = "PT3s"; // 3 seconds
-    now = System.currentTimeMillis();
+    start = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
-    assertThat( System.currentTimeMillis() - now ).isGreaterThanOrEqualTo( 3000 );
+    end = System.currentTimeMillis();
+    assertThat( end - start ).isGreaterThanOrEqualTo( 3000 );
+    assertThat( end - start ).isLessThanOrEqualTo( 3020 ); // +20 = almost no execution time (NOTE: 10 was sometimes exceeded (15))
   }
 }

@@ -52,12 +52,13 @@ This is a regular maintenance release.
 === External libraries
 
 * Upgrade "dependency-check-maven" plugin from 12.1.3 to 12.1.8
-* Upgrade asciidoctorj-pdf from 2.3.19 to 2.3.21
+* Upgrade asciidoctorj from 3.0.0 to 3.0.1
+* Upgrade asciidoctorj-pdf from 2.3.19 to 2.3.23
 * Upgrade assertj from 3.27.4 to 3.27.6
 * Upgrade glassfish.jaxb-runtime from 4.0.5 to 4.0.6
-* Upgrade junit-jupiter from 5.14.0 to 6.0.0
-* Upgrade jsonsmart from 2.5.2 to 2.6.0
-* Upgrade junit-jupiter from 5.13.4 to 5.14.0
+* Upgrade jackson-databind form 2.20.0 to 2.20.1
+* Upgrade jsonpath form 2.9.0 to 2.10.0
+* Upgrade junit-jupiter from 5.13.4 to 6.0.1
 * Upgrade log4j from 2.25.1 to 2.25.2
 * Upgrade mockito from 5.19.0 to 5.20.0
 
