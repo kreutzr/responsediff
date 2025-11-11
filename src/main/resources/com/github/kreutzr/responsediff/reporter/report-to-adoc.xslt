@@ -15,7 +15,7 @@
 :encoding: utf-8
 :lang: de
 :toc: left
-:toclevels: 5
+:toclevels: 12
 :icons: font
 :icon-set: fas
 
@@ -29,7 +29,7 @@
 
   <!-- ========================================================================== -->
 
-<xsl:template match="testSet"><xsl:call-template name="headline"/> TestSet: <xsl:call-template name="substring-after-last">
+<xsl:template match="testSet"><xsl:call-template name="headline"/><xsl:call-template name="substring-after-last">
 <xsl:with-param name="string" select="./@id" />
 <xsl:with-param name="delimiter" select="' / '" />
 </xsl:call-template>
@@ -91,7 +91,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
   <!-- ========================================================================== -->
 
-<xsl:template name="insertTest"><xsl:param name="result" /><xsl:call-template name="headline"/> <xsl:call-template name="headlineIcon"><xsl:with-param name="result" select="$result" /></xsl:call-template> Test: <xsl:call-template name="substring-after-last">
+<xsl:template name="insertTest"><xsl:param name="result" /><xsl:call-template name="headline"/> <xsl:call-template name="headlineIcon"><xsl:with-param name="result" select="$result" /></xsl:call-template>&nbsp;<xsl:call-template name="substring-after-last">
 <xsl:with-param name="string" select="./@id" />
 <xsl:with-param name="delimiter" select="' / '" />
 </xsl:call-template>
@@ -487,14 +487,8 @@ Body:
 <xsl:when test="structureDepth =  3">=== </xsl:when>
 <xsl:when test="structureDepth =  4">==== </xsl:when>
 <xsl:when test="structureDepth =  5">===== </xsl:when>
-<xsl:when test="structureDepth =  6">====== </xsl:when>
-<xsl:when test="structureDepth =  7">======= </xsl:when>
-<xsl:when test="structureDepth =  8">======== </xsl:when>
-<xsl:when test="structureDepth =  9">========= </xsl:when>
-<xsl:when test="structureDepth = 10">========== </xsl:when>
-<xsl:when test="structureDepth = 11">=========== </xsl:when>
-<xsl:when test="structureDepth = 12">============ </xsl:when>
-<xsl:otherwise>============= (<xsl:value-of select="structureDepth"/>) </xsl:otherwise></xsl:choose>
+<!-- AsciiDoc does only support 5 levels in the table of content -->
+<xsl:otherwise>====== </xsl:otherwise></xsl:choose>
 </xsl:template>
 
   <!-- ========================================================================== -->
