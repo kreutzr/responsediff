@@ -15,7 +15,7 @@
 :encoding: utf-8
 :lang: de
 :toc: left
-:toclevels: 12
+:toclevels: 5
 :icons: font
 :icon-set: fas
 
