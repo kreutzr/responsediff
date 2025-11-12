@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -197,10 +198,18 @@ public class ValidationHandler
          }
        }
 
-       // Validate expected response headers
+       // Validate expected response header values
        if( xmlExpected.getHeaders() != null ) {
+         // Get all header names with a path definition
+         final Set< String > lowerCaseHeaderNamesWithPaths = new TreeSet<>();
+         for( final XmlHeader xmlHeader : xmlExpected.getHeaders().getHeader() ) {
+           if( xmlHeader.getPath() != null ) {
+             lowerCaseHeaderNamesWithPaths.add( xmlHeader.getName().toLowerCase() );
+           }
+         }
+
          // Create JSON from candidate headers
-         final String headersAsJson = ToJson.fromHeaders( candidateResponse.getHeaders(), true );
+         final String headersAsJson = ToJson.fromHeaders( candidateResponse.getHeaders(), true, lowerCaseHeaderNamesWithPaths ); // All "real" headers with their values (which may be JSON)
          final JsonPathHelper jph = new JsonPathHelper( headersAsJson );
 
          // Lookup expected headers
@@ -330,8 +339,8 @@ public class ValidationHandler
      // Calculate header differences
      final JsonDiff headerIgnore = createIgnoreJsonDiff( innerWhiteNoise, ignoreHeaders, ToJson.HEADERS_SUBPATH, IGNORE_HEADER_TOKEN );
      relevantDiffs.join( validateJson(
-       ToJson.fromHeaders( candidateResponse.getHeaders(), true ),
-       ToJson.fromHeaders( referenceResponse.getHeaders(), true ),
+       ToJson.fromHeaders( candidateResponse.getHeaders(), true, null ),
+       ToJson.fromHeaders( referenceResponse.getHeaders(), true, null ),
        headerIgnore,
        reportWhiteNoise,
        testId

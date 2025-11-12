@@ -1779,6 +1779,45 @@ The `ifExecutionContextContains` attribute is accepted in the following XML bloc
 <2> The test that the value at `$.project.version` must not contain the string "SNAPSHOT" is only performed if the configuration parameter `executionContext` contains the value "releasing" when ResponseDiff is called.
 ====
 
+=== Response Header with JSON Content
+
+If a response header contains a JSON structure, its content can also be accessed for testing.
+
+.Example: The response header "x-duration"
+====
+In this example, a server-side performance measurement was implemented such that the time of receipt of a request and the time of dispatch of the response are recorded, the duration between these times is determined, and everything is returned as a JSON header.
+
+Below, we see the value of such a measurement as a JSON structure and assume that it is returned as the `x-duration` header in the response.
+[source]
+----
+{"begin":"2025-11-12T18:54:40.225345222Z","duration":"PT0.003391786S","end":"2025-11-12T18:54:40.228737008Z"}
+----
+====
+For evaluation purposes, the `<header>` tag has the attribute `path`. This attribute is considered *exclusively* for `<header>` tags within a `<expected><headers>` tag structure. The value of the `path` attribute must be expressed as JSONPath. All options from the section section "<<Checking values ​​(`values`)>>" are available for testing.
+
+Example: Testing a JSON Response Header
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="client-management setup">
+  <testSet id="Performance">
+    <test id="Check maximum speed of person endpoint request execution">
+      <request method="GET" endpoint="/persons" />
+      <response>
+        <expected>
+          <headers>
+            <header name="x-duration" path="$.duration" type="duration" epsilon="PT0.003S">PT0.005S</header> <1>
+          </headers>
+        </expected>
+      </response>
+    </test>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> We assume an execution time (measured server-side) of 5 milliseconds, allowing a tolerance of 3 milliseconds. Therefore, the maximum acceptable execution time is 8 milliseconds. This example does not assume that the execution time can be less than 2 milliseconds.
+
+====
 
 == Automatic adaptation of tests when changing versions
 

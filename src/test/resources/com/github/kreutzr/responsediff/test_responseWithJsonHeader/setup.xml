@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="ROOT SETUP">
+  <description>Test that response definitions are inherited from setup to testSet to test</description>
+
+  <testSet id="TestSet 00" order="strict" report="all">
+    <description>Check that testing with JSON header values works.</description>
+
+    <test id="Test JSON header value" >
+      <request method="GET" endpoint="my-endpoint"/>
+      <response>
+        <ignore>
+          <header>x-duration</header>
+          <explanation>Duration measurements often differ.</explanation>
+        </ignore>
+        <expected>
+          <headers>
+            <header name="x-duration" path="$.duration" type="duration" epsilon="PT0.001S">PT0.02S</header>
+          </headers>
+        </expected>
+      </response>
+    </test>
+  </testSet>
+
+</XmlResponseDiffSetup>

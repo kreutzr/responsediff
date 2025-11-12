@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<XmlResponseDiffSetup id="ROOR SETUP">
+<XmlResponseDiffSetup id="ROOT SETUP">
   <description>Test that response definitions are inherited from setup to testSet to test</description>
 
   <filterRegistry>

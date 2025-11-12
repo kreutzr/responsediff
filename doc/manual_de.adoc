@@ -1775,6 +1775,45 @@ Das Attribut `ifExecutionContextContains` wird in folgenden XML-Blocks akzeptier
 <2> Der Test, dass der Wert unter `$.project.version` die Zeichenkette "SNAPSHOT" nicht enthalten darf, erfolgt nur, wenn beim Aufruf von ResponseDiff der Konfigurationsparameter `executionContext` den Wert "releasing" enthält.
 ====
 
+=== Antwort-Header mit JSON-Inhalt
+
+Falls ein Antwort-Header eine JSON-Struktur beinhaltet, so kann auch auf deren Inhalt für Tests zugegriffen werden.
+
+.Beispiel Der Antwort-Header "x-duration"
+====
+In diesem Beispiel wurde eine serverseitige Performanzmessung so implementieren, dass der Zeitpunkt bei Eingang einer Anfrage und der beim Ausgang der Antwort festgehalten werden, die Dauer zwischen den Zeitpunkten bestimmt und alles in einer JSON-Struktur als Header zurückliefert wird.
+
+Nachfolgend sehen wir den Wert einer solchen Messung als JSON-Struktur und nehmen an, dass er als `x-duration`-Header in der Antwort geliefert wird.
+[source]
+----
+{"begin":"2025-11-12T18:54:40.225345222Z","duration":"PT0.003391786S","end":"2025-11-12T18:54:40.228737008Z"}
+----
+====
+Für die Auswertung hat das `<header>`-Tag das Attribut `path`. Das Attribut wird *ausschließlich* bei `<header>`-Tags innerhalb einer `<expected><headers>`-Tag-Struktur berücksichtigt. Der Wert des `path`-Attributs muss als JSONPath formuliert sein. Für den Test stehen alle Möglichkeiten aus dem Abschnitt "<<Prüfen von Werten (`values`)>>" zur Verfügung.
+
+.Beispiel Test eine JSON Antwort-Headers
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="client-management setup">
+  <testSet id="Performance">
+    <test id="Check maximum speed of person endpoint request execution">
+      <request method="GET" endpoint="/persons" />
+      <response>
+        <expected>
+          <headers>
+            <header name="x-duration" path="$.duration" type="duration" epsilon="PT0.003S">PT0.005S</header> <1>
+          </headers>
+        </expected>
+      </response>
+    </test>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> Wir gehen von einer Ausführungszeit (serverseitig gemessen) von 5 Millisekunden aus, wobei wir eine Toleranz von 3 Millisekunden erlauben. Die maximal akzeptierte Ausführungszeit beträgt also 8 Millisekunden. Dass die Ausführungszeit weniger als 2 Millisekunden dauern kann, wird in diesem Beispiel nicht angenommen.
+
+====
 
 == Automatische Anpassung der Tests bei Versionswechsel
 

@@ -25,7 +25,7 @@ public class ToJsonTest
     xmlHeaders.getHeader().add( createXmlHeader( "etag", "my-etag" ) );
 
     // When
-    final String result = ToJson.fromHeaders( xmlHeaders, false );
+    final String result = ToJson.fromHeaders( xmlHeaders, false, null );
 
     // Then
     assertThat( result ).isEqualTo( "\"headers\":{\"header-name\":\"header-value\",\"etag\":\"my-etag\"}" );

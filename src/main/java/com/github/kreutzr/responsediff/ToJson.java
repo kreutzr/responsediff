@@ -1,5 +1,7 @@
 package com.github.kreutzr.responsediff;
 
+import java.util.Set;
+
 /**
  * Class to provide XML to JSON transformation.
  */
@@ -14,9 +16,14 @@ public class ToJson
    * Creates a JSON representation of the passed XmlHeaders.
    * @param xmlHeaders The headers object to transform. May be null.
    * @param withOuterBrackets Flag, if the outer brackets shall be added (true) or not (false).
+   * @param lowerCaseHeaderNamesWithPaths An optional Set of lower case header names which have a path definition. => Therefore the value must be treated as JSON. May be null.
    * @return The formatted XmlHeaders.
    */
-  static String fromHeaders( final XmlHeaders xmlHeaders, final boolean withOuterBrackets )
+  static String fromHeaders(
+    final XmlHeaders xmlHeaders,
+    final boolean withOuterBrackets,
+    final Set< String > lowerCaseHeaderNamesWithPaths
+  )
   {
     final StringBuilder sb = new StringBuilder();
 
@@ -36,9 +43,16 @@ public class ToJson
           sb.append( "," );
         }
         final XmlHeader xmlHeader = xmlHeaders.getHeader().get( i );
-        sb.append( "\"" ).append( xmlHeader.getName().toLowerCase() ) // HTTP spec says that header names are case-insensitive ( see "https://datatracker.ietf.org/doc/html/rfc2616#section-4.2")
-          .append( "\":\"" ).append( maskQuotes( xmlHeader.getValue() ) )
-          .append( "\"" );
+        final String lowerCaseHeaderName = xmlHeader.getName().toLowerCase(); // HTTP spec says that header names are case-insensitive ( see "https://datatracker.ietf.org/doc/html/rfc2616#section-4.2")
+
+        final boolean hasPath = lowerCaseHeaderNamesWithPaths != null && lowerCaseHeaderNamesWithPaths.contains( lowerCaseHeaderName );
+        sb.append( "\"" ).append( lowerCaseHeaderName ).append( "\":" );
+        if( hasPath ) {
+          sb.append( xmlHeader.getValue() ); // Use plain value => It becomes part of the JSON structure instead of a String value.
+        }
+        else {
+          sb.append( "\"" ).append( maskQuotes( xmlHeader.getValue() ) ).append( "\"" );
+        }
       }
       sb.append( "}" );
     }
@@ -186,6 +200,31 @@ public class ToJson
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
+   * Creates a JSON representation of the passed XmlValue.
+   * @param xmlvalue The XmlValue to transform. May be null.
+   * @return The formatted XmValue.
+   */
+  static String fromXmlValue( final XmlValue xmlValue )
+  {
+    if( xmlValue == null ) {
+      return "null";
+    }
+
+    final StringBuilder sb = new StringBuilder()
+      .append("{\"epsilon\":\"").append( xmlValue.getEpsilon() ).append( "\"" )
+      .append( ",\"path\":\""  ).append( xmlValue.getPath()    ).append( "\"" )
+      .append( ",\"type\":\""  ).append( xmlValue.getType()    ).append( "\"" )
+      .append( ",\"value\":\"" ).append( xmlValue.getValue()   ).append( "\"" )
+//      .append( ",\"ticketReference\":\""            ).append( xmlValue.getTicketReference()            ).append( "\"" )
+//      .append( ",\"ifExecutionContextContains\":\"" ).append( xmlValue.getIfExecutionContextContains() ).append( "\"" )
+    ;
+
+    return sb.append( "}" ).toString();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
    * Creates a JSON representation of the passed Xml objects.
    * @param endpoint   The HTTP endpoint. May be null.
    * @param xmlHeaders The headers. May be null.
@@ -205,7 +244,7 @@ public class ToJson
     if( sb.length() > 1 ) {
       sb.append( "," );
     }
-    sb.append( fromHeaders( xmlHeaders, false ) );
+    sb.append( fromHeaders( xmlHeaders, false, null ) );
 
     if( body != null ) {
       sb.append( ",\"body\":\"" ).append( body ).append( "\"" );

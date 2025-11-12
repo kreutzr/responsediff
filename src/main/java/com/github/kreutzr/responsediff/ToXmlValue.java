@@ -21,6 +21,15 @@ public class ToXmlValue
     xmlValue.setCheckIsNull    ( xmlHeader.isCheckIsNull() );
     xmlValue.setCheckInverse   ( xmlHeader.isCheckInverse() );
 //    xmlValue.setTicketReference( xmlHeader.getTicketReference() );
+
+    final String path = xmlHeader.getPath();
+    if( path != null ) {
+      if( !path.startsWith( "$." ) ) {
+        throw new RuntimeException( "A header path must start with \"$.\". Path was: " + path );
+      }
+      xmlValue.setPath( xmlValue.getPath() + path.substring( 1 ) ); // Remove leading "$" of path
+    }
+
     return xmlValue;
   }
 }

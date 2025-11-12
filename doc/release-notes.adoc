@@ -42,6 +42,7 @@ This is a regular maintenance release.
 
 * If responses of candidate and reference (and control) instances do not differ, only the candidate response is shown in the report to avoid redundancies.
 * Allowed to use variables with (other) variables defined within the same "variables" XML-block.
+* Allowed to test JSON structures returned within a response header.
 
 === Bug fixes
 

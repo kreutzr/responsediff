@@ -319,7 +319,7 @@ public class TestSetHandler
        return;
      }
 
-    final String json = ToJson.fromHeaders( xmlHttpResponse.getHeaders(), true );
+    final String json = ToJson.fromHeaders( xmlHttpResponse.getHeaders(), true, null );
 
     JsonPathHelper jph = null;
     for( final XmlVariable xmlVariable : xmlTest.getResponse().getVariables().getVariable() ) {
@@ -1910,26 +1910,28 @@ public class TestSetHandler
     final Set< String > headersToIgnore
   )
   {
-//LOG.error( "### testID=" + testId + ", target="+ ToJson.fromHeaders( target, true ) + ", base=" + ToJson.fromHeaders( base, true ) );
+//LOG.error( "### testID=" + testId + ", target="+ ToJson.fromHeaders( target, true, null ) + ", base=" + ToJson.fromHeaders( base, true, null ) );
 
     final Map< String, XmlHeader > xmlHeadersByName = new TreeMap<>();
 
     // Join XmlHeaders
     if( base != null ) {
       for( final XmlHeader xmlHeader : base.getHeader() ) {
-        if( headersToIgnore == null || !headersToIgnore.contains( xmlHeader.getName() ) )  {
-//LOG.error("### RKR ### Adding expected header from base: " + xmlHeader.getName() + " ignore=" + headersToIgnore );
-          xmlHeadersByName.put( xmlHeader.getName(), xmlHeader );
+        final String headerName = xmlHeader.getName() + ( xmlHeader.getPath() != null ? xmlHeader.getPath() : "" ); // Make sure we do not lose expectation of headers with JSON paths.
+        if( headersToIgnore == null || !headersToIgnore.contains( headerName ) )  {
+//LOG.error("### RKR ### Adding expected header from base: " + headerName + " ignore=" + headersToIgnore );
+          xmlHeadersByName.put( headerName, xmlHeader );
         }
         else {
-//LOG.error("### RKR ### Skipped adding expected header from base: " + xmlHeader.getName() + " ignore=" + headersToIgnore );
+//LOG.error("### RKR ### Skipped adding expected header from base: " + headerName + " ignore=" + headersToIgnore );
         }
       }
     }
     if( target != null ) {
       for( final XmlHeader xmlHeader : target.getHeader() ) {
-//LOG.error("### RKR ### Adding expected header from target: " + xmlHeader.getName() + " ignore=" + headersToIgnore );
-        xmlHeadersByName.put( xmlHeader.getName(), xmlHeader );
+       final String headerName = xmlHeader.getName() + ( xmlHeader.getPath() != null ? xmlHeader.getPath() : "" ); // Make sure we do not lose expectation of headers with JSON paths.
+//LOG.error("### RKR ### Adding expected header from target: " + headerName + " ignore=" + headersToIgnore );
+        xmlHeadersByName.put( headerName, xmlHeader );
       }
     }
 
@@ -2054,8 +2056,8 @@ public class TestSetHandler
     }
 
     result.setHeaders( joinHeaders( result.getHeaders(), base != null ? base.getHeaders() : null, testId, headersToIgnore ) );
-    result.setValues ( joinValues ( result.getValues(),  base != null ? base.getValues()  : null,  testId, pathsToIgnore ) );
-    result.setBody   ( joinBody   ( result.getBody(),    base != null ? base.getBody()    : null,    testId ) );
+    result.setValues ( joinValues ( result.getValues(),  base != null ? base.getValues()  : null, testId, pathsToIgnore ) );
+    result.setBody   ( joinBody   ( result.getBody(),    base != null ? base.getBody()    : null, testId ) );
 
 //LOG.error( "RKR testID=" + testId + ", joined expected headers="  + ToJson.fromHeaders( result.getHeaders(), true ) );
 
@@ -2164,7 +2166,18 @@ public class TestSetHandler
     if( base != null ) {
       for( final XmlIgnore xmlIgnore : base ) {
         if( xmlIgnore.getHeader() != null ) {
-          if( !headersToExpect.contains( xmlIgnore.getHeader() ) ) {
+          // ------------------------------------------------------------------------------------------------------------------------------------------------------------
+          // NOTE: "true": The thereby skipped condition was introduced 2025-05-27 with commit message "Fixed issue with inherited expected values and ignores.".
+          //       Without skipping (without "true ||") a header difference (of e.g. a JSON value like in "x-duration") is reported instead of being ignored
+          //       only because an expectation test is implemented (no matter if the expectation is met or not).
+          //
+          // Current usage example:
+          // - "x-duration" header is ignored in central setup.xml
+          // - "x-duration" header value is JSON like "{ "duration" : "PT0.01S" }". The values differ between the candidate and reference responses.
+          // - A header expectation is implemented in the response like "<header name="x-duration" path="$.duration" type="duration" epsilon="PT0.00001S">PT0S</header>".
+          // => Without skipping the "x-duration" header value difference is reported instead of being ignored!
+          // ------------------------------------------------------------------------------------------------------------------------------------------------------------
+          if( true || !headersToExpect.contains( xmlIgnore.getHeader() ) ) {
             xmlIgnoreByHeader.put( xmlIgnore.getHeader(), xmlIgnore );
           }
         }

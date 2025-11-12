@@ -310,6 +310,7 @@
         <xsd:attribute name="checkInverse"               type="xsd:boolean"  use="optional" default="false"/>
         <xsd:attribute name="ticketReference"            type="xsd:string"   use="optional" />
         <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
+        <xsd:attribute name="path"                       type="xsd:string"   use="optional" /> <!-- For expected response values only -->
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
