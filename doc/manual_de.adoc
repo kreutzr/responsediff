@@ -182,7 +182,7 @@ Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen Skripts durchzuführen. Im `doc`-Ordner ist ein Vorschlag für solch ein Skript vorbereitet (`start-responseDiff`).
 ====
 
-.Beispiel JSON für die Aufruf-Konfiguration
+.Beispiel-JSON für die Aufruf-Konfiguration
 ====
 [source,json]
 ----
@@ -331,7 +331,7 @@ Diese sind im Einzelnen:
 
 Die Definition mindestens eines TestSets (`testSet`) ist mandatorisch.
 
-.Beispiel TestSetup
+.TestSetup
 ====
 [source,xml]
 ----
@@ -367,7 +367,7 @@ Ein TestSet umfasst wie das Test-Setup auch einige generelle Informationen, die 
 
 Darüber benötigt jedes TestSet verpflichtend ein `id`-Attribut.
 
-.Beispiel für ein TestSet
+.TestSet
 ====
 [source,xml]
 ----
@@ -399,7 +399,7 @@ Darüber benötigt jedes TestSet verpflichtend ein `id`-Attribut.
 
 Ein TestSet kann aber ebenso auch weitere TestSets beinhalten. Auf diese Weise ergibt sich eine Baumstruktur.
 
-.Beispiel für ein strukturiertes, komplexes Test-Setup
+.Strukturiertes, komplexes Test-Setup
 ====
 [source,xml]
 ----
@@ -601,7 +601,52 @@ Diese Einstellung gilt dann für alle im TestSet eingeschlossen TestSets und Tes
 ==== Lokaler Testabbruch
 Hängen Tests voneinander ab (beispielsweise, weil erwartet wird, dass Abfrage-Aufrufe nicht funktionieren werden, wenn die Erzeugung eines später abzufragenden Objekts fehlgeschlagen ist), so kann dem durch das Attribut `breakOnFailure` auf Test-Ebene Rechnung getragen werden. Das Attribut würde beim Test, der ein später benötigtes Objekt anlegt auf `true` gesetzt werden (default ist `false`). Schlägt dieser Aufruf dann fehl, so werden alle nachfolgenden Tests und TestSets dieser Gliederungsebene nicht mehr ausgeführt. So übersprungene Tests werden in der Testzusammenfassung als "skipped" notiert.
 
+Um zu vermeiden, dass ein Testabfolge abgebrochen wird, "nur" weil ein eher unwichtiger Test (z.B. eine Zeitmessung) fehlschlägt, kann je Wertprüfung ein LogLevel (`logLevel`) definiert werden. Nur die Level `ERROR` und `FATAL` führen zu einem Testabbruch, nicht aber z.B. `WARN`. Wenn kein LogLevel explizit angegeben ist, wird `ERROR` als Default angenommen.
+
 Der Mechanismus kann auf TestSet-Ebene fortgeführt werden, so dass bei einem auf diese Weise abgebrochenen TestSet die nachfolgenden TestSets der selben Gliederungsebene ebenfalls nicht mehr ausgeführt werden.
+
+.Lokaler Testabbruch und Einsatz von `logLevel`
+====
+[source]
+----
+<XmlResponseDiffSetup ...>
+  <testSet id="Complex test" order="strict"> <1>
+    <testSet id="before" breakOnFailure="true> <2>
+      <test id="Create test element" breakOnFailure="true"> <3>
+        ...
+        <response> <4>
+          <httpStatus logLevel="WARN">200</httpStatus>
+          <headers>
+            <header name="x-duration" path="$.duration" logLevel="WARN" type="duration" epsilon="PT0.005S">PT0S</header>
+          </headers>
+          <maxDuration logLevel="WARN">PT0.010S</maxDuration>
+          <values>
+            <value path="..." logLevel="WARN">...</value>
+          </values>
+          <body logLevel="WARN">...</body>
+        </expected>
+        </response>
+      </test>
+      ...
+      <overAllExpected> <5>
+        <maxDuration logLevel="WARN">PT0S</maxDuration>
+      </overAllExpected>
+    </testSet>
+    <testSet id=test">
+      ...
+    </testSet>
+    <testSet id=after">
+      ...
+    </testSet>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> Das umschließende TestSet definiert durch Angabe von `order="strict"` eine sequenzielle Ausführung der inneren Elemente. Dadurch wird das TestSet mit ID "before" als erstes ausgeführt.
+<2> Das TestSet "before" ist mit `breakOnFailure="true"` markiert. Scheitert die Ausführung mit nur einem (inneren) Fehler (`ERROR` oder `FATAL`), so werden die nachfolgenden TestSets  "test" und "after" übersprungen ("lokaler Testabbruch"). Wenn die Ausführungsreihenfolge der inneren Tests relevant wäre, müsste hier ebenfalls `order="strict"` gesetzt werden.
+<3> Der Test mit ID "Create test element" ist ebenfalls mit `breaOnFailure="true"` markiert. Ein Scheitern führt zum Überspringen aller nachfolgenden Tests.
+<4> Bei den Erwartungswerten kann optional ein LogLevel angegeben werden. Ist der LogLevel nicht `ERROR` oder `FATAL`, so löst ein Scheitern **keinen** lokalen Testabbruch aus.
+<5> Das selbe gilt für die übergreifenden Erwartungswerte (`overAllExpected`).
+====
 
 [CAUTION]
 ====
@@ -627,7 +672,7 @@ Folgende Aufruf-Filter sind bereits in ResponseDiff enthalten:
 ==== `RemoveHeaderRequestFilter`
 Im Allgemeinen werden die zu setzenden Header innerhalb eines `request`-Eintrags spezifiziert. Zusätzlich zu diesen werden aber auch immer alle die Header gesetzt, die beim Aufruf von ResponseDiff von außen übergeben wurden (vgl. JSON-Werte `referenceHeaders`, `controlHeaders` und `candidateHeaders` in der Aufruf-Konfiguration). Sollen spezielle Header beim Server-Aufruf unterdrückt werden (etwa ein von außen übergebenes Bearer-Token beim Aufruf des Login-Endpunkts), so kann der `RemoveHeaderRequestFilter` wie folgt eingesetzt werden:
 
-.Beispiel XML für eine header-Unterdrückung
+.XML für eine header-Unterdrückung
 ====
 
 Die Konfiguration des Filters erfolgt über den nachfolgenden Parameter:
@@ -690,7 +735,7 @@ Der Filter nimmt drei optionale Konfigurationsparameter entgegen:
 Zusätzlich kann je Name spezifiziert werden, welche Daten konkret zur Sortierung herangezogen werden sollen. Die Pfade zu den zu berücksichtigenden Daten werden als JSONPath in runde Klammern (`'('` und `')'`) und ggfs. durch ein Semikolon (`;`) getrennt angegeben.
 * `storeOriginalResponse` : Über diesen Parameter kann die eingehende Antwort im Filterergebnis gespeichert werden, bevor der Filter seine Arbeit aufnimmt. Die Original-Antwort findet sich in der Ergebnisstruktur unter `originalResponse`. Die Speicherung wird aktiviert, wenn als Parameterwert `true` gesetzt wird (default ist `false`).
 
-.Beispiel für eine detaillierte Filterkonfiguration
+.Detaillierte Filterkonfiguration
 ====
 Der `SortJsonBodyResponseFilter` liefert für das nachfolgende JSON-Dokument
 
@@ -807,7 +852,7 @@ Der Filter kann wie folgt konfiguriert werden:
 * `normalizeArrays` : Dieser Parameter darf nur auf `true` gesetzt werden, wenn der Parameter `normalizeMaps` auf `true` gesetzt wurde. Ist dies der Fall, so bewirkt dies, dass Einträge innerhalb von JSON-Listen ebenfalls normalisiert werden (z.B.: `[ "array.length" : 1 ]' -> "[ "array" : { "length" : 1  } ]`). (default is `false`)
 
 
-.Beispiel für eine Filterkonfiguration
+.Filterkonfiguration
 ====
 [source,xml]
 ----
@@ -860,7 +905,7 @@ Für die Erstellung eigener Request- und Response-Filter bietet ResponseDiff ein
 
 Auf diese Weise ist es einfach, eigene, parametrisierbare Filter zu erstellen.
 
-.Beispiel für einen eigenen RequestFilter
+.Eigener RequestFilter
 ====
 [source,java]
 ----
@@ -892,7 +937,7 @@ public class MyRequestFilter extends DiffFilterImpl implements DiffRequestFilter
 ----
 ====
 
-.Beispiel für einen eigenen ResponseFilter
+.Eigener ResponseFilter
 ====
 [source,java]
 ----
@@ -923,7 +968,7 @@ public class MyResponseFilter extends DiffResponseFilterImpl
 Auf jeder Ebene (Test-Setup -> TestSet -> Test -> Request bzw. Response) ist es möglich, Variablen zu definieren.
 Dies erfolgt einfach durch Angabe der `id` (als Tag-Attribut) und des Wertes als Text.
 
-.Beispiel einer Variablen-Definition
+.Variablen-Definition
 ====
 [source,xml]
 ----
@@ -953,7 +998,7 @@ Diese Variablen können an folgenden Stellen verwendet werden:
 * Request-Nachricht (`body`)
 * Response-Erwartungswert (`value`) vgl. Abschnitt "<<Auswerten von Antwortwerten>>"
 
-.Beispiel einer Variablen-Verwendung
+.Variablen-Verwendung
 ====
 [source,xml]
 ----
@@ -1030,7 +1075,7 @@ ResponseDiff bietet einige Möglichkeiten, um mit solchen Abweichungen umzugehen
 
 Zudem kann ein Erwartungswert (für `header` wie für `value`) auch dynamisch erzeugt werden (vgl. `$.lastUpdated` im nachfolgenden Beispiel). Weitere Informationen zu dynamischen Werten finden sich im Abschnitt "<<Funktionswerte in Variablen-Definitionen und Erwartungswerten>>".
 
-.Beispiel zu Erwartungswerten in Funktionstests
+.Erwartungswerte in Funktionstests
 ====
 [source,xml]
 ----
@@ -1229,7 +1274,7 @@ Sollen Variablen ausgelesen werden, so muss (meist) sichergestellt werden, dass 
 Antwortwerte können sich Instanz-spezifisch unterscheiden, weswegen Sie als zwei bzw. drei  separate Variablen vorgehalten werden (für Referenz, Kandidat und ggfs. Kontrolle). Bei der Verwendung dieser Variablen muss hierauf jedoch keine Rücksicht genommen werden, da ResponseDiff die Variablen je nach Instanz individuell ersetzt. Im ausgeleiteten XML-Report können die Variablen aber einzeln eingesehen werden.
 ====
 
-.Beispiel zum Auslesen und Verwenden von Antwortwerten
+.Auslesen und Verwenden von Antwortwerten
 ====
 [source,xml]
 ----
@@ -1300,7 +1345,7 @@ ResponseDiff wurde nicht speziell für Performanztest konzipiert. Auch bei einze
 Insbesondere bei Verwendung eines `overAllExpected`-Blocks bei TestSets wird (technisch bedingt) nicht nur die reine Aufrufdauer des Kandidat-Aufrufs gemessen, sondern auch die Dauern der Aufrufe der Referenz- und ggfs. der Kontroll-Instanzen - zuzüglich der internen Ausführungszeiten zwischen diesen Aufrufen.
 ====
 
-.Beispiel zur Prüfung von Aufrufdauern
+.Prüfung von Aufrufdauern
 ====
 [source,xml]
 ----
@@ -1369,7 +1414,7 @@ Trying to read variables file "<filePath>".
 
 Die Struktur der unter `source` angegebenen JSON-Datei ist wie folgt:
 
-.Beispiel einer Konfiguration für den SetVariablesRequestFilter (Im Ergebnis sind die beiden Alternativen identisch.)
+.Konfiguration für den SetVariablesRequestFilter (Im Ergebnis sind die beiden Alternativen identisch.)
 ====
 ----
 {
@@ -1404,7 +1449,7 @@ Beide Attributnamen `variables` und `variableSets` müssen aktuell genannt werde
 [NOTE]
 Es ist möglich, auch komplexe Strukturen als Variablen zu setzen. Es ist jedoch zu beachten, dass dabei die Variablenwerte immer nur als String behandelt werden und dadurch innere Anführungszeichen maskiert werden müssen.
 
-.Beispiel einer Konfiguration mit strukturierten Variablen.
+.Konfiguration mit strukturierten Variablen
 ====
 [source,json]
 ----
@@ -1427,7 +1472,7 @@ Es ist möglich, auch komplexe Strukturen als Variablen zu setzen. Es ist jedoch
 
 Dynamische Werte (vgl. auch Abschnitt "<<Funktionswerte in Variablen-Definitionen und Erwartungswerten>>") in Requests für Massendaten können in der Filterkonfiguration wie folgt definiert werden:
 
-.Beispiel einer Konfiguration mit Zufallswerten.
+.Konfiguration mit Zufallswerten
 ====
 [source,json]
 ----
@@ -1458,7 +1503,7 @@ Alles, was wir nun noch benötigen, ist die Möglichkeit, einen Test oder ein Te
 
 ResponseDiff erlaubt die Mehrfachausführung sowohl auf TestSet- als auch auf Test-Ebene.
 
-.Beispiel für Mehrfachausführung eines TestSets und eines Tests
+.Mehrfachausführung eines TestSets und eines Tests
 ====
 [source,xml]
 ----
@@ -1516,7 +1561,7 @@ Aus diesem Grund bietet ResponseDiff eine proprietäre *Syntax-Erweiterung* (`#<
 Daher wird die Verwendung der regulären Syntax wo immer möglich empfohlen.
 ====
 
-.Beispiel für die proprietäre JSONPath-Syntax-Erweiterung
+.Proprietäre JSONPath-Syntax-Erweiterung
 ====
 [source,xml]
 ----
@@ -1547,7 +1592,7 @@ Ein Analyse-Block gibt Auskunft über
 * Alle bei der Durchführung erkannten Auffälligkeiten (`messages/message`)
 
 
-.Beispiel eines Analyse-Blocks
+.Analyse-Block
 ====
 [source,xml]
 ----
@@ -1582,7 +1627,7 @@ Wenn der Endpunkt (`endpoint`) in der Definition des Aufrufs (`request`) schon A
 * Der erste Parameter muss mit `?` der URL angehangen werden.
 * Jeder weitere Parameter muss mit `*\&amp;*` statt `&` angehangen werden, da ansonsten die XML-Datei technisch nicht gelesen werden kann. Grund hierfür sind die durch XML vorgegebenen Syntaxvorgaben.
 
-.Beispiel zu Aufrufparametern
+.Aufrufparameter
 ====
 [source,xml]
 ----
@@ -1606,7 +1651,7 @@ Wird kein Dekomprimierungsfilter vorgeschaltet, so ist zu beachten, dass vorgesc
 An dieser Stelle sei auf die Verwendung des Attributs `inherit` verwiesen (vgl. Abschnitt "<<Response>>").
 
 
-.Beispiel zum Entfernen von Antwortfiltern
+.Entfernen von Antwortfiltern
 ====
 [source,xml]
 ----
@@ -1636,7 +1681,7 @@ An dieser Stelle sei auf die Verwendung des Attributs `inherit` verwiesen (vgl. 
 
 Die Komprimierung lässt sich im Allgemeinen mit `HTTP`-Mitteln vermeiden, indem dem Server per `Accept-Encoding`-Header mitgeteilt wird, dass keine Komprimierung akzeptiert wird.
 
-.Beispiel Vermeiden von komprimierten Antworten - Alternative 1
+.Vermeiden von komprimierten Antworten - Alternative 1
 ====
 [source]
 ----
@@ -1648,7 +1693,7 @@ Die Komprimierung lässt sich im Allgemeinen mit `HTTP`-Mitteln vermeiden, indem
 ----
 ====
 
-.Beispiel Vermeiden von komprimierten Antworten - Alternative 2
+.Vermeiden von komprimierten Antworten - Alternative 2
 ====
 [source]
 ----
@@ -1688,7 +1733,7 @@ Unterschiede, die sich aus dem Kontext der Einbettung ergeben, können in Variab
 [CAUTION]
 Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 
-.Beispiel Einbinden eines generischen TestSets
+.Einbinden eines generischen TestSets
 ====
 [source]
 ----
@@ -1716,7 +1761,7 @@ Das Attribut `workPath` wird nicht vererbt, sondern gilt ausschließlich lokal.
 <3> Die Einbettungen je Service verweisen auf dieselbe XML-Datei.
 ====
 
-.Beispiel Generisches TestSet
+.Generisches TestSet
 ====
 [source]
 ----
@@ -1749,7 +1794,7 @@ Das Attribut `ifExecutionContextContains` wird in folgenden XML-Blocks akzeptier
 * `expected/headers/header`
 * `expected/values/value`
 
-.Beispiel Bedingte Testausführung
+.Bedingte Testausführung
 ====
 [source]
 ----
@@ -1779,7 +1824,7 @@ Das Attribut `ifExecutionContextContains` wird in folgenden XML-Blocks akzeptier
 
 Falls ein Antwort-Header eine JSON-Struktur beinhaltet, so kann auch auf deren Inhalt für Tests zugegriffen werden.
 
-.Beispiel Der Antwort-Header "x-duration"
+.Der Antwort-Header "x-duration"
 ====
 In diesem Beispiel wurde eine serverseitige Performanzmessung so implementieren, dass der Zeitpunkt bei Eingang einer Anfrage und der beim Ausgang der Antwort festgehalten werden, die Dauer zwischen den Zeitpunkten bestimmt und alles in einer JSON-Struktur als Header zurückliefert wird.
 
@@ -1791,7 +1836,7 @@ Nachfolgend sehen wir den Wert einer solchen Messung als JSON-Struktur und nehme
 ====
 Für die Auswertung hat das `<header>`-Tag das Attribut `path`. Das Attribut wird *ausschließlich* bei `<header>`-Tags innerhalb einer `<expected><headers>`-Tag-Struktur berücksichtigt. Der Wert des `path`-Attributs muss als JSONPath formuliert sein. Für den Test stehen alle Möglichkeiten aus dem Abschnitt "<<Prüfen von Werten (`values`)>>" zur Verfügung.
 
-.Beispiel Test eine JSON Antwort-Headers
+.Test eine JSON Antwort-Headers
 ====
 [source]
 ----
@@ -1856,7 +1901,7 @@ echo $?
 
 Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 
-.Beispiel JSON für die Aufruf-Konfiguration
+.JSON für die Aufruf-Konfiguration
 ====
 [source,json]
 ----
@@ -1897,7 +1942,7 @@ Eine Struktur `project/vergleich/service/endpunkt` hat sich als hilfreich erwies
 * Die Vergleichsversionen sind klar strukturiert.
 * Die Historie kann bewahrt werden, so dass jederzeit Regressionstest für Hotfix-Lieferungen gegen die fehlerhafte Version möglich sind. Alle zur Referenz passenden Einstellungen sind dann noch vorhanden und müssen nicht mühevoll und fehlerträchtig rekonstruiert werden.
 
-.Beispiel Verzeichnisstruktur für Regressiontests
+.Verzeichnisstruktur für Regressiontests
 ====
 [source]
 ----
@@ -1917,15 +1962,15 @@ Manchmal müssen zur Testdurchführung zunächst Daten erzeugt werden. Solche Da
 
 [NOTE]
 ====
-Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, lohnt es sich, sich mit dem Attribut `breakOnFailure` in Abschnitt "<<Lokaler Testabbruch>>" vertraut zu machen.
+Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, lohnt es sich, sich mit den Attributen `breakOnFailure` und `logLevel` in Abschnitt "<<Lokaler Testabbruch>>" vertraut zu machen.
 ====
 
-.Beispiel Ausgelagerte Aufbau-, Test- und Abbau-Aufrufe
+.Lokale Aufbau-, Test- und Abbau-Aufrufe
 ====
 [source]
 ----
 <XmlResponseDiffSetup ...>
-  <testSet id="Complex data" order="strict">
+  <testSet id="Complex test" order="strict">
     <testSet id="before" breakOnFailure="true">
       ...
     </testSet>
@@ -1937,7 +1982,6 @@ Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, 
     </testSet>
   </testSet>
 </XmlResponseDiffSetup>
-
 ----
 ====
 
@@ -1948,7 +1992,7 @@ Wird die Setup-Datei zu umfangreich, können die "Aufbau" und "Abbau" TestSets i
 Wenn Aufbau und Abbau ausgelagert werden, müssen (technisch bedingt) auch die eigentlichen Test-Aufrufe ausgelagert werden, da sonst die gewünschte Ausführungsreihenfolge nicht gewährleistet ist.
 ====
 
-.Beispiel Ausgelagerte Aufbau-, Test- und Abbau-Aufrufe
+.Ausgelagerte Aufbau-, Test- und Abbau-Aufrufe
 ====
 [source]
 ----
@@ -1965,7 +2009,6 @@ Wenn Aufbau und Abbau ausgelagert werden, müssen (technisch bedingt) auch die e
     <testSetInclude file="./after.xml" />
   </testSet>
 </XmlResponseDiffSetup>
-
 ----
 ====
 
@@ -2036,7 +2079,7 @@ echo $?
 
 Als Konfiguration wird ein JSON wie folgt erwartet (ohne Zeilenumbrüche):
 
-.Beispiel JSON für die Aufruf-Konfiguration
+.JSON für die Aufruf-Konfiguration
 ====
 [source,json]
 ----

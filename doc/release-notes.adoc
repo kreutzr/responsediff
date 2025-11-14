@@ -43,6 +43,8 @@ This is a regular maintenance release.
 * If responses of candidate and reference (and control) instances do not differ, only the candidate response is shown in the report to avoid redundancies.
 * Allowed to use variables with (other) variables defined within the same "variables" XML-block.
 * Allowed to test JSON structures returned within a response header.
+* Added logLevel attribute to XML expectations. Differences of level WARN will not trigger a BreakOnFailureException. Exceptions have logLevel FATAL.
+* Body comparisons are more tolerant by ignoring any white spaces (including line breaks).
 
 === Bug fixes
 
@@ -50,6 +52,7 @@ This is a regular maintenance release.
 * Fixed issue that test set includes within inner test sets where not read.
 * Special characters "[", "]" and " " are masked in request as "%5B", "%5D" and "%20".
 * Restricted asciidoc headline levels to 5 (AsciiDoc doesnot support more levels).
+* Not a bug: Replaced deprecated code (com.fasterxml.jackson.databind.JsonNode).
 
 === External libraries
 

@@ -310,19 +310,20 @@ public class ValidationHandler
            if( xmlBody.isNoBody() ) {
              if( candidateResponse.getBody() != null && !candidateResponse.getBody().trim().isEmpty() ) {
                final String errorMessage = "Body expected: null or empty but was: not empty";
-               relevantDiffs.getAdditions().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
+               relevantDiffs.getAdditions().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) ); // NOTE: Additions are always treated as ERROR
              }
            }
            else {
              if( candidateResponse.getBody() == null || candidateResponse.getBody().trim().isEmpty() ) {
                final String errorMessage = "Body expected: not null nor empty but was: null or empty";
-               relevantDiffs.getDeletions().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
+               relevantDiffs.getDeletions().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) ); // NOTE: Deletions are always treated as ERROR
              }
              else {
-               // NEEDS FIX B: Be more tolerant here (ignore any white spaces and line breaks)
-               if( !xmlBody.getValue().equals( candidateResponse.getBody() ) ) {
+               if( !normalizeBody( xmlBody.getValue() ).equals( normalizeBody( candidateResponse.getBody() ) ) ) {
                  final String errorMessage = "Body expected: " + xmlBody.getValue() + " + but was: " + candidateResponse.getBody();
-                 relevantDiffs.getChanges().add( new JsonDiffEntry( "$", "", "", null, errorMessage ) );
+                 final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry( "$", "", "", null, errorMessage );
+                 jsonDiffEntry.setLogLevel( xmlBody.getLogLevel() );
+                 relevantDiffs.getChanges().add( jsonDiffEntry );
                }
              }
            }
@@ -375,6 +376,14 @@ public class ValidationHandler
      }
 
      return relevantDiffs;
+   }
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   private static String normalizeBody( final String body )
+   {
+     // NEEDS FIX C: This is a bit simple because spaces within quotes might be relevant! 
+     return body.replaceAll( "\\s+", "" );
    }
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

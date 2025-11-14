@@ -59,7 +59,7 @@ If only the candidate instance is available, it can also be compared with a prev
 === Creating a test setup
 The test scenarios for ResponseDiff are formulated in a setup file (XML).
 
-.Example setup:
+.Sample setup
 ====
 [source,xml]
 ----
@@ -182,7 +182,7 @@ A JSON is expected as configuration as follows (without line breaks):
 It is recommended to set the configuration parameters within a small script. A suggestion for such a script is provided in the `doc` folder. (`start-responseDiff`).
 ====
 
-.Example JSON for the call configuration
+.JSON for the call configuration
 ====
 [source,json]
 ----
@@ -265,7 +265,7 @@ The formatted report contains all the information from the XML file taken into a
 
 If not all tests should be considered in the transformation (e.g., because you are only interested in failed tests), the optional attribute `report` can be used in the transformer. An attribute value of an outer test set is inherited by the inner test sets and tests unless a different value is specified.
 
-.Example of using the report attribute
+.Using the report attribute
 ====
 [source,xml]
 ----
@@ -332,7 +332,7 @@ These are in detail:
 
 The definition of at least one test set (`testSet`) is mandatory.
 
-.Example TestSetup
+.TestSetup
 ====
 [source,xml]
 ----
@@ -368,7 +368,7 @@ Like the test setup, a test set also includes some general information that appl
 
 In addition, each test set requires an `id` attribute.
 
-.Example of a test set
+.TestSet
 ====
 [source,xml]
 ----
@@ -400,7 +400,7 @@ In addition, each test set requires an `id` attribute.
 
 A test set can also contain additional test sets, resulting in a tree structure.
 
-.Example of a structured, complex test setup
+.Structured, complex test setup
 ====
 [source,xml]
 ----
@@ -437,7 +437,7 @@ The following information is required:
 
 In addition, every test requires an `id` attribute.
 
-.Example of a test
+.Test
 ====
 [source,xml]
 ----
@@ -567,7 +567,7 @@ If test sets become very extensive or if recurring call sequences arise, test se
 
 Embedding external test setup occurs at the end of a test set after the last test.
 
-.Example XML for embedding external test setups
+.XML for embedding external test setups
 ====
 [source,xml]
 ----
@@ -589,7 +589,7 @@ Especially for *CRUD* interfaces (`Create`, `Read`, `Update`, `Delete`), the exe
 ==== The `order` attribute
 By default, tests and test sets are executed in a random order. If this is not desired, you can set the optional attribute `order` in the enclosing test set with the value `strict` (default is `random`).
 
-.Example XML for strict test execution
+.XML for strict test execution
 ====
 [source,xml]
 ----
@@ -602,7 +602,52 @@ This setting then applies to all test sets and tests included in the test set, u
 ==== Local test abort
 If tests depend on each other (for example, because it is expected that query calls will fail if the creation of an object to be queried later fails), this can be accounted for by the `breakOnFailure` attribute at the test level. The attribute would be set to `true` for the test that creates an object required later (the default is `false`). If this call then fails, all subsequent tests and test sets at this structure level are no longer executed. Tests skipped in this way are noted as "skipped" in the test summary.
 
+To prevent a test sequence from being aborted "only" because a relatively unimportant test (e.g., a timing measurement) fails, a log level (`logLevel`) can be defined for each value check. Only the levels `ERROR` and `FATAL` will lead to a test termination, but not, for example, `WARN`. If no LogLevel is explicitly specified, `ERROR` is assumed as the default.
+
 The mechanism can be continued at TestSet level, so that if a TestSet is aborted in this way, the subsequent TestSets of the same structure level are also no longer executed.
+
+.Test abort definition and `logLevel` usage
+====
+[source]
+----
+<XmlResponseDiffSetup ...>
+  <testSet id="Complex test" order="strict"> <1>
+    <testSet id="before" breakOnFailure="true> <2>
+      <test id="Create test element" breakOnFailure="true"> <3>
+        ...
+        <response> <4>
+          <httpStatus logLevel="WARN">200</httpStatus>
+          <headers>
+            <header name="x-duration" path="$.duration" logLevel="WARN" type="duration" epsilon="PT0.005S">PT0S</header>
+          </headers>
+          <maxDuration logLevel="WARN">PT0.010S</maxDuration>
+          <values>
+            <value path="..." logLevel="WARN">...</value>
+          </values>
+          <body logLevel="WARN">...</body>
+        </expected>
+        </response>
+      </test>
+      ...
+      <overAllExpected> <5>
+        <maxDuration logLevel="WARN">PT0S</maxDuration>
+      </overAllExpected>
+    </testSet>
+    <testSet id=test">
+      ...
+    </testSet>
+    <testSet id=after">
+      ...
+    </testSet>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> The enclosing TestSet defines a sequential execution of its inner elements by specifying `order="strict"`. This ensures that the TestSet with ID "before" is executed first.
+<2> The TestSet "before" is marked with `breakOnFailure="true"`. If execution fails with only one (inner) error (`ERROR` or `FATAL`), the subsequent TestSets "test" and "after" are skipped ("local test termination"). If the execution order of the inner tests were relevant, `order="strict"` would also have to be set here.
+<3> The test with ID "Create test element" is also marked with `breakOnFailure="true"`. A failure of this test results in all subsequent tests being skipped.
+<4> A LogLevel can optionally be specified for the expected values. If the LogLevel is not `ERROR` or `FATAL`, a failure will **not** trigger a local test termination.
+<5> The same applies to the overall expected values ​​(`overAllExpected`).
+====
 
 [CAUTION]
 ====
@@ -629,7 +674,7 @@ The following call filters are already included in ResponseDiff:
 ==== `RemoveHeaderRequestFilter`
 Generally, the headers to be set are specified within a `request` entry. In addition to these, all headers passed externally when calling ResponseDiff are also always set (see JSON values ​​`referenceHeaders`, `controlHeaders`, and `candidateHeaders` in the call configuration). If specific headers are to be suppressed during the server call (such as a bearer token passed externally when calling the login endpoint), the `RemoveHeaderRequestFilter` can be used as follows:
 
-.Example XML for header suppression
+.XML for header suppression
 ====
 
 The filter is configured using the following parameter:
@@ -692,7 +737,7 @@ The filter accepts three optional configuration parameters:
 Additionally, you can specify for each name which data should be used for sorting. The paths to the data to be considered are specified as JSONPaths in round brackets (`'('` and `')'`) and, if necessary, separated by a semicolon (`;`).
 * `storeOriginalResponse` : This parameter allows the incoming response to be saved in the filter result before the filter begins its operation. The original response can be found in the result structure under `originalResponse`. Saving is enabled when the parameter value is set to `true` (default is `false`).
 
-.Example of a detailed filter configuration
+.Detailed filter configuration
 ====
 The `SortJsonBodyResponseFilter` returns for the following JSON document
 
@@ -808,7 +853,7 @@ The filter can be configured as follows:
 * `normalizeArrays` : This parameter may only be set to `true` if the `normalizeMaps` parameter has been set to `true`. If this is the case, this means that entries within JSON lists are also normalized (e.g.: `[ “array.length” : 1 ]' -> “[ ‘array’ : { ‘length’ : 1 } ]`). (default is `false`)
 
 
-.Example of a filter configuration
+.Filter configuration
 ====
 [source,xml]
 ----
@@ -861,7 +906,7 @@ ResponseDiff offers several interfaces and abstract base classes for creating yo
 
 This makes it easy to create your own parameterizable filters.
 
-.Example of a custom RequestFilter
+.Custom RequestFilter
 ====
 [source,java]
 ----
@@ -893,7 +938,7 @@ public class MyRequestFilter extends DiffFilterImpl implements DiffRequestFilter
 ----
 ====
 
-.Example of a custom ResponseFilter
+.Custom ResponseFilter
 ====
 [source,java]
 ----
@@ -924,7 +969,7 @@ public class MyResponseFilter extends DiffResponseFilterImpl
 It is possible to define variables at every level (Test Setup -> TestSet -> Test -> Request or Response).
 This is done simply by specifying the `id` (as a tag attribute) and the value as text.
 
-.Example of a variable definition
+.Variable definition
 ====
 [source,xml]
 ----
@@ -954,7 +999,7 @@ These variables can be used in the following places:
 * Request message (`body`)
 * Expected response value (`value`) see section "<<Evaluating response values>>"
 
-.Example of variable usage
+.Variable usage
 ====
 [source,xml]
 ----
@@ -1031,7 +1076,7 @@ ResponseDiff offers several options for dealing with such deviations. For this p
 
 In addition, an expected value (for `header` as well as for `value`) can also be generated dynamically (see `$.lastUpdated` in the following example). Further information on dynamic values ​​can be found in the section "<<Function values ​​in variable definitions and expected values>>".
 
-.Example of expected values ​​in functional tests
+.Expected values ​​in functional tests
 ====
 [source,xml]
 ----
@@ -1230,7 +1275,7 @@ If variables are to be read, it must (usually) be ensured that a strict (`order=
 Response values ​​can vary from instance to instance, which is why they are stored as two or three separate variables (for reference, candidate, and possibly control). However, this need not be taken into account when using these variables, as ResponseDiff replaces the variables individually depending on the instance. However, the variables can be viewed individually in the output XML report.
 ====
 
-.Example for reading and using response values
+.Reading and using response values
 ====
 [source,xml]
 ----
@@ -1301,7 +1346,7 @@ ResponseDiff was not specifically designed for performance testing. Even for ind
 In particular, when using an `overAllExpected` block in TestSets, not only the pure call duration of the candidate call is measured (for technical reasons), but also the durations of the calls to the reference and, if applicable, the control instances - plus the internal execution times between these calls.
 ====
 
-.Example for checking call durations
+.Checking call durations
 ====
 [source,xml]
 ----
@@ -1370,7 +1415,7 @@ Trying to read variables file "<filePath>".
 
 The structure of the JSON file specified under `source` is as follows:
 
-.Example of a configuration for the SetVariablesRequestFilter (The result is identical for both alternatives.)
+.Configuration for the SetVariablesRequestFilter (The result is identical for both alternatives.)
 ====
 ----
 {
@@ -1405,7 +1450,7 @@ The filter parameter `useVariables` can be used to configure whether the values 
 [NOTE]
 It is also possible to set complex structures as variables. However, please note that the variable values ​​are always treated as strings, and therefore inner quotation marks must be escaped.
 
-.Example of a configuration with structured variables.
+.Configuration with structured variables
 ====
 [source,json]
 ----
@@ -1428,7 +1473,7 @@ It is also possible to set complex structures as variables. However, please note
 
 Dynamic values ​​(see also section "<<Function values ​​in variable definitions and expected values>>") in requests for mass data can be defined in the filter configuration as follows:
 
-.Example of a configuration with random values.
+.Configuration with random values
 ====
 [source,json]
 ----
@@ -1459,7 +1504,7 @@ All we need now is the ability to run a test or test set multiple times.
 
 ResponseDiff allows multiple execution at both the test set and test level.
 
-.Example of multiple execution of a test set and a test
+.Multiple execution of a test set and a test
 ====
 [source,xml]
 ----
@@ -1517,7 +1562,7 @@ For this reason, ResponseDiff provides a proprietary *syntax extension* (`#<inde
 Therefore, the use of regular syntax is recommended wherever possible.
 ====
 
-.Example of the proprietary JSONPath syntax extension
+.Proprietary JSONPath syntax extension
 ====
 [source,xml]
 ----
@@ -1548,7 +1593,7 @@ An analysis block provides information about
 * All anomalies detected during the execution (`messages/message`)
 
 
-.Example of an analysis block
+.Analysis block
 ====
 [source,xml]
 ----
@@ -1584,7 +1629,7 @@ If the endpoint (`endpoint`) in the definition of the call (`request`) already c
 * The first parameter must be appended to the URL with `?`.
 * Each additional parameter must be appended with `*\&*` instead of `&`, otherwise the XML file cannot be read. This is due to the syntax requirements specified by XML.
 
-.Example of call parameters
+.Call parameters
 ====
 [source,xml]
 ----
@@ -1608,7 +1653,7 @@ If no decompression filter is used upstream, please note that upstream response 
 At this point, reference should be made to the use of the attribute `inherit` (see section "<<Response>>").
 
 
-.Example of removing response filters
+.Removing response filters
 ====
 [source,xml]
 ----
@@ -1640,7 +1685,7 @@ At this point, reference should be made to the use of the attribute `inherit` (s
 
 Compression can generally be avoided using HTTP methods by telling the server via the Accept-Encoding header that compression is not accepted.
 
-.Example Avoiding Compressed Answers - Alternative 1
+.Avoiding Compressed Answers - Alternative 1
 ====
 [source]
 ----
@@ -1652,7 +1697,7 @@ Compression can generally be avoided using HTTP methods by telling the server vi
 ----
 ====
 
-.Example Avoiding Compressed Answers - Alternative 2
+.Avoiding Compressed Answers - Alternative 2
 ====
 [source]
 ----
@@ -1692,7 +1737,7 @@ Differences resulting from the embedding context can be stored in variables. The
 [CAUTION]
 The `workPath` attribute is not inherited, but is only valid locally.
 
-.Example: Embedding a generic TestSet
+.Embedding a generic TestSet
 ====
 [source]
 ----
@@ -1720,7 +1765,7 @@ The `workPath` attribute is not inherited, but is only valid locally.
 <3> The embeddings for each service point to the same XML file.
 ====
 
-.Example Generic TestSet
+.Generic TestSet
 ====
 [source]
 ----
@@ -1753,7 +1798,7 @@ The `ifExecutionContextContains` attribute is accepted in the following XML bloc
 * `expected/headers/header`
 * `expected/values/value`
 
-.Example Conditional test execution
+.Conditional test execution
 ====
 [source]
 ----
@@ -1783,7 +1828,7 @@ The `ifExecutionContextContains` attribute is accepted in the following XML bloc
 
 If a response header contains a JSON structure, its content can also be accessed for testing.
 
-.Example: The response header "x-duration"
+.The response header "x-duration"
 ====
 In this example, a server-side performance measurement was implemented such that the time of receipt of a request and the time of dispatch of the response are recorded, the duration between these times is determined, and everything is returned as a JSON header.
 
@@ -1860,7 +1905,7 @@ echo $?
 
 The configuration expected is JSON as follows (without line breaks):
 
-.Example JSON for the call configuration
+.JSON for the call configuration
 ====
 [source,json]
 ----
@@ -1901,7 +1946,7 @@ A structure `project/comparison/service/endpoint` has proven to be helpful.
 * The comparison versions are clearly structured.
 * History can be preserved, allowing regression testing of hotfix deliveries against the faulty version at any time. All settings matching the reference are then still available and do not require laborious and error-prone reconstruction.
 
-.Example directory structure for regression tests
+.Directory structure for regression tests
 ====
 [source]
 ----
@@ -1921,15 +1966,15 @@ Sometimes, data must first be generated to run a test. Such data is usually remo
 
 [NOTE]
 ====
-Since errors in the setup of the test scenario will lead to subsequent errors, it is worth familiarizing yourself with the `breakOnFailure` attribute (see section "<<Local test abort>>").
+Since errors in the setup of the test scenario will lead to subsequent errors, it is worth familiarizing yourself with the `breakOnFailure` and `logLevel` attributes (see section "<<Local test abort>>").
 ====
 
-.Example Outsourced Build, Test and Teardown Calls
+.Local setup, test and teardown calls
 ====
 [source]
 ----
 <XmlResponseDiffSetup ...>
-  <testSet id="Complex data" order="strict">
+  <testSet id="Complex test" order="strict">
     <testSet id="before" breakOnFailure="true">
       ...
     </testSet>
@@ -1941,7 +1986,6 @@ Since errors in the setup of the test scenario will lead to subsequent errors, i
     </testSet>
   </testSet>
 </XmlResponseDiffSetup>
-
 ----
 ====
 
@@ -1952,7 +1996,7 @@ If the setup file becomes too large, the "build" and "breakdown" test sets can b
 If setup and teardown are outsourced, the actual test calls must also be outsourced (for technical reasons), otherwise the desired execution order cannot be guaranteed.
 ====
 
-.Example Outsourced Build, Test and Teardown Calls
+.Outsourced setup, test and teardown calls
 ====
 [source]
 ----
@@ -1969,7 +2013,6 @@ If setup and teardown are outsourced, the actual test calls must also be outsour
     <testSetInclude file="./after.xml" />
   </testSet>
 </XmlResponseDiffSetup>
-
 ----
 ====
 
@@ -2040,7 +2083,7 @@ echo $?
 
 The configuration expected is JSON as follows (without line breaks):
 
-.Example JSON for the call configuration
+.JSON for the call configuration
 ====
 [source,json]
 ----
