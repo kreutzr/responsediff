@@ -62,6 +62,17 @@
 
 '''
 
+*Legend*
+|===
+| icon:bomb[] | Test failed
+| icon:bolt[] | Test has warning
+| icon:ban[]  | test was skipped
+|===
+
+'''
+
+*Technical information*
+
 ResponseDiff: Version <xsl:value-of select="buildVersion" /> (build-time: <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="buildTime" /></xsl:call-template>)
 
 XSLT: <xsl:value-of select="system-property('xsl:version')"/>
