@@ -15,11 +15,11 @@ public class JsonDiffEntry implements Comparable< JsonDiffEntry >
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   public JsonDiffEntry(
-      final String jsonPath,
-      final String actual,
-      final String expected,
-      final String executionContextConstraint,
-      final String message
+    final String jsonPath,
+    final String actual,
+    final String expected,
+    final String executionContextConstraint,
+    final String message
   )
   {
     jsonPath_                   = jsonPath;

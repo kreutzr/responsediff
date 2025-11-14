@@ -21,6 +21,7 @@ public class ToXmlValue
     xmlValue.setCheckIsNull    ( xmlHeader.isCheckIsNull() );
     xmlValue.setCheckInverse   ( xmlHeader.isCheckInverse() );
 //    xmlValue.setTicketReference( xmlHeader.getTicketReference() );
+    xmlValue.setLogLevel       ( xmlHeader.getLogLevel() );
 
     final String path = xmlHeader.getPath();
     if( path != null ) {

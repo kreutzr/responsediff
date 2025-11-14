@@ -173,7 +173,7 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
         LOG.trace( "Found map entry " + name );
       }
 
-      final Iterator< Entry< String, JsonNode > > it = node.fields();
+      final Iterator< Entry< String, JsonNode > > it = node.properties().iterator();
       while( it.hasNext() ) {
         final Entry< String, JsonNode > entry = it.next();
         traverse( entry.getValue(), entry.getKey(), keysToSort );

@@ -92,15 +92,15 @@ public class ResponseVariablesTest extends TestBase
       // Check feature evaluation
       assertThat( step4.getAnalysis().getMessages().getMessage() ).hasSize( 3 );
       // Note: Messages are sorted by path (see TestSetHandler.handleAnalysis)
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 0 ).getLevel() ).isEqualTo( XmlLogLevel.ERROR );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 0 ).getLevel() ).isEqualTo( XmlLogLevel.FATAL );
       assertThat( step4.getAnalysis().getMessages().getMessage().get( 0 ).getPath()  ).isEqualTo( "$.array[?(@.key03=='a')].key04#0" );
       assertThat( step4.getAnalysis().getMessages().getMessage().get( 0 ).getValue() ).startsWith( "class java.lang.String cannot be cast to class java.lang.Boolean" );
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 1 ).getLevel() ).isEqualTo( XmlLogLevel.ERROR );
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 1 ).getPath()  ).isEqualTo( "$.doesNotExist" );
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 1 ).getValue() ).isEqualTo( "Object expected: (trim=false, ignoreCase=false) true but was: null" );
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 2 ).getLevel() ).isEqualTo( XmlLogLevel.ERROR );
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 2 ).getPath()  ).isEqualTo( "$.key01" );
-      assertThat( step4.getAnalysis().getMessages().getMessage().get( 2 ).getValue() ).startsWith( "class java.lang.String cannot be cast to class java.lang.Boolean" );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 1 ).getLevel() ).isEqualTo( XmlLogLevel.FATAL );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 1 ).getPath()  ).isEqualTo( "$.key01" );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 1 ).getValue() ).startsWith( "class java.lang.String cannot be cast to class java.lang.Boolean" );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 2 ).getLevel() ).isEqualTo( XmlLogLevel.WARN );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 2 ).getPath()  ).isEqualTo( "$.doesNotExist" );
+      assertThat( step4.getAnalysis().getMessages().getMessage().get( 2 ).getValue() ).isEqualTo( "Object expected: (trim=false, ignoreCase=false) true but was: null" );
 
       // Check feature evaluation with empty body
       assertThat( step5.getAnalysis().getMessages().getMessage() ).hasSize( 1 );

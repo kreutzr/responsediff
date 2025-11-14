@@ -281,7 +281,7 @@ public class TestSetHandler
     );
 
     // Check if an exception occurred or an overall expectation was violated
-    if( breakException != null || !jsonDiffEntries.isEmpty() ) {
+    if( breakException != null || ( !jsonDiffEntries.isEmpty() && JsonDiff.hasAnyError( jsonDiffEntries ) ) ) {
       if( xmlTestSet.isBreakOnFailure() ) {
         throw new BreakOnFailureException( "Test set \"" + xmlTestSet.getId() + "\" terminated unsuccessfully. Followup tests are skipped.", breakException );
       }
@@ -356,11 +356,13 @@ public class TestSetHandler
         }
       }
       catch( final Exception ex ) {
-        foundDiffs.getChanges().add( new JsonDiffEntry(
+        final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry(
           "Exception", "", "", null,
           "Error reading " + serviceId + " header variable " + xmlVariable.getId() + " from path " + xmlVariable.getPath() + " ."
         + " (Exception=" + ex.getClass().getName() + ", message=" + ex.getMessage() + ")"
-        ) );
+        );
+        jsonDiffEntry.setLogLevel( XmlLogLevel.FATAL );
+        foundDiffs.getChanges().add( jsonDiffEntry );
       }
     }
   }
@@ -436,11 +438,13 @@ public class TestSetHandler
         }
       }
       catch( final Exception ex ) {
-        foundDiffs.getChanges().add( new JsonDiffEntry(
+        final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry(
           "Exception", "", "", null,
           "Error reading " + serviceId + " response variable " + xmlVariable.getId() + " from path " + xmlVariable.getPath() + " ."
         + " (Exception=" + ex.getClass().getName() + ", message=" + ex.getMessage() + ")"
-        ) );
+        );
+        jsonDiffEntry.setLogLevel( XmlLogLevel.FATAL );
+        foundDiffs.getChanges().add( jsonDiffEntry );
       }
     }
   }
@@ -666,6 +670,7 @@ public class TestSetHandler
       }
 
       final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry( "Exception", "", "", null, ex.getMessage() );
+      jsonDiffEntry.setLogLevel( XmlLogLevel.FATAL );
 
       if( ex instanceof TestIgnoredException ) {
         LOG.debug( ex.getMessage() );
@@ -716,7 +721,7 @@ public class TestSetHandler
     }
 
     // Check if an exception occurred or an expectation was violated
-    if( hasError || foundDiffs.hasDifference() ) {
+    if( hasError || foundDiffs.hasAnyError() ) {
       if( xmlTest.isBreakOnFailure() ) {
         throw new BreakOnFailureException( "Test \"" + testId + "\" terminated unsuccessfully." );
       }
@@ -1203,12 +1208,13 @@ public class TestSetHandler
       }
 
       if( !skip ) {
-        final String   maxDurationString   = xmlOverAllExpected.getMaxDuration();
-        final String   totalDurationString = xmlAnalysis.getTotalDuration() != null
-                                           ? xmlAnalysis.getTotalDuration()
-                                           : xmlAnalysis.getDuration();
-        final Duration maxDuration         = Duration.parse( maxDurationString );
-        final Duration totalDuration       = Duration.parse( totalDurationString );
+        final XmlMaxDuration xmlMaxDuration      = xmlOverAllExpected.getMaxDuration();
+        final String         maxDurationString   = xmlMaxDuration.getValue();
+        final String         totalDurationString = xmlAnalysis.getTotalDuration() != null
+                                                 ? xmlAnalysis.getTotalDuration()
+                                                 : xmlAnalysis.getDuration();
+        final Duration       maxDuration         = Duration.parse( maxDurationString );
+        final Duration       totalDuration       = Duration.parse( totalDurationString );
 
         // Check if maxDuration was exceeded
         if( totalDuration.compareTo( maxDuration ) > 0 ) {
@@ -1223,7 +1229,7 @@ public class TestSetHandler
             null,
             prefix + "Maximum over all duration expected: " + maxDurationString + " but was: " + totalDurationString
           );
-          jsonDiffEntry.setLogLevel( XmlLogLevel.ERROR );
+          jsonDiffEntry.setLogLevel( xmlMaxDuration.getLogLevel() );
 
           if( xmlAnalysis.getMessages() == null ) {
             xmlAnalysis.setMessages( new XmlMessages() );

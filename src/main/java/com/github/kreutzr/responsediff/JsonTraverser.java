@@ -172,7 +172,7 @@ public class JsonTraverser
   {
     final Set< String > keys = new TreeSet<>();
 
-    final Iterator< Map.Entry< String, JsonNode > > fields = jsonNode.fields();
+    final Iterator< Map.Entry< String, JsonNode > > fields = jsonNode.properties().iterator();
     while(fields.hasNext()) {
       keys.add( fields.next().getKey() );
     }

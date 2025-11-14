@@ -184,6 +184,8 @@ public class ValidationHandler
                xmlTest.getIfExecutionContextContains(), // executionContextConstraint
                message    // message
            );
+           jsonDiffEntry.setLogLevel( xmlHttpStatus.getLogLevel() );
+
            relevantDiffs  .getChanges().add( jsonDiffEntry );
            innerWhiteNoise.getChanges().add( jsonDiffEntry ); // Avoid double entries due to unexpected header differences
          }
@@ -241,21 +243,24 @@ public class ValidationHandler
        if( xmlExpected.getMaxDuration() != null ) {
          relevantDiffs.incrementExpectedCount();
 
-         final Duration maximumDuration = Duration.parse( xmlExpected.getMaxDuration() );
-         final Duration requestDuration = Duration.parse( candidateResponse.getRequestDuration() );
+         final XmlMaxDuration xmlMaxDuration  = xmlExpected.getMaxDuration();
+         final Duration       maximumDuration = Duration.parse( xmlMaxDuration.getValue() );
+         final Duration       requestDuration = Duration.parse( candidateResponse.getRequestDuration() );
          if( ( requestDuration.getSeconds() >  maximumDuration.getSeconds() )
           || ( requestDuration.getSeconds() == maximumDuration.getSeconds()
                && requestDuration.getNano() >  maximumDuration.getNano() )
          ) {
            final String requestDurationString = requestDuration.toString();
            final String maximumDurationString = maximumDuration.toString();
-           relevantDiffs.getChanges().add( new JsonDiffEntry(
+           final JsonDiffEntry jsonDiffEntry = new JsonDiffEntry(
                "", // jsonPath
                requestDurationString, // actual
                maximumDurationString, // expected
                null,                  // executionContextConstraint
-               "Maximum request duration expected: " + maximumDurationString + " but was: " + requestDurationString
-           ) );
+               "Maximum request duration expected: " + maximumDurationString + " but was: " + requestDurationString // TODO: Use StringBuiler
+           );
+           jsonDiffEntry.setLogLevel( xmlMaxDuration.getLogLevel() );
+           relevantDiffs.getChanges().add( jsonDiffEntry );
          }
        }
 
@@ -580,10 +585,11 @@ public class ValidationHandler
 
      final boolean checkInverse = xmlValue.isCheckInverse();
 
-     String  errorMessage        = null;
-     String  message             = EXPECTED_VALUE_TOKEN;
-     boolean expectationMismatch = false;
-     boolean checkValue          = true;
+     String      errorMessage        = null;
+     String      message             = EXPECTED_VALUE_TOKEN;
+     boolean     expectationMismatch = false;
+     boolean     checkValue          = true;
+     XmlLogLevel logLevel            = xmlValue.getLogLevel();
 
      // Plausibility check
      if( ( xmlValue.isCheckPathExists() || xmlValue.isCheckIsNull() ) && xmlValue.getValue() != null && !xmlValue.getValue().isEmpty() ) {
@@ -591,6 +597,7 @@ public class ValidationHandler
          + " Use an additional value XML element to check the value.";
        expectationMismatch = true;
        checkValue = false;
+       logLevel = XmlLogLevel.FATAL;
      }
 
      // NOTE: Check if path exists before a null check, because this check is stronger!
@@ -1004,6 +1011,7 @@ public class ValidationHandler
          LOG.error( "ERROR: An error occurred when processing JsonPath \"" + jsonPath + "\".", ex );
          expectationMismatch = true;
          message = (ex instanceof NullPointerException) ? "NullPointerException" : ex.getMessage();
+         logLevel = XmlLogLevel.FATAL;
        }
      } // if( checkValue )
 
@@ -1014,6 +1022,7 @@ public class ValidationHandler
          xmlValue.getIfExecutionContextContains(), // executionContextConstraint
          message      // message
      );
+     jsonDiffEntry.setLogLevel( logLevel );
 
      if( expectationMismatch ) {
        // Store expectation matches

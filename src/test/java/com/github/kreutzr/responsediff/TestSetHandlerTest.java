@@ -175,8 +175,10 @@ public class TestSetHandlerTest
   public void testThatOverAllExpectedForTestsWorks()
   {
     // Given
+    final XmlMaxDuration xmlMaxDuration = new XmlMaxDuration();
+    xmlMaxDuration.setValue( "PT2S" );
     final XmlOverAllExpected xmlOverAllExpected = new XmlOverAllExpected();
-    xmlOverAllExpected.setMaxDuration( "PT2S" );
+    xmlOverAllExpected.setMaxDuration( xmlMaxDuration );
     final XmlTest xmlTest = new XmlTest();
     xmlTest.setId( "MyTest" );
     xmlTest.setOverAllExpected( xmlOverAllExpected );
@@ -217,8 +219,10 @@ public class TestSetHandlerTest
   public void testThatOverAllExpectedForTestSetsWorks()
   {
     // Given
+    final XmlMaxDuration xmlMaxDuration = new XmlMaxDuration();
+    xmlMaxDuration.setValue("PT2S" );
     final XmlOverAllExpected xmlOverAllExpected = new XmlOverAllExpected();
-    xmlOverAllExpected.setMaxDuration( "PT2S" );
+    xmlOverAllExpected.setMaxDuration( xmlMaxDuration );
     final XmlTestSet xmlTestSet = new XmlTestSet();
     xmlTestSet.setId( "MyTestSet" );
     xmlTestSet.setOverAllExpected( xmlOverAllExpected );

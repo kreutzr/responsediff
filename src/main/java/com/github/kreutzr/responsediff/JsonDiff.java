@@ -247,6 +247,40 @@ public class JsonDiff
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Checks if the given list holds any entry with LogLevel ERROR or more severe (FATAL).
+   * @param jsonDiffEntries The list to check. Must not be null.
+   * @return true if any entry with LogLevel ERROR or more severe was found. Otherwise false is returned.
+   */
+  public static boolean hasAnyError( final List< JsonDiffEntry > jsonDiffEntries )
+  {
+    for( final JsonDiffEntry jsonDiffEntry : jsonDiffEntries ) {
+      if( jsonDiffEntry.getLogLevel() == XmlLogLevel.ERROR
+       || jsonDiffEntry.getLogLevel() == XmlLogLevel.FATAL
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Checks if the changes list holds any entry with LogLevel ERROR or more severe (FATAL) or any addition or deletion was detected.
+   * @return true if any entry with LogLevel ERROR or more severe was found or any addition or deletion was detected. Otherwise false is returned.
+   */
+  public boolean hasAnyError()
+  {
+    return hasAnyError( getChanges() ) || !getAdditions().isEmpty() || !getDeletions().isEmpty();
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Checks if any change, any addition or deletion was detected.
+   * @return true if any change, any addition or deletion was detected. Otherwise false is returned.
+   */
   public boolean hasDifference()
   {
     return !getChanges().isEmpty() || !getAdditions().isEmpty() || !getDeletions().isEmpty();
@@ -441,9 +475,9 @@ public class JsonDiff
   {
     final Set< String > keys = new TreeSet<>();
 
-    final Iterator< Map.Entry< String, JsonNode > > fields = jsonNode.fields();
+    final Iterator< Map.Entry< String, JsonNode > > fields = jsonNode.properties().iterator();
     while(fields.hasNext()) {
-        keys.add( fields.next().getKey() );
+      keys.add( fields.next().getKey() );
     }
 
     return keys;
@@ -458,8 +492,8 @@ public class JsonDiff
 
     if( can != ref ) {
       final StringBuilder sb = new StringBuilder()
-         .append( "Boolean value expected: " ).append( ref )
-         .append( " but was: " ).append( can );
+       .append( "Boolean value expected: " ).append( ref )
+       .append( " but was: " ).append( can );
 
       changes_.add( new JsonDiffEntry( path, ""+can, ""+ref, null, sb.toString() ) );
     }
@@ -474,8 +508,8 @@ public class JsonDiff
 
     if( Math.abs( can.doubleValue() - ref.doubleValue() ) >= epsilon_ ) {
       final StringBuilder sb = new StringBuilder()
-         .append( "Number value expected: " ).append( ref )
-         .append( " but was: " ).append( can );
+       .append( "Number value expected: " ).append( ref )
+       .append( " but was: " ).append( can );
 
       changes_.add( new JsonDiffEntry( path, ""+can, ""+ref, null, sb.toString() ) );
     }
