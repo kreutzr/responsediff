@@ -273,7 +273,7 @@ Wenn in der Transformation nicht alle Tests berücksichtigt werden sollen (z.B.,
   ...
   <testSet> <!-- Ohne Angabe des report-Attributs gilt der Wert "fail,skip" -->
      ...
-     <testSet report="fail,skip">
+     <testSet report="fail,skip,warn">
         ...
      </testSet>
      <test ... report="success">
@@ -294,7 +294,8 @@ Der AsciiDoc-Transformator ist die Referenzimplementierung eines Transformators.
 Folgende Werte sind für die `report`-Attribute an den TestSets und Tests vorgesehen:
 
 * `success`: Der Test wird im Report berücksichtigt, wenn er erfolgreich war.
-* `fail`: Der Test wird im Report berücksichtigt, wenn er fehlgeschlagenen ist.
+* `fail`: Der Test wird im Report berücksichtigt, wenn er fehlgeschlagen ist.
+* `warn`: Der Test wird im Report berücksichtigt, wenn eine Warnung auftrat.
 * `skip`: Der Test wird im Report berücksichtigt, wenn er aufgrund von technischen Problemen abgebrochenen wurde, oder aufgrund eines angegebenen `testIdPattern` von der Ausführung ausgenommen wurde.
 * `all`: Der Test wird unabhängig des Testergebnisses berücksichtigt.
 * `none`: Der Test wird niemals berücksichtigt.

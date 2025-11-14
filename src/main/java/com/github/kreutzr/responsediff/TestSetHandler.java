@@ -991,9 +991,14 @@ public class TestSetHandler
     Duration duration = ( begin != null && end != null )
       ? Duration.between( begin, end )
       : null;
-    result.setFailCount    ( foundDiffs != null && foundDiffs.hasDifference() && ( skipped == null || !skipped ) ? 1 : 0 ); // NOTE: Skipped tests log the reason for skipping into the foundDiffs changes.
-    result.setSkipCount    ( skipped    != null && skipped   ? 1 : 0 );
-    result.setSuccessCount ( ( result.getFailCount() + result.getSkipCount() == 0 ) ? 1 : 0 );
+    final boolean hasAnyError   = foundDiffs != null && foundDiffs.hasAnyError();
+    final boolean hasAnyWarning = foundDiffs != null && foundDiffs.hasAnyWarning();
+    final boolean notSkipped    = skipped == null || !skipped;
+
+    result.setFailCount    ( notSkipped && hasAnyError   ? 1 : 0 ); // NOTE: Skipped tests log the reason for skipping into the foundDiffs changes.
+    result.setWarnCount    ( notSkipped && hasAnyWarning ? 1 : 0 );
+    result.setSkipCount    ( !notSkipped                 ? 1 : 0 );
+    result.setSuccessCount ( ( result.getFailCount() + result.getWarnCount() + result.getSkipCount() == 0 ) ? 1 : 0 );
     result.setTotalCount   ( 1 );
     result.setBegin        ( begin != null ? begin.toString() : null );
     result.setEnd          ( end   != null ? end  .toString() : null );
@@ -1150,6 +1155,7 @@ public class TestSetHandler
 
     xmlAnalysis.setSuccessCount ( xmlAnalysis.getSuccessCount()   + child.getSuccessCount() );
     xmlAnalysis.setFailCount    ( xmlAnalysis.getFailCount()      + child.getFailCount() );
+    xmlAnalysis.setWarnCount    ( xmlAnalysis.getWarnCount()      + child.getWarnCount() );
     xmlAnalysis.setSkipCount    ( xmlAnalysis.getSkipCount()      + child.getSkipCount() );
     xmlAnalysis.setTotalCount   ( xmlAnalysis.getTotalCount()     + child.getTotalCount() );
     xmlAnalysis.setBegin        ( minimumBegin.toString() );
@@ -1229,14 +1235,25 @@ public class TestSetHandler
             null,
             prefix + "Maximum over all duration expected: " + maxDurationString + " but was: " + totalDurationString
           );
-          jsonDiffEntry.setLogLevel( xmlMaxDuration.getLogLevel() );
+          final XmlLogLevel xmlLogLevel = xmlMaxDuration.getLogLevel();
+          jsonDiffEntry.setLogLevel( xmlLogLevel );
 
           if( xmlAnalysis.getMessages() == null ) {
             xmlAnalysis.setMessages( new XmlMessages() );
           }
           xmlAnalysis.getMessages().getMessage().add( toXmlMessage( jsonDiffEntry ) );
           xmlAnalysis.setTotalCount( xmlAnalysis.getTotalCount() + 1 );
-          xmlAnalysis.setFailCount ( xmlAnalysis.getFailCount () + 1 );
+          switch( xmlLogLevel ) {
+            case FATAL: // Fall through
+            case ERROR:
+              xmlAnalysis.setFailCount( xmlAnalysis.getFailCount() + 1 );
+              break;
+            case WARN:
+              xmlAnalysis.setWarnCount( xmlAnalysis.getWarnCount() + 1 );
+              break;
+            default:
+              LOG.error( "TestSetHandler.validateOverAllExpected(): Unhandled XmlLogLevel \"" + xmlLogLevel.value() + "\"." );
+          }
 
           result.add( jsonDiffEntry );
         }

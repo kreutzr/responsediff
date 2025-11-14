@@ -172,6 +172,7 @@
       <xsd:element name="successCount"   type="xsd:int"     minOccurs="1" maxOccurs="1" />
       <xsd:element name="failCount"      type="xsd:int"     minOccurs="1" maxOccurs="1" />
       <xsd:element name="skipCount"      type="xsd:int"     minOccurs="1" maxOccurs="1" />
+      <xsd:element name="warnCount"      type="xsd:int"     minOccurs="1" maxOccurs="1" />
       <xsd:element name="totalCount"     type="xsd:int"     minOccurs="1" maxOccurs="1" />
       <xsd:element name="messages"       type="XmlMessages" minOccurs="0" maxOccurs="1" />
     </xsd:sequence>

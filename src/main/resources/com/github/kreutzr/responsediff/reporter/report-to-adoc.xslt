@@ -76,6 +76,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
       <xsl:choose>
         <xsl:when test="analysis/successCount=1">success</xsl:when>
         <xsl:when test="analysis/failCount=1">fail</xsl:when>
+        <xsl:when test="analysis/warnCount=1">warn</xsl:when>
         <xsl:when test="analysis/skipCount>=1">skip</xsl:when>
       </xsl:choose>
     </xsl:when>
@@ -142,6 +143,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:template name="headlineIcon"><xsl:param name="result" /><xsl:choose>
 <xsl:when test="$result='success'"> icon:check[]</xsl:when>
 <xsl:when test="$result='fail'"> icon:bomb[]</xsl:when>
+<xsl:when test="$result='warn'"> icon:bolt[]</xsl:when>
 <xsl:when test="$result='skip'"> icon:ban[]</xsl:when>
 </xsl:choose>
 </xsl:template>
@@ -299,9 +301,9 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 | avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template> | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
 
 </xsl:if>
-| success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" />    | skip        | <xsl:value-of select="skipCount" />
+| success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" />    | warn        | <xsl:value-of select="warnCount" />
 
-| total       | <xsl:value-of select="totalCount" />   | expectations| <xsl:value-of select="expectedCount" />|             |
+| total       | <xsl:value-of select="totalCount" />   | expectations| <xsl:value-of select="expectedCount" />| skip        | <xsl:value-of select="skipCount" />
 |===
 
 <xsl:apply-templates select="messages" />

@@ -278,6 +278,22 @@ public class JsonDiff
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
+   * Checks if the given list holds any entry with LogLevel WARN.
+   * @return true if any entry with LogLevel WARN was found. Otherwise false is returned.
+   */
+  public boolean hasAnyWarning()
+  {
+    for( final JsonDiffEntry jsonDiffEntry : getChanges() ) {
+      if( jsonDiffEntry.getLogLevel() == XmlLogLevel.WARN ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
    * Checks if any change, any addition or deletion was detected.
    * @return true if any change, any addition or deletion was detected. Otherwise false is returned.
    */

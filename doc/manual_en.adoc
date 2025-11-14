@@ -274,7 +274,7 @@ If not all tests should be considered in the transformation (e.g., because you a
   ...
   <testSet> <!-- If the report attribute is not specified, the value "fail,skip" applies -->
      ...
-     <testSet report="fail,skip">
+     <testSet report="fail,skip,warn">
         ...
      </testSet>
      <test ... report="success">
@@ -296,6 +296,7 @@ The following values ​​are provided for the `report` attributes on the test 
 
 * `success`: The test will be included in the report if it was successful.
 * `fail`: The test will be included in the report if it failed.
+* `warn`: The test will be included in the report if a warning occurred.
 * `skip`: The test will be included in the report if it was aborted due to technical problems or was excluded from execution due to a specified `testIdPattern`.
 * `all`: The test is considered regardless of the test result.
 * `none`: The test is never considered.
