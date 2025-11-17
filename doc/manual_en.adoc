@@ -300,6 +300,7 @@ The following values ​​are provided for the `report` attributes on the test 
 * `skip`: The test will be included in the report if it was aborted due to technical problems or was excluded from execution due to a specified `testIdPattern`.
 * `all`: The test is considered regardless of the test result.
 * `none`: The test is never considered.
+* `orga`: Tests and test sets are excluded by default if the `orga` attribute of the respective test or test set is set to `true` (the default is `false`). This can be useful if the report should only show the actual tests, but not the setup and cleanup of the test scenario that might be necessary. Tests and test sets marked with `orga` are included in the report only if the `report` attribute also contains `orga`.
 
 ====== HTML from AsciiDoc
 It is easy to create a HTML report from a created AsciiDoc report. Simply append (comma separated) `html` to the configuration parameter `reportConversionFormats` (see section "<<Configuration>>"). Note that a huge HTML report may bring a browser to its limits. In such cases creating a PDF report is more suitable.
@@ -1841,7 +1842,7 @@ Below, we see the value of such a measurement as a JSON structure and assume tha
 ====
 For evaluation purposes, the `<header>` tag has the attribute `path`. This attribute is considered *exclusively* for `<header>` tags within a `<expected><headers>` tag structure. The value of the `path` attribute must be expressed as JSONPath. All options from the section section "<<Checking values ​​(`values`)>>" are available for testing.
 
-Example: Testing a JSON Response Header
+.Testing a JSON Response Header
 ====
 [source]
 ----
@@ -1862,7 +1863,6 @@ Example: Testing a JSON Response Header
 </XmlResponseDiffSetup>
 ----
 <1> We assume an execution time (measured server-side) of 5 milliseconds, allowing a tolerance of 3 milliseconds. Therefore, the maximum acceptable execution time is 8 milliseconds. This example does not assume that the execution time can be less than 2 milliseconds.
-
 ====
 
 == Automatic adaptation of tests when changing versions
@@ -1975,22 +1975,25 @@ Since errors in the setup of the test scenario will lead to subsequent errors, i
 [source]
 ----
 <XmlResponseDiffSetup ...>
-  <testSet id="Complex test" order="strict">
-    <testSet id="before" breakOnFailure="true">
+  <testSet id="Complex test" order="strict" report="success,fail,skip,warn,orga">
+    <testSet id="before" breakOnFailure="true" orga="true"> <1>
       ...
     </testSet>
-    <testSet id=test">
+    <testSet id=test"> <2>
       ...
     </testSet>
-    <testSet id=after">
+    <testSet id=after" orga="true"> <3>
       ...
     </testSet>
   </testSet>
 </XmlResponseDiffSetup>
 ----
+<1> Setting the `breakOnFailure` attribute prevents subsequent errors during the actual test execution if this test set could not be executed successfully.
+<2> The test sets with IDs `test` and `after` are marked as "skipped" in the report if the preparation test set `before` was unsuccessful.
+<3> The test set is (as <1>) not included in the report in detail due to the `orga="true"` flag if no `orga` entry is found in the surrounding `report` attribute (see section `<<AsciiDoc (default)>>`).
 ====
 
-If the setup file becomes too large, the "build" and "breakdown" test sets can be swapped out to separate files and included using the `testSetInclude` tag. Swapping out is also useful if the swapped out calls are to be used elsewhere. A desired `breakOnFailure` attribute must be set in the swapped out file when swapping out.
+If the setup file becomes too large, the "setup" (`before`) and "teardown" (`after`) test sets can be swapped out to separate files and included using the `testSetInclude` tag. Swapping out is also useful if the swapped out calls are to be used elsewhere. A desired `breakOnFailure` attribute must be set in the swapped out file when swapping out.
 
 [NOTE]
 ====

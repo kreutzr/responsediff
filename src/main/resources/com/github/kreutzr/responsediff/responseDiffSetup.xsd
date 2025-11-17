@@ -100,6 +100,7 @@
     <xsd:attribute name="breakOnFailure"             type="xsd:boolean"  use="optional" default="false"/>
     <xsd:attribute name="workPath"                   type="xsd:string"   use="optional" />
     <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
+    <xsd:attribute name="orga"                       type="xsd:boolean"  use="optional" default="false" /> <!-- For reporting only -->
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -247,6 +248,7 @@
     <xsd:attribute name="breakOnFailure"             type="xsd:boolean" use="optional" default="false"/>
     <xsd:attribute name="waitBefore"                 type="xsd:string"  use="optional" />
     <xsd:attribute name="ifExecutionContextContains" type="xsd:string"  use="optional" />
+    <xsd:attribute name="orga"                       type="xsd:boolean" use="optional" default="false" /> <!-- For reporting only -->
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->

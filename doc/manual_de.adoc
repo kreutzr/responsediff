@@ -299,6 +299,7 @@ Folgende Werte sind für die `report`-Attribute an den TestSets und Tests vorges
 * `skip`: Der Test wird im Report berücksichtigt, wenn er aufgrund von technischen Problemen abgebrochenen wurde, oder aufgrund eines angegebenen `testIdPattern` von der Ausführung ausgenommen wurde.
 * `all`: Der Test wird unabhängig des Testergebnisses berücksichtigt.
 * `none`: Der Test wird niemals berücksichtigt.
+* `orga`: Tests und TestSets werden per Default nicht berücksichtigt, wenn am jeweiligen Test oder TestSet das Attribut `orga` auf `true` gesetzt wurde (Default ist `false`). Dies kann interessant sein, wenn der Report nur die "echten" Tests ausweisen soll, nicht aber das ggfs. dafür notwendige Aufbauen und Abräumen des Testszenarios. Mit `orga` markierte Tests und TestSets werden (nur) in den Report eingebunden, wenn das `report`-Attribut zusätzlich `orga` enthält.
 
 ====== HTML via AsciiDoc
 Es ist einfach, einen HTML-Report aus einem erzeugten AsciiDoc-Report zu erzeugen. Es reicht `html` (Komma-separiert) dem Wert des Konfigurationsparameters `reportConversionFormats` anzuhängen (siehe Abschnit "<<Konfiguration>>"). Es ist zu beachten, dass ein umfangreicher HTML-Report ggfs. einen Browser an seine Grenzen bringen kann. In diesen Fällen ist es geeigneter, einen PDF-Report zu erzeugen.
@@ -612,7 +613,7 @@ Der Mechanismus kann auf TestSet-Ebene fortgeführt werden, so dass bei einem au
 ----
 <XmlResponseDiffSetup ...>
   <testSet id="Complex test" order="strict"> <1>
-    <testSet id="before" breakOnFailure="true> <2>
+    <testSet id="before" breakOnFailure="true"> <2>
       <test id="Create test element" breakOnFailure="true"> <3>
         ...
         <response> <4>
@@ -1858,7 +1859,6 @@ Für die Auswertung hat das `<header>`-Tag das Attribut `path`. Das Attribut wir
 </XmlResponseDiffSetup>
 ----
 <1> Wir gehen von einer Ausführungszeit (serverseitig gemessen) von 5 Millisekunden aus, wobei wir eine Toleranz von 3 Millisekunden erlauben. Die maximal akzeptierte Ausführungszeit beträgt also 8 Millisekunden. Dass die Ausführungszeit weniger als 2 Millisekunden dauern kann, wird in diesem Beispiel nicht angenommen.
-
 ====
 
 == Automatische Anpassung der Tests bei Versionswechsel
@@ -1971,22 +1971,25 @@ Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, 
 [source]
 ----
 <XmlResponseDiffSetup ...>
-  <testSet id="Complex test" order="strict">
-    <testSet id="before" breakOnFailure="true">
+  <testSet id="Complex test" order="strict" report="success,fail,skip,warn,orga">
+    <testSet id="before" breakOnFailure="true" orga="true"> <1>
       ...
     </testSet>
-    <testSet id=test">
+    <testSet id=test"> <2>
       ...
     </testSet>
-    <testSet id=after">
+    <testSet id=after" orga="true"> <3>
       ...
     </testSet>
   </testSet>
 </XmlResponseDiffSetup>
 ----
+<1> Mittels `breakOnFailure` werden Folgefehler bei der eigentlichen Testausführung vermieden, wenn dieses TestSet nicht fehlerfrei ausgeführt werden konnte.
+<2> Die TestSets mit IDs `test` und `after` werden im Report als "übersprungen" markiert, wenn das Vorbereitungs-TestSet `before` nicht erfolgreich war.
+<3> Das TestSet wird (wie auch <1>) im Report wegen der Markierung `orga="true"` berücksichtigt, wenn sich im umschließenden `report`-Attribut kein Eintrag `orga`  findet (vgl. Abschnitt `<<AsciiDoc (default)>>`).
 ====
 
-Wird die Setup-Datei zu umfangreich, können die "Aufbau" und "Abbau" TestSets in eigene Dateien ausgelagert und per `testSetInclude`-Tag eingebunden werden. Eine Auslagerung ist zudem sinnvoll, wenn die so ausgelagerten Aufrufe auch an anderer Stelle Verwendung finden sollen. Ein gewünschtes Attribut `breakOnFailure` muss bei Auslagerung in der ausgelagerten Datei gesetzt werden.
+Wird die Setup-Datei zu umfangreich, können die "Aufbau"- (`before`) und "Abbau"- (`after`) TestSets in eigene Dateien ausgelagert und per `testSetInclude`-Tag eingebunden werden. Eine Auslagerung ist zudem sinnvoll, wenn die so ausgelagerten Aufrufe auch an anderer Stelle Verwendung finden sollen. Ein gewünschtes Attribut `breakOnFailure` muss bei Auslagerung in der ausgelagerten Datei gesetzt werden.
 
 [NOTE]
 ====

@@ -32,7 +32,7 @@
 <xsl:template match="testSet"><xsl:call-template name="headline"/><xsl:call-template name="substring-after-last">
 <xsl:with-param name="string" select="./@id" />
 <xsl:with-param name="delimiter" select="' / '" />
-</xsl:call-template>
+</xsl:call-template><xsl:if test="not(./@orga = 'true') or contains(./@report,'orga') or contains(./@report,'all')" >
 
 [cols="15h,85"]
 |===
@@ -53,6 +53,8 @@
 <xsl:apply-templates select="test"/>
 
 <xsl:apply-templates select="testSet"/>
+</xsl:if>
+&nbsp;<!-- Keep this together with line break for correct headline and TOC rendering -->
 
 </xsl:template>
 
@@ -94,11 +96,8 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
     <xsl:otherwise>skip</xsl:otherwise>
   </xsl:choose>
 </xsl:variable>
-<xsl:variable name="report" select ="./@report" />
 
-<xsl:if test="contains($report,$result) or contains($report,'all')" ><xsl:call-template name="insertTest">
-<xsl:with-param name="result" select="$result" /></xsl:call-template></xsl:if>
-
+<xsl:call-template name="insertTest"><xsl:with-param name="result" select="$result" /></xsl:call-template>
 </xsl:template>
 
   <!-- ========================================================================== -->
@@ -107,6 +106,9 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:with-param name="string" select="./@id" />
 <xsl:with-param name="delimiter" select="' / '" />
 </xsl:call-template>
+&nbsp;<!-- Keep this together with line break for correct headline and TOC rendering -->
+
+<xsl:if test="( not(./@orga = 'true') or contains(./@report,'orga') ) and ( contains(./@report,$result) or contains(./@report,'all') )" >
 
 <xsl:variable name="ticketUrl"><xsl:value-of select="/XmlResponseDiffSetup/ticketServiceUrl" /></xsl:variable>
 
@@ -147,6 +149,9 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:apply-templates select="response/controlResponse"/>
 </xsl:if>
+</xsl:if>
+
+
 </xsl:template>
 
 <!-- ========================================================================== -->
