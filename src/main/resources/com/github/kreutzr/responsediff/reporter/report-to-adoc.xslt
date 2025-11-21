@@ -68,7 +68,7 @@
 |===
 | icon:bomb[] | Test failed
 | icon:bolt[] | Test has warning
-| icon:ban[]  | test was skipped
+| icon:ban[]  | Test was skipped
 |===
 
 '''
@@ -108,7 +108,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 </xsl:call-template>
 &nbsp;<!-- Keep this together with line break for correct headline and TOC rendering -->
 
-<xsl:if test="( not(./@orga = 'true') or contains(./@report,'orga') ) and ( contains(./@report,$result) or contains(./@report,'all') )" >
+<xsl:if test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( ( $result != 'success' ) or contains(./@report,'orga') ) )" >
 
 <xsl:variable name="ticketUrl"><xsl:value-of select="/XmlResponseDiffSetup/ticketServiceUrl" /></xsl:variable>
 
