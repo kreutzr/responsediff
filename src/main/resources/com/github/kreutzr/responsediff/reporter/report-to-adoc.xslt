@@ -29,10 +29,30 @@
 
   <!-- ========================================================================== -->
 
-<xsl:template match="testSet"><xsl:call-template name="headline"/><xsl:call-template name="substring-after-last">
+<xsl:template match="testSet">
+<xsl:variable name="result">
+  <xsl:choose>
+    <xsl:when test="analysis">
+      <xsl:choose>
+        <xsl:when test="analysis/failCount>0">fail</xsl:when> <!-- Any fail is considered -->
+        <xsl:when test="analysis/warnCount>0">warn</xsl:when> <!-- Any warn is considered -->
+        <xsl:when test="analysis/skipCount>0">skip</xsl:when> <!-- Any skip is considered -->
+        <xsl:otherwise>success</xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
+    <xsl:otherwise>skip</xsl:otherwise> <!-- Skipped test sets do not have an analysis element -->
+  </xsl:choose>
+</xsl:variable>
+<xsl:call-template name="insertTestSet"><xsl:with-param name="result" select="$result" /></xsl:call-template>
+</xsl:template>
+
+  <!-- ========================================================================== -->
+
+<xsl:template name="insertTestSet"><xsl:param name="result" /><xsl:call-template name="headline"/><xsl:call-template name="substring-after-last">
 <xsl:with-param name="string" select="./@id" />
 <xsl:with-param name="delimiter" select="' / '" />
-</xsl:call-template><xsl:if test="not(./@orga = 'true') or contains(./@report,'orga') or contains(./@report,'all')" >
+</xsl:call-template><xsl:choose>
+<xsl:when test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( not($result = 'success') or contains(./@report,'orga') ) )" >
 
 [cols="15h,85"]
 |===
@@ -53,9 +73,12 @@
 <xsl:apply-templates select="test"/>
 
 <xsl:apply-templates select="testSet"/>
-</xsl:if>
+</xsl:when>
+<xsl:otherwise>
 &nbsp;<!-- Keep this together with line break for correct headline and TOC rendering -->
 
+</xsl:otherwise>
+</xsl:choose>
 </xsl:template>
 
   <!-- ========================================================================== -->
@@ -90,13 +113,12 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
         <xsl:when test="analysis/successCount=1">success</xsl:when>
         <xsl:when test="analysis/failCount=1">fail</xsl:when>
         <xsl:when test="analysis/warnCount=1">warn</xsl:when>
-        <xsl:when test="analysis/skipCount>=1">skip</xsl:when>
+        <xsl:otherwise>skip</xsl:otherwise>
       </xsl:choose>
     </xsl:when>
-    <xsl:otherwise>skip</xsl:otherwise>
+    <xsl:otherwise>skip</xsl:otherwise> <!-- Skipped tests do not have an analysis element -->
   </xsl:choose>
 </xsl:variable>
-
 <xsl:call-template name="insertTest"><xsl:with-param name="result" select="$result" /></xsl:call-template>
 </xsl:template>
 
@@ -105,14 +127,11 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:template name="insertTest"><xsl:param name="result" /><xsl:call-template name="headline"/> <xsl:call-template name="headlineIcon"><xsl:with-param name="result" select="$result" /></xsl:call-template>&nbsp;<xsl:call-template name="substring-after-last">
 <xsl:with-param name="string" select="./@id" />
 <xsl:with-param name="delimiter" select="' / '" />
-</xsl:call-template>
-&nbsp;<!-- Keep this together with line break for correct headline and TOC rendering -->
-
-<xsl:if test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( ( $result != 'success' ) or contains(./@report,'orga') ) )" >
-
+</xsl:call-template><xsl:choose>
+<xsl:when test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( ( $result != 'success' ) or contains(./@report,'orga') ) )" >
 <xsl:variable name="ticketUrl"><xsl:value-of select="/XmlResponseDiffSetup/ticketServiceUrl" /></xsl:variable>
-
 <xsl:if test="( (./description != '') or (./@waitBefore != '') or (./@ticketReference != '') or (./@breakOnFailure) )">
+
 [cols="15h,85"]
 |===
 
@@ -149,9 +168,12 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:apply-templates select="response/controlResponse"/>
 </xsl:if>
-</xsl:if>
+</xsl:when>
+<xsl:otherwise>
+&nbsp;<!-- Keep this together with line break for correct headline and TOC rendering -->
 
-
+</xsl:otherwise>
+</xsl:choose>
 </xsl:template>
 
 <!-- ========================================================================== -->
@@ -311,7 +333,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 |===
 | Measure | Value | Measure | Value | Measure | Value
 
-| begin       | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="begin" /></xsl:call-template> | end | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="end" /></xsl:call-template> | duration    | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="duration" /></xsl:call-template> 
+| begin       | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="begin" /></xsl:call-template> | end | <xsl:call-template name="formatIsoDate"><xsl:with-param name="isoDateTime" select="end" /></xsl:call-template> | duration    | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="duration" /></xsl:call-template>
 
 <xsl:if test="(avgDuration != '') and (minDuration != '') and (maxDuration != '')">
 | avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template> | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
