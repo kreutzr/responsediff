@@ -46,6 +46,7 @@ This is a regular maintenance release.
 * Added logLevel attribute to XML expectations. Differences of level WARN will not trigger a BreakOnFailureException. Exceptions have logLevel FATAL.
 * Body comparisons are more tolerant by ignoring any white spaces (including line breaks).
 * Allowed "orga" attribute on "test" and "testSet" XML tags in setup to optionally hide organizational processes (e.g., test preparation and tear down) in the rendered report.
+* Replaced license-maven-plugin by cyclonedx-maven-plugin for SBOM creation. Replaced src/main/resources/licenses.xslt by src/main/resources/sbom.xslt accordingly.
 
 === Bug fixes
 
