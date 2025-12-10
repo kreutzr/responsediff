@@ -13,13 +13,13 @@
 # Run this script and zip updated "ResponseDiff/" folder.
 #
 # Draft a release in GitHub with new tag "v1.x.0"
-# => - Follow link "releases"
-#    - Click "create new release"
+# => - Follow link "Releases"
+#    - Click "draft new release"
 #    - Set a new tag "v.1.x.0"
 #    - Check on "Set as the latest version" (checkbox below)
 #    - Upload zipped ResponseDiff folder (See "Attach binaries by dropping them here or select them.")
 #    - Copy former release notes text and copy and adjust it here.
-#    - Press Realese button.
+#    - Press "Publish release" button.
 #
 # Finally edit (new version -> SNAPSHOT)
 # - pom.xml
