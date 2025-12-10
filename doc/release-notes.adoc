@@ -5,7 +5,7 @@
 
 image::img/responsediff-logo_320x160.png[ResponseDiff]
 
-== V1.3.0 (2025-xx-xx)
+== V1.4.0 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
 
@@ -30,13 +30,34 @@ This is a regular maintenance release.
 * ...
 
 
-== V1.2.1 (2025-xx-xx)
+== V1.3.1 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
 
 === Hints
 
 * ...
+
+=== Features / Changes
+
+* ...
+
+=== Bug fixes
+
+* ...
+
+=== External libraries
+
+* ...
+
+=== Known issues
+
+* ...
+
+
+== V1.3.0 (2025-12-10)
+=== Type
+This is a regular maintenance release.
 
 === Features / Changes
 
@@ -68,10 +89,6 @@ This is a regular maintenance release.
 * Upgrade junit-jupiter from 5.13.4 to 6.0.1
 * Upgrade log4j from 2.25.1 to 2.25.2
 * Upgrade mockito from 5.19.0 to 5.20.0
-
-=== Known issues
-
-* ...
 
 
 == V1.2.0 (2025-09-19)
