@@ -44,7 +44,7 @@ This is a regular maintenance release.
 
 === Bug fixes
 
-* ...
+* Special character "'" is masked in request as "%27".
 
 === External libraries
 

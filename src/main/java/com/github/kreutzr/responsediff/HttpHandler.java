@@ -434,6 +434,7 @@ public class HttpHandler
 	  .replace( "[", "%5B" )
 	  .replace( "]", "%5D" )
 	  .replace( " ", "%20" )
+	  .replace( "'", "%27" )
 	  ;
   }
 
