@@ -23,18 +23,19 @@
     <license>
       <name>MIT License</name>
       <url>https://opensource.org/license/mit</url>
+      <distribution>repo</distribution>
     </license>
   </licenses>
 
   <distributionManagement>
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
     <repository>
       <id>ossrh</id>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
   </distributionManagement>
 
   <scm>
@@ -49,6 +50,12 @@
       <email>reinhardkreutz@hotmail.com</email>
       <organization>com.github.kreutzr</organization>
       <organizationUrl>https://github.com/kreutzr</organizationUrl>
+    </developer>
+    <developer>
+      <name>Reinhard Kreutz</name>
+      <email>rkr@gypsilon.de</email>
+      <organization>gypsilon Software GmbH</organization>
+      <organizationUrl>https://www.gypsilon.de/</organizationUrl>
     </developer>
   </developers>
 
