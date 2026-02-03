@@ -48,6 +48,7 @@ This is a regular maintenance release.
 
 === External libraries
 
+* Upgrade assertj from 3.27.6 to 3.27.7
 * Upgrade jackson-databind from 2.20.1 to 2.21.0
 * Upgrade junit-jupiter from 6.0.1 to 6.0.2
 * Upgrade log4j from 2.25.2 to 2.25.3

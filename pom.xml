@@ -73,10 +73,10 @@
     <main.basedir>${project.basedir}</main.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Versions (latest check: 2026-01-21)-->
+    <!-- Versions (latest check: 2026-02-03)-->
     <version.asciidoctorj>3.0.1</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.4.14.0 ! -->
     <version.asciidoctorj-pdf>2.3.23</version.asciidoctorj-pdf>
-    <version.assertj>3.27.6</version.assertj>
+    <version.assertj>3.27.7</version.assertj>
     <version.glassfish.jaxb-runtime>4.0.6</version.glassfish.jaxb-runtime>
     <version.jackson-databind>2.21.0</version.jackson-databind>
     <version.jakarta.xml.bind-api>4.0.4</version.jakarta.xml.bind-api>
