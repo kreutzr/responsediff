@@ -19,7 +19,8 @@ public class ResponseDiffConfiguration
   private boolean           maskAuthorizationHeaderInCurl_ = true;
   private boolean           reportControlResponse_ = false;
   private String            executionContext_;
-  private String            ticketServiceUrl_;
+  private String            ticketServiceUrl_; // Deprecated: Will be removed in version 2.0.
+  private String            ticketServiceUrls_;
   private String            candidateServiceUrl_;
   private List< XmlHeader > candidateHeaders_;
   private String            referenceServiceUrl_;
@@ -202,6 +203,10 @@ public class ResponseDiffConfiguration
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @deprecated Since ticket services may change over time, use {@link #getTicketServiceUrls} instead.
+   */
+  @Deprecated
   public String getTicketServiceUrl()
   {
     return ticketServiceUrl_;
@@ -209,9 +214,27 @@ public class ResponseDiffConfiguration
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * @deprecated Since ticket services may change over time, use {@link #setTicketServiceUrls} instead.
+   */
+  @Deprecated
   public void setTicketServiceUrl( final String ticketServiceUrl )
   {
     ticketServiceUrl_ = ticketServiceUrl;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public String getTicketServiceUrls()
+  {
+    return ticketServiceUrls_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setTicketServiceUrls( final String ticketServiceUrls )
+  {
+    ticketServiceUrls_ = ticketServiceUrls;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

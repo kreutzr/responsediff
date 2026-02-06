@@ -194,6 +194,7 @@ It is recommended to set the configuration parameters within a small script. A s
   "controlServiceUrl" : "...",
   "responseTimeoutMs" : ...,
   "ticketServiceUrl" : "...",
+  "ticketServiceUrls" : "...",
   "xmlFilePath" : "...",
   "reportTitle" : "...",
   "testIdPattern" : "...",
@@ -223,7 +224,8 @@ It is recommended to set the configuration parameters within a small script. A s
 * `referenceFilePath`: Optional reference to an "old" XML report to be used as a reference if no `referenceServiceUrl` was specified.
 * `controlServiceUrl`: Optional URL of the control instance (e.g. "http://localhost:10520/my-tool")
 * `responseTimeoutMs`: Optional timeout (as an integer) for receiving responses. (default is 1000)
-* `ticketServiceUrl`: Optional URL to the ticket system, so that the ticket number only needs to be appended (e.g. "http://localhost/tickets/")
+* `ticketServiceUrl`: Optional URL to the ticket system, so that the ticket number only needs to be appended (e.g. `http://localhost/tickets/`). This parameter is *deprecated* and will be removed in version 2.0. It is replaced by the parameter `ticketServiceUrls`.
+* `ticketServiceUrls`: Optional, comma-separated list of the ticket system URLs to be used, so that the ticket number only needs to be appended (e.g., `http://localhost/tickets/`). If more than one URL is used, the URLs must be distinguished by an identifier (e.g., `ticketServiceUrls:"repo1=http://localhost/tickets/repo1/,repo2=http://localhost/tickets/repo2,old=http://localhost/legacy-ticketsystem/"`). If no identifier is specified for a URL, the identifier `default` is used internally (e.g., `ticketServiceUrls:"new=http://localhost/new-ticketsystem/,http://localhost/legacy-ticketsystem/"`). The identifiers can be used in the test definitions to reference the ticketing system to be used (e.g., `ticketReference="new:123"`). If no identifier is specified in a `ticketReference`, the identifier `default` is assumed to be meant (e.g., `ticketReference="456"`).
 * `xmlFilePath`: Mandatory specification of the XML file containing the setup to be tested. The path can be specified relative to the optionally specified `rootPath`.
 * `reportTitle`: Optional text that shall be used as report title when set. If not set the `description` text of the `XmlResponseDiffSetup` block is used as default. If set, the `description` is used as subtitle.
 * `testIdPattern`: Optional regular expression (in Java RegEx syntax) to restrict execution to specific tests. If nothing or null is passed, all tests are executed (default). Otherwise, only those tests whose `id` matches the passed expression are executed.

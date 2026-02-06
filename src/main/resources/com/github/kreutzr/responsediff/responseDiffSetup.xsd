@@ -10,20 +10,39 @@
   <xsd:element name="XmlResponseDiffSetup">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element name="ticketServiceUrl" type="xsd:string"        minOccurs="0" maxOccurs="1" />
-        <xsd:element name="reportTitle"      type="xsd:string"        minOccurs="0" maxOccurs="1" />
-        <xsd:element name="description"      type="xsd:string"        minOccurs="0" maxOccurs="1" />
-        <xsd:element name="filterRegistry"   type="XmlFilterRegistry" minOccurs="0" maxOccurs="1" />
-        <xsd:element name="variables"        type="XmlVariables"      minOccurs="0" maxOccurs="1" />
-        <xsd:element name="testSet"          type="XmlTestSet"        minOccurs="1" maxOccurs="unbounded" />
-        <xsd:element name="analysis"         type="XmlAnalysis"       minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
-        <xsd:element name="structureDepth"   type="xsd:int"           minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
-        <xsd:element name="runtime"          type="XmlRuntime"        minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+        <xsd:element name="ticketServiceUrl"  type="xsd:string"           minOccurs="0" maxOccurs="1" /> <!-- Deprecated: Use ticketServiceUrls instead. It will be removed in Version 2.0. -->
+        <xsd:element name="ticketServiceUrls" type="XmlTicketServiceUrls" minOccurs="0" maxOccurs="1" />
+        <xsd:element name="reportTitle"       type="xsd:string"           minOccurs="0" maxOccurs="1" />
+        <xsd:element name="description"       type="xsd:string"           minOccurs="0" maxOccurs="1" />
+        <xsd:element name="filterRegistry"    type="XmlFilterRegistry"    minOccurs="0" maxOccurs="1" />
+        <xsd:element name="variables"         type="XmlVariables"         minOccurs="0" maxOccurs="1" />
+        <xsd:element name="testSet"           type="XmlTestSet"           minOccurs="1" maxOccurs="unbounded" />
+        <xsd:element name="analysis"          type="XmlAnalysis"          minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+        <xsd:element name="structureDepth"    type="xsd:int"              minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
+        <xsd:element name="runtime"           type="XmlRuntime"           minOccurs="0" maxOccurs="1" /> <!-- For internal use only -->
       </xsd:sequence>
 
       <xsd:attribute name="id" type="xsd:string" use="required" />
     </xsd:complexType>
   </xsd:element>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlTicketServiceUrls">
+    <xsd:sequence>
+      <xsd:element name="ticketServiceUrls" type="XmlTicketServiceUrl" minOccurs="1" maxOccurs="unbounded" />
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <xsd:complexType name="XmlTicketServiceUrl">
+    <xsd:simpleContent>
+       <xsd:extension base="xsd:string">
+           <xsd:attribute name="id" type="xsd:string" use="required" />
+       </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 

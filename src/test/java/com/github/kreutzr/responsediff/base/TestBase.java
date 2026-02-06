@@ -10,6 +10,8 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -17,13 +19,12 @@ import org.mockito.MockedStatic;
 
 import com.github.kreutzr.responsediff.HttpHandler;
 import com.github.kreutzr.responsediff.ResponseDiff;
-import com.github.kreutzr.responsediff.tools.FormatHelper;
-
 import com.github.kreutzr.responsediff.XmlHeader;
 import com.github.kreutzr.responsediff.XmlHeaders;
 import com.github.kreutzr.responsediff.XmlRequest;
 import com.github.kreutzr.responsediff.XmlVariable;
 import com.github.kreutzr.responsediff.XmlVariables;
+import com.github.kreutzr.responsediff.tools.FormatHelper;
 
 public class TestBase
 {
@@ -42,22 +43,23 @@ public class TestBase
   @BeforeAll
   public static void init() throws Exception
   {
-    String  xmlFilePath                   = null;
-    String  reportTitle                   = null;
-    String  testIdPattern                 = null;
-    String  xsltFilePath                  = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
-    String  reportFileEnding              = "adoc";
-    String  reportConversionFormats       = ""; // html, pdf (CAUTION: This will produce a lot of reports in the test-result folder)
-    String  storeResultPath               = "./test-results/";
-    boolean reportWhiteNoise              = false;
-    boolean maskAuthorizationHeaderInCurl = true;
-    boolean reportControlResponse         = false;
-    String  executionContextAsString      = null;
-    String  ticketServiceUrl              = null;
-    Long    responseTimeoutMs             = 1000L;
-    Double  epsilon                       = 0.00000001;
-    String  referenceFilePath             = null;
-    Boolean exitWithExitCode              = false; // Disable for local IDE testing
+    String  xmlFilePath                    = null;
+    String  reportTitle                    = null;
+    String  testIdPattern                  = null;
+    String  xsltFilePath                   = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
+    String  reportFileEnding               = "adoc";
+    String  reportConversionFormats        = ""; // html, pdf (CAUTION: This will produce a lot of reports in the test-result folder)
+    String  storeResultPath                = "./test-results/";
+    boolean reportWhiteNoise               = false;
+    boolean maskAuthorizationHeaderInCurl  = true;
+    boolean reportControlResponse          = false;
+    String  executionContextAsString       = null;
+    String  ticketServiceUrl               = null; // Deprecated: Will be removed in Version 2.0.
+    Map< String, String> ticketServiceUrls = new TreeMap<>();
+    Long    responseTimeoutMs              = 1000L;
+    Double  epsilon                        = 0.00000001;
+    String  referenceFilePath              = null;
+    Boolean exitWithExitCode               = false; // Disable for local IDE testing
 
     List< XmlHeader > candidateHeaders = new ArrayList<>();
     List< XmlHeader > referenceHeaders = new ArrayList<>();
@@ -76,7 +78,8 @@ public class TestBase
       maskAuthorizationHeaderInCurl,
       reportControlResponse,
       executionContextAsString,
-      ticketServiceUrl,
+      ticketServiceUrl, // Deprecated: Will be removed in Version 2.0.
+      ticketServiceUrls,
       CANDIDATE_URL,
       candidateHeaders,
       REFERENCE_URL,

@@ -194,6 +194,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
   "controlServiceUrl" : "...",
   "responseTimeoutMs" : ...,
   "ticketServiceUrl" : "...",
+  "ticketServiceUrls" : "...",
   "xmlFilePath" : "...",
   "reportTitle" : "...",
   "testIdPattern" : "...",
@@ -222,7 +223,8 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
 * `referenceFilePath`: Optionaler Verweis auf einen "alten" XML-Report, der als Referenz verwendet werden soll, falls keine `referenceServiceUrl` angegeben wurde.
 * `controlServiceUrl`: Optionale URL der Kontroll-Instanz (z.B. "http://localhost:10520/my-tool")
 * `responseTimeoutMs`: Optionales Timeout (als Ganzzahl) für den Empfang von Antworten. (default ist 1000)
-* `ticketServiceUrl`: Optionale URL zum Ticketsystem, so dass die Ticketnummer nur noch angehangen werden muss (z.B. "http://localhost/tickets/")
+* `ticketServiceUrl`: Optionale URL zum Ticketsystem, so dass die Ticketnummer nur noch angehangen werden muss (z.B. `http://localhost/tickets/`). Dieser Parameter ist *deprecated* und wird in Version 2.0 entfernt werden. An seine Stelle tritt der Parameter `ticketServiceUrls`.
+* `ticketServiceUrls`: Optionale, Komma-separierte Auflistung der zu verwendenden Ticketsystem-URLs, so dass die Ticketnummer nur noch angehangen werden muss (z.B. `http://localhost/tickets/`). Wenn mehr als eine URL zum Einsatz kommt, müssen die URLs über einer Kennung unterschieden werden (z.B. `ticketServiceUrls:"repo1=http://localhost/tickets/repo1/,repo2=http://localhost/tickets/repo2,old=http://localhost/legacy-ticketsystem/"`). Wird bei einer URL keine Kennung angegeben, so wird intern die Kennung `default` verwendet (z.B. `ticketServiceUrls:"new=http://localhost/new-ticketsystem/,http://localhost/legacy-ticketsystem/"`). Die Kennungen können in den Testdefinitionen verwendet werden, um das zu verwendende Ticketsystem zu referenzieren (z.B. `ticketReference="new:123"`). Wird in einer `ticketReference` keine Kennung angegeben, so wird angenommen, dass die Kennung `default` gemeint ist (z.B. `ticketReference="456"`).
 * `xmlFilePath`: Mandatorische Angabe der XML-Datei, welche das zu testende Setup beinhaltet. Der Pfad kann relativ zum optional angegebenen `rootPath` angegeben werden.
 * `reportTitle`: Optionaler Text, der als Reporttitel verwendet werden soll. Per Default wird die `description` aus dem `XmlResponseDiffSetup`-Block verwendet. Ist der Parameter gesetzt, so wird die `description` als Untertitel verwendet.
 * `testIdPattern`: Optionaler regulärer Ausdruck (in Java RegEx Syntax), um die Ausführung auf einzelne Tests einzuschränken. Wird nichts oder null übergeben, so werden alle Tests ausgeführt (default). Andernfalls werden nur diejenigen Tests ausgeführt, deren `id` zum übergebenen Ausdruck passt.

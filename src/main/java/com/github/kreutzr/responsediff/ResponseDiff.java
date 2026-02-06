@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -34,6 +35,8 @@ public class ResponseDiff
 
    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd_HH-mm-ss" );
 
+   protected static final String DEFAULT_TICKET_SERVICE_ID = "default";
+
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    private final String                    reportTitle_;
@@ -47,6 +50,7 @@ public class ResponseDiff
    private final boolean                   reportControlResponse_;
    private final String                    executionContextAsString_;
    private final String                    ticketServiceUrl_;
+   private final Map< String, String >     ticketServiceUrls_;
    private final String                    candidateServiceUrl_;
    private final List< XmlHeader >         candidateHeaders_;
    private final String                    referenceServiceUrl_;
@@ -74,7 +78,8 @@ public class ResponseDiff
     * @param reportConversionFormats The target formats (as comma separated string, e.g. "pdf,html") an AscciiDoc report shall be converted to. Only considered if reportFileEnding is "adoc".
     * @param storeReportPath The path to store the report in. Must not be null.
     * @param reportWhiteNoise Flag, if any different value shall be reported (true) or only those that were not discovered to be white noise (differences between reference and control, or expected differences) (false).
-    * @param ticketServiceUrl The URL of the ticket server. This is used for links within the generated documentation. May be null.
+    * @param ticketServiceUrl The URL of the ticket server. This is used for links within the generated documentation. May be null. <b>Deprecated</b>: Use ticketServiceUrls instead. It will be removed in Version 2.0.
+    * @param ticketServiceUrls A map that holds different URLs of ticket servers (identified by an id). This is used to create links to a ticket system within the generated documentation. Must not be null.
     * @param candidateServiceUrl The URL of the candidate server. Must not be null.
     * @param candidateHeaders A XmlHeaders object. May be null. This is required for e.g. passing server individual authentication headers.
     * @param referenceServiceUrl The URL of the reference server. May only be null if referenceFilePath is not null.
@@ -88,29 +93,30 @@ public class ResponseDiff
     * @throws Exception If an error occurs during the initialization, an Exception is thrown
     */
    public ResponseDiff(
-     final String            rootPath,
-     final String            xmlFilePath,
-     final String            reportTitle,
-     final String            testIdPattern,
-     final String            xsltFilePath,
-     final String            reportFileEnding,
-     final String            reportConversionFormats,
-     final String            storeReportPath,
-     final boolean           reportWhiteNoise,
-     final boolean           maskAuthorizationHeaderInCurl,
-     final boolean           reportControlResponse,
-     final String            executionContextAsString,
-     final String            ticketServiceUrl,
-     final String            candidateServiceUrl,
-     final List< XmlHeader > candidateHeaders,
-     final String            referenceServiceUrl,
-     final List< XmlHeader > referenceHeaders,
-     final String            controlServiceUrl,
-     final List< XmlHeader > controlHeaders,
-     final long              timeoutMs,
-     final double            epsilon,
-     final String            referenceFilePath,
-     final boolean           exitWithExitCode
+     final String                rootPath,
+     final String                xmlFilePath,
+     final String                reportTitle,
+     final String                testIdPattern,
+     final String                xsltFilePath,
+     final String                reportFileEnding,
+     final String                reportConversionFormats,
+     final String                storeReportPath,
+     final boolean               reportWhiteNoise,
+     final boolean               maskAuthorizationHeaderInCurl,
+     final boolean               reportControlResponse,
+     final String                executionContextAsString,
+     final String                ticketServiceUrl,
+     final Map< String, String > ticketServiceUrls,
+     final String                candidateServiceUrl,
+     final List< XmlHeader >     candidateHeaders,
+     final String                referenceServiceUrl,
+     final List< XmlHeader >     referenceHeaders,
+     final String                controlServiceUrl,
+     final List< XmlHeader >     controlHeaders,
+     final long                  timeoutMs,
+     final double                epsilon,
+     final String                referenceFilePath,
+     final boolean               exitWithExitCode
    )
    throws Exception
    {
@@ -127,6 +133,7 @@ public class ResponseDiff
      reportControlResponse_         = reportControlResponse;
      executionContextAsString_      = executionContextAsString;
      ticketServiceUrl_              = ticketServiceUrl;
+     ticketServiceUrls_             = ticketServiceUrls;
      candidateServiceUrl_           = unifyUrl( candidateServiceUrl );
      candidateHeaders_              = candidateHeaders;
      referenceServiceUrl_           = unifyUrl( referenceServiceUrl );
@@ -187,6 +194,39 @@ public class ResponseDiff
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
+    * Converts a given comma separated list if key value pairs into a map.
+    * @param ticketServiceUrlsAsString The comma separated list of key value pairs ("<key1>=<value1>,<key2>=<value2>,...") to parse. May be null.
+    * @return A map that hold all passed key value pairs. If no key (no "=" character) was defined, a default key is used (see DEFAULT_TICKET_SERVICE_ID). If null was passed, an empty map is returned.
+    */
+   public static final Map< String, String > parseTicketServiceUrls( final String ticketServiceUrlsAsString )
+   {
+     final Map< String, String > map = new TreeMap<>();
+     if( ticketServiceUrlsAsString == null || ticketServiceUrlsAsString.isBlank() ) {
+       return map;
+     }
+
+     final String[] parts = ticketServiceUrlsAsString.split( "," );
+     for( final String part : parts ) {
+       String id    = DEFAULT_TICKET_SERVICE_ID;
+       String value = part;
+       final int pos = part.indexOf( "=" );
+       if( pos > 0 ) {
+         id    = part.substring( 0, pos );
+         value = part.substring( pos+1 );
+       }
+       final String ticketServiceUrl = map.get( id );
+       if( ticketServiceUrl != null ) {
+         LOG.warn( "The ticket service id \"" + id + "\" is already defined as \"" + ticketServiceUrl + "\". The ticket service \"" + value + "\" will be ignored. Some ticket references may point to the wrong ticket service." );
+       }
+       else {
+         map.put(id, value );
+       }
+     }
+     return map;
+   }
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+   /**
     * Allows to change the XML test setup.
     * <br/><b>NOTE:</b> This (re-)sets xmlTestSetup_ as a <b>side effect</b>!
     * @param xmlFilePath The configuration file (XML) that describes the test setup.
@@ -219,7 +259,20 @@ public class ResponseDiff
 //   LOG.trace( "### setup=" + JsonHelper.provideObjectMapper().writeValueAsString( xmlTestSetup_ ) );
 //}
 
+     // NEEDS FIX C: The following code lines should be placed outside this method. => Check if required by tests.
      xmlTestSetup_.setTicketServiceUrl( ticketServiceUrl_ );
+
+     if( !ticketServiceUrls_.isEmpty() ) {
+       final XmlTicketServiceUrls xmlTicketServiceUrls = new XmlTicketServiceUrls();
+       xmlTestSetup_.setTicketServiceUrls( xmlTicketServiceUrls );
+       for( String id : ticketServiceUrls_.keySet() ) {
+         final XmlTicketServiceUrl xmlTicketServiceUrl = new XmlTicketServiceUrl();
+         xmlTicketServiceUrl.setId( id );
+         xmlTicketServiceUrl.setValue( ticketServiceUrls_.get( id ) );
+         xmlTicketServiceUrls.getTicketServiceUrls().add( xmlTicketServiceUrl );
+       }
+     }
+
      if( reportTitle_ != null ) {
        xmlTestSetup_.setReportTitle( reportTitle_ );
      }
@@ -413,6 +466,7 @@ public class ResponseDiff
      Boolean  reportControlResponse         = false;
      String   executionContextAsString      = null;
      String   ticketServiceUrl              = null;
+     String   ticketServiceUrlsAsString     = null;
      String   candidateServiceUrl           = null;
      String   referenceServiceUrl           = null;
      String   controlServiceUrl             = null;
@@ -436,6 +490,7 @@ public class ResponseDiff
      reportControlResponse         = Converter.asBoolean( config.getReportControlResponse(),         reportControlResponse );
      executionContextAsString      = Converter.asString ( config.getExecutionContext(),              executionContextAsString );
      ticketServiceUrl              = Converter.asString ( config.getTicketServiceUrl(),              ticketServiceUrl );
+     ticketServiceUrlsAsString     = Converter.asString ( config.getTicketServiceUrls(),             ticketServiceUrlsAsString );
      candidateServiceUrl           = Converter.asString ( config.getCandidateServiceUrl(),           candidateServiceUrl );
      referenceServiceUrl           = Converter.asString ( config.getReferenceServiceUrl(),           referenceServiceUrl );
      controlServiceUrl             = Converter.asString ( config.getControlServiceUrl(),             controlServiceUrl );
@@ -444,6 +499,21 @@ public class ResponseDiff
      referenceFilePath             = Converter.asString ( config.getReferenceFilePath(),             referenceFilePath );
      exitWithExitCode              = Converter.asBoolean( config.isExitWithExitCode(),               exitWithExitCode );
      startupSleepMs                = Converter.asLong   ( config.getStartupSleepMs(),                startupSleepMs );
+
+     Map< String, String > ticketServiceUrls = new TreeMap<>();
+     if( ticketServiceUrlsAsString != null ) {
+       ticketServiceUrls = parseTicketServiceUrls( ticketServiceUrlsAsString );
+
+       // Compatibility code. Obsolete with Version 2.0.
+       if( ticketServiceUrl == null && !ticketServiceUrls.isEmpty() ) {
+         // Choose any entry (we use the first in collection)
+         ticketServiceUrl = (String) ticketServiceUrls.values().toArray()[ 0 ];
+       }
+     }
+     else if ( ticketServiceUrl != null ) {
+       // Compatibility code. Obsolete with Version 2.0.
+       ticketServiceUrls.put( DEFAULT_TICKET_SERVICE_ID, ticketServiceUrl );
+     }
 
      if( testIdPattern != null
        && ( testIdPattern.trim().isEmpty() || testIdPattern.trim().equals( "null" ) )
@@ -498,7 +568,8 @@ public class ResponseDiff
          maskAuthorizationHeaderInCurl,
          reportControlResponse,
          executionContextAsString,
-         ticketServiceUrl,
+         ticketServiceUrl, // Deprecated: Use ticketServiceUrls instead. It will be removed in Version 2.0.
+         ticketServiceUrls,
          candidateServiceUrl,
          candidateHeaders,
          referenceServiceUrl,
