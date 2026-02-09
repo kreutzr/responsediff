@@ -30,7 +30,7 @@
 
   <xsd:complexType name="XmlTicketServiceUrls">
     <xsd:sequence>
-      <xsd:element name="ticketServiceUrls" type="XmlTicketServiceUrl" minOccurs="1" maxOccurs="unbounded" />
+      <xsd:element name="ticketServiceUrl" type="XmlTicketServiceUrl" minOccurs="1" maxOccurs="unbounded" />
     </xsd:sequence>
   </xsd:complexType>
 

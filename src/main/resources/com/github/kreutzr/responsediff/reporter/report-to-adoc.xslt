@@ -129,7 +129,6 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:with-param name="delimiter" select="' / '" />
 </xsl:call-template><xsl:choose>
 <xsl:when test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( ( $result != 'success' ) or contains(./@report,'orga') ) )" >
-<xsl:variable name="ticketUrl"><xsl:value-of select="/XmlResponseDiffSetup/ticketServiceUrl" /></xsl:variable>
 <xsl:if test="( (./description != '') or (./@waitBefore != '') or (./@ticketReference != '') or (./@breakOnFailure) )">
 
 [cols="15h,85"]
@@ -142,7 +141,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 | Wait before | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="./@waitBefore" /></xsl:call-template>
 </xsl:if>
 <xsl:if test="./@ticketReference != ''">
-| Ticket references | <xsl:call-template name="handle-ticket-reference"><xsl:with-param name="ticketReference" select="./@ticketReference" /><xsl:with-param name="ticketUrl" select="$ticketUrl" /></xsl:call-template>
+| Ticket references | <xsl:call-template name="handle-ticket-reference"><xsl:with-param name="ticketReference" select="./@ticketReference" /></xsl:call-template>
 </xsl:if>
 <xsl:if test="./@breakOnFailure">
 | BreakOnFailure | <xsl:value-of select="./@breakOnFailure"/>
@@ -190,11 +189,10 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:template name="handle-ticket-reference">
 <xsl:param name="ticketReference" />
-<xsl:param name="ticketUrl" />
 <xsl:choose><xsl:when test="$ticketReference and not($ticketReference = '')">
   <xsl:call-template name="split-ticket-reference">
     <xsl:with-param name="ticketReference" select="$ticketReference" />
-    <xsl:with-param name="ticketUrl" select="$ticketUrl" />
+    <xsl:with-param name="prefix" />
   </xsl:call-template>
   </xsl:when>
   <xsl:otherwise>-</xsl:otherwise>
@@ -205,16 +203,40 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:template name="split-ticket-reference">
 <xsl:param name="ticketReference" />
-<xsl:param name="ticketUrl" />
+<xsl:param name="prefix" />
 <xsl:if test="string-length($ticketReference)">
-   <xsl:variable name="part" select="normalize-space(substring-before(concat($ticketReference,','), ','))"/>link:<xsl:value-of select="$ticketUrl" /><xsl:value-of select="$part"/>[<xsl:value-of select="$part"/>]<xsl:if test="contains($ticketReference, ',')">, </xsl:if><xsl:call-template name="split-ticket-reference">
-     <xsl:with-param name="ticketReference" select="substring-after($ticketReference, ',')"/>
-     <xsl:with-param name="ticketUrl" select="$ticketUrl" />
-   </xsl:call-template>
+  <xsl:value-of select="$prefix"/>
+
+  <xsl:variable name="part" select="normalize-space(substring-before(concat($ticketReference,','), ','))"/>
+  <xsl:variable name="urlReference"><xsl:choose>
+    <xsl:when test="contains($part, ':')"><xsl:value-of select="normalize-space(substring-before($part, ':'))"/></xsl:when>
+    <xsl:otherwise>default</xsl:otherwise>
+  </xsl:choose></xsl:variable>
+  <xsl:variable name="ticketId"><xsl:choose>
+    <xsl:when test="contains($part, ':')"><xsl:value-of select="substring-after($part, ':')"/></xsl:when>
+    <xsl:otherwise><xsl:value-of select="$part"/></xsl:otherwise>
+  </xsl:choose></xsl:variable>
+  <xsl:call-template name="render-ticket-reference">
+    <xsl:with-param name="ticketId"  select="$ticketId"/>
+    <xsl:with-param name="ticketUrl" select="/XmlResponseDiffSetup/ticketServiceUrls/ticketServiceUrl[@id=$urlReference]" />
+  </xsl:call-template>
+
+  <xsl:call-template name="split-ticket-reference">
+    <xsl:with-param name="ticketReference" select="substring-after($ticketReference, ',')"/>
+    <xsl:with-param name="prefix">, </xsl:with-param>
+  </xsl:call-template>
 </xsl:if>
 </xsl:template>
 
   <!-- ========================================================================== -->
+
+<xsl:template name="render-ticket-reference">
+<xsl:param name="ticketId" />
+<xsl:param name="ticketUrl" />
+<xsl:if test="string-length($ticketId)">link:<xsl:value-of select="$ticketUrl" /><xsl:value-of select="$ticketId"/>[<xsl:value-of select="$ticketId"/>]</xsl:if>
+</xsl:template>
+
+<!-- ========================================================================== -->
 
 <xsl:template name="formatIsoDate">
 <xsl:param name="isoDateTime" />

@@ -269,7 +269,7 @@ public class ResponseDiff
          final XmlTicketServiceUrl xmlTicketServiceUrl = new XmlTicketServiceUrl();
          xmlTicketServiceUrl.setId( id );
          xmlTicketServiceUrl.setValue( ticketServiceUrls_.get( id ) );
-         xmlTicketServiceUrls.getTicketServiceUrls().add( xmlTicketServiceUrl );
+         xmlTicketServiceUrls.getTicketServiceUrl().add( xmlTicketServiceUrl );
        }
      }
 
