@@ -36,7 +36,7 @@ This is a regular maintenance release.
 
 === Hints
 
-* ...
+* The configuration parameter "ticketServiceUrl" (used when invoking ResponseDiff) is marked as deprecated. Please use "ticketServiceUrls" (just add a "s") instead. The old (singular) parameter will be removed in the future with version 2.0 .
 
 === Features / Changes
 
