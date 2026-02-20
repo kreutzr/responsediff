@@ -34,9 +34,10 @@
   <xsl:choose>
     <xsl:when test="analysis">
       <xsl:choose>
-        <xsl:when test="analysis/failCount>0">fail</xsl:when> <!-- Any fail is considered -->
-        <xsl:when test="analysis/warnCount>0">warn</xsl:when> <!-- Any warn is considered -->
-        <xsl:when test="analysis/skipCount>0">skip</xsl:when> <!-- Any skip is considered -->
+        <!-- NOTE:  xsl:when : First match wins (only) -->
+        <xsl:when test="analysis/skipCount>0">skip</xsl:when> <!-- Any skip is considered: Prio 1 -->
+        <xsl:when test="analysis/failCount>0">fail</xsl:when> <!-- Any fail is considered: Prio 2 -->
+        <xsl:when test="analysis/warnCount>0">warn</xsl:when> <!-- Any warn is considered: Prio 3 -->
         <xsl:otherwise>success</xsl:otherwise>
       </xsl:choose>
     </xsl:when>
@@ -110,10 +111,11 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
   <xsl:choose>
     <xsl:when test="analysis">
       <xsl:choose>
-        <xsl:when test="analysis/successCount=1">success</xsl:when>
-        <xsl:when test="analysis/failCount=1">fail</xsl:when>
-        <xsl:when test="analysis/warnCount=1">warn</xsl:when>
-        <xsl:otherwise>skip</xsl:otherwise>
+        <!-- NOTE:  xsl:when : First match wins (only) -->
+        <xsl:when test="analysis/failCount=1">fail</xsl:when> <!-- Most important to indicate -->
+        <xsl:when test="analysis/warnCount>0">warn</xsl:when> <!-- More important than success -->
+        <xsl:when test="analysis/successCount=1">success</xsl:when> <!-- Neither fail nor warn => Probably success -->
+        <xsl:otherwise>skip</xsl:otherwise> <!-- Neither fail, nor warn nor success => Test was skipped -->
       </xsl:choose>
     </xsl:when>
     <xsl:otherwise>skip</xsl:otherwise> <!-- Skipped tests do not have an analysis element -->
@@ -361,9 +363,9 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 | avgDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="avgDuration" /></xsl:call-template> | minDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="minDuration" /></xsl:call-template> | maxDuration | <xsl:call-template name="formatDuration"><xsl:with-param name="duration" select="maxDuration" /></xsl:call-template>
 
 </xsl:if>
-| success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" />    | warn        | <xsl:value-of select="warnCount" />
+| success     | <xsl:value-of select="successCount" /> | fail        | <xsl:value-of select="failCount" />    | skip        | <xsl:value-of select="skipCount" />
 
-| total       | <xsl:value-of select="totalCount" />   | expectations| <xsl:value-of select="expectedCount" />| skip        | <xsl:value-of select="skipCount" />
+| total       | <xsl:value-of select="totalCount" />   | expectations| <xsl:value-of select="expectedCount" />| warn        | <xsl:value-of select="warnCount" />
 |===
 
 <xsl:apply-templates select="messages" />

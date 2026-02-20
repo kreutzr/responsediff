@@ -255,6 +255,10 @@ public class JsonDiff
   public static boolean hasAnyError( final List< JsonDiffEntry > jsonDiffEntries )
   {
     for( final JsonDiffEntry jsonDiffEntry : jsonDiffEntries ) {
+      if( jsonDiffEntry.getLogLevel() == null ) {
+        jsonDiffEntry.setLogLevel( XmlLogLevel.ERROR ); // NEEDS FIX B: Refactor: Better set LogLevel when JsonDiffEntry is created!
+      }
+
       if( jsonDiffEntry.getLogLevel() == XmlLogLevel.ERROR
        || jsonDiffEntry.getLogLevel() == XmlLogLevel.FATAL
       ) {
@@ -278,17 +282,18 @@ public class JsonDiff
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
-   * Checks if the given list holds any entry with LogLevel WARN.
-   * @return true if any entry with LogLevel WARN was found. Otherwise false is returned.
+   * Computes the number of change entries with LogLevel WARN.
+   * @return The number of change entries with LogLevel WARN.
    */
-  public boolean hasAnyWarning()
+  public int getWarningCount()
   {
+    int result = 0;
     for( final JsonDiffEntry jsonDiffEntry : getChanges() ) {
       if( jsonDiffEntry.getLogLevel() == XmlLogLevel.WARN ) {
-        return true;
+        result += 1;
       }
     }
-    return false;
+    return result;
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

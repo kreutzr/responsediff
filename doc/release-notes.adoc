@@ -45,12 +45,14 @@ This is a regular maintenance release.
 === Bug fixes
 
 * Special character "'" is masked in request as "%27".
+* Fixed bug introduced in V1.3.0 . Some change messages of level ERROR did not increase the fail counter while change messages of level WARN contributed (incorrectly) to the total counter. (Intended: total = success + fail + skip)
 
 === External libraries
 
 * Upgrade assertj from 3.27.6 to 3.27.7
 * Upgrade jackson-databind from 2.20.1 to 2.21.0
-* Upgrade junit-jupiter from 6.0.1 to 6.0.2
+* Upgrade jakarta.xml.bind-api from 4.0.4 to 4.0.5
+* Upgrade junit-jupiter from 6.0.1 to 6.0.3
 * Upgrade log4j from 2.25.2 to 2.25.3
 * Upgrade mockito from 5.20.0 to 5.21.0
 

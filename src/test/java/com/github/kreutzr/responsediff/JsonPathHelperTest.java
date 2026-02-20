@@ -169,28 +169,53 @@ public class JsonPathHelperTest
       assertThat( JsonPathHelper.contains( "$.*",    "$.a[0]"   ) ).isTrue();
       assertThat( JsonPathHelper.contains( "$.*",    "$.b"      ) ).isTrue();
 
-      assertThat( JsonPathHelper.contains( "$.*.a",  "$.a"      ) ).isFalse();
+      // Single "*" in path
+      assertThat( JsonPathHelper.contains( "$.*.a",  "$.a"      ) ).isFalse(); // A dot must not be ignored
       assertThat( JsonPathHelper.contains( "$.*.a",  "$.b.a"    ) ).isTrue();
-      assertThat( JsonPathHelper.contains( "$.*.a",  "$.b.a.c"  ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$.*.a",  "$.b.a.c"  ) ).isTrue();  // Successor path is irrelevant (may be any)
       assertThat( JsonPathHelper.contains( "$.*.a",  "$.b[0].a" ) ).isTrue();
       assertThat( JsonPathHelper.contains( "$.*.a",  "$.b"      ) ).isFalse();
-      assertThat( JsonPathHelper.contains( "$.*.a",  "$.b.c.a"  ) ).isFalse();
+      assertThat( JsonPathHelper.contains( "$.*.a",  "$.b.c.a"  ) ).isFalse(); // "*" is not greedy
 
-      assertThat( JsonPathHelper.contains( "$..a",   "$.a"      ) ).isTrue();
-      assertThat( JsonPathHelper.contains( "$..a",   "$.b.a"    ) ).isTrue();
-      assertThat( JsonPathHelper.contains( "$..a",   "$.b.a.c"  ) ).isTrue();
-      assertThat( JsonPathHelper.contains( "$..a",   "$.b.ab"   ) ).isFalse();
-      assertThat( JsonPathHelper.contains( "$..a",   "$.b[0].a" ) ).isTrue();
-      assertThat( JsonPathHelper.contains( "$..a",   "$.b"      ) ).isFalse();
-      assertThat( JsonPathHelper.contains( "$..a",   "$.b.c.a"  ) ).isTrue();
+      // Multiple "*" in path
+      assertThat( JsonPathHelper.contains( "$.*.a.*.b",  "$.a.b"                ) ).isFalse(); // A dot must not be ignored
+      assertThat( JsonPathHelper.contains( "$.*.a.*.b",  "$.x.a.b"              ) ).isFalse(); // A dot must not be ignored
+      assertThat( JsonPathHelper.contains( "$.*.a.*.b",  "$.a.y.b"              ) ).isFalse(); // A dot must not be ignored
+      assertThat( JsonPathHelper.contains( "$.*.a.*.b.*.c",  "$.x.a.y.b.z.c"    ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$.*.a.*.b.*.c",  "$.x.a.y.b.z.z.c"  ) ).isFalse(); // "*" (b) is not greedy
 
+      // ".." from root
+      assertThat( JsonPathHelper.contains( "$..a",      "$.a"           ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$..a",      "$.b.a"         ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$..a",      "$.b.a.c"       ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$..a",      "$.b.ab"        ) ).isFalse();
+      assertThat( JsonPathHelper.contains( "$..a",      "$.b[0].a"      ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$..a",      "$.b"           ) ).isFalse();
+      assertThat( JsonPathHelper.contains( "$..a",      "$.b.c.a"       ) ).isTrue();
+
+      // ".." from inner path
+      assertThat( JsonPathHelper.contains( "$.a..d",    "$.a.b.c.d"     ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$.a..d",    "$.a.b.c.x"     ) ).isFalse();
+
+      // Multiple ".." from inner path
+      assertThat( JsonPathHelper.contains( "$.a..d..f", "$.a.b.c.d.e.f" ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$.a..d..f", "$.a.b.c.d.e.x" ) ).isFalse();
+
+      // "*" in single array
       assertThat( JsonPathHelper.contains( "$[*].a", "$[5].a"       ) ).isTrue();
       assertThat( JsonPathHelper.contains( "$[*].a", "$[5].az"      ) ).isFalse(); // Substrings must not be mixed (e.g. $.type must not test $.typeName)
       assertThat( JsonPathHelper.contains( "$[*].a", "$[5].a.b"     ) ).isTrue();
       assertThat( JsonPathHelper.contains( "$[*].a", "$[5].a[4].b"  ) ).isTrue();
-      assertThat( JsonPathHelper.contains( "$[*].a", "$[5].b[3].a"  ) ).isFalse();
+      assertThat( JsonPathHelper.contains( "$[*].a", "$[5].b[3].a"  ) ).isFalse(); // "*" is not greedy
 
-      assertThat( JsonPathHelper.contains( "$[ * ].a", "$[ 5 ].a"   ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$[ * ].a", "$[ 5 ].a"   ) ).isTrue();  // White spaces are irrelevant
+
+      // "*" in multiple arrays
+      assertThat( JsonPathHelper.contains( "$[*].a.b[*].c", "$[5].a.b[1].c"      ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$[*].a.b[*].c", "$[5].a.b[1].cz"     ) ).isFalse();
+      assertThat( JsonPathHelper.contains( "$[*].a.b[*].c", "$[5].a.b[1].c.z"    ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$[*].a.b[*].c", "$[5].a.b[1].c[4].x" ) ).isTrue();
+      assertThat( JsonPathHelper.contains( "$[*].a.b[*].c", "$[5].a.b[1].b[4].c" ) ).isFalse(); // "*" (b) is not greedy
     }
     catch( final Exception ex ) {
       ex.printStackTrace();

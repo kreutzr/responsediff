@@ -991,18 +991,18 @@ public class TestSetHandler
     Duration duration = ( begin != null && end != null )
       ? Duration.between( begin, end )
       : null;
-    final boolean hasAnyError   = foundDiffs != null && foundDiffs.hasAnyError();
-    final boolean hasAnyWarning = foundDiffs != null && foundDiffs.hasAnyWarning();
-    final boolean notSkipped    = skipped == null || !skipped;
+    final boolean hasAnyError = foundDiffs != null && foundDiffs.hasAnyError();
+    final boolean notSkipped  = skipped == null || !skipped;
+    final int     warnCount   = foundDiffs == null ? 0 : foundDiffs.getWarningCount();
 
     result.setFailCount    ( notSkipped && hasAnyError   ? 1 : 0 ); // NOTE: Skipped tests log the reason for skipping into the foundDiffs changes.
-    result.setWarnCount    ( notSkipped && hasAnyWarning ? 1 : 0 );
     result.setSkipCount    ( !notSkipped                 ? 1 : 0 );
     result.setSuccessCount ( ( result.getFailCount() + result.getWarnCount() + result.getSkipCount() == 0 ) ? 1 : 0 );
+    result.setWarnCount    ( warnCount ); // total = fail + skip + success. WARN is irrelevant for test result counting!
     result.setTotalCount   ( 1 );
     result.setBegin        ( begin != null ? begin.toString() : null );
     result.setEnd          ( end   != null ? end  .toString() : null );
-    result.setDuration     ( duration != null ? duration.toString() : null );
+    result.setDuration     ( duration   != null ? duration.toString() : null );
     result.setExpectedCount( foundDiffs != null ? foundDiffs.getExpectedCount() : 0 );
 
     if( foundDiffs != null && foundDiffs.hasDifference() ) {
