@@ -55,7 +55,7 @@ This is a regular maintenance release.
 * Upgrade jakarta.xml.bind-api from 4.0.4 to 4.0.5
 * Upgrade junit-jupiter from 6.0.1 to 6.0.3
 * Upgrade log4j from 2.25.2 to 2.25.3
-* Upgrade mockito from 5.20.0 to 5.22.0
+* Upgrade mockito from 5.20.0 to 5.23.0
 
 === Known issues
 
