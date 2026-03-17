@@ -1,0 +1,3 @@
+# Assumption: This is executed from within a xslt subfolder to test XSLT report files.
+# Invoke as follows: xsltproc <xml-file> <xslt-file> <output-file>
+java -cp ../target/responsediff-1.4.0-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.reporter.XsltProcessor $1 $2 $3

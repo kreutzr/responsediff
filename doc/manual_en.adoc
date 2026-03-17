@@ -1,4 +1,4 @@
-= ResponseDiff - Version 1.3.1-SNAPSHOT
+= ResponseDiff - Version 1.4.0-SNAPSHOT
 :encoding: utf-8
 :lang: de
 :toc: left
@@ -36,7 +36,7 @@ Now, the successor version needs to be checked to ensure that the functionality 
 == Required infrastructure
 
 === Java
-ResponseDiff requires Java version 11 or higher.
+ResponseDiff requires Java version 17 or higher.
 
 === Multiserver operation
 In order to be able to make the comparison required for a regression test, at least two instances of the software to be tested must be installed.
