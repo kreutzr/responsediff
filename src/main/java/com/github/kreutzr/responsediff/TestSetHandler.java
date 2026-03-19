@@ -947,7 +947,7 @@ public class TestSetHandler
     HttpHandler.handleRequestParameters( clonedXmlRequest, serviceId, testId,  testFileName );
     HttpHandler.createServiceUrl       ( clonedXmlRequest, serviceId, testId,  testFileName, serviceUrl );
     HttpHandler.handleRequestBody      ( clonedXmlRequest, serviceId, testId,  testFileName );
-    HttpHandler.handleExternalHeaders  ( clonedXmlRequest, serviceId, testId,  testFileName, xmlExternalHeaders );
+    HttpHandler.handleExternalHeaders  ( clonedXmlRequest, serviceId, testId,  testFileName, xmlExternalHeaders, xmlTest.getUserId() );
     HttpHandler.handleRequestHeaders   ( clonedXmlRequest, serviceId, testId,  testFileName );
     HttpHandler.handleUploadParts      ( clonedXmlRequest, serviceId, testId,  testFileName );
     HttpHandler.applyRequestFilters    ( clonedXmlRequest, serviceId, xmlTest, testFileName, filterRegistry, serviceId.equals( CANDIDATE ) );
@@ -1483,6 +1483,7 @@ public class TestSetHandler
     if( xmlTestSetChild.getReport()  == null ) { xmlTestSetChild.setReport ( xmlTestSet.getReport()  ); }
     if( xmlTestSetChild.getProject() == null ) { xmlTestSetChild.setProject( xmlTestSet.getProject() ); }
     if( xmlTestSetChild.getOrder()   == null ) { xmlTestSetChild.setOrder  ( xmlTestSet.getOrder()   ); }
+    if( xmlTestSetChild.getUserId()  == null ) { xmlTestSetChild.setUserId ( xmlTestSet.getUserId() == null ? null : xmlTestSet.getUserId().trim() ); }  else { xmlTestSetChild.setUserId( xmlTestSetChild.getUserId().trim() ); }
 
     // ---------------------------------------------------------------
     // Init variables
@@ -1570,7 +1571,8 @@ public class TestSetHandler
     // ---------------------------------------------------------------
     // Init attributes
     // ---------------------------------------------------------------
-    if( xmlTest.getReport() == null ) { xmlTest.setReport ( xmlTestSet.getReport()  ); }
+    if( xmlTest.getReport() == null ) { xmlTest.setReport( xmlTestSet.getReport() ); }
+    if( xmlTest.getUserId() == null ) { xmlTest.setUserId( xmlTestSet.getUserId() == null ? null : xmlTestSet.getUserId().trim() ); } else { xmlTest.setUserId( xmlTest.getUserId().trim() ); }
 
     // ---------------------------------------------------------------
     // Init variables

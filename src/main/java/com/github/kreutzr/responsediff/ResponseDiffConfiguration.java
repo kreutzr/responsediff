@@ -397,6 +397,9 @@ public class ResponseDiffConfiguration
   {
     for( final XmlHeader xmlHeader : xmlHeaders ) {
       xmlHeader.setName( xmlHeader.getName().trim() );
+      if( xmlHeader.getUserId() != null ) {
+        xmlHeader.setUserId( xmlHeader.getUserId().trim() );
+      }
     }
     return xmlHeaders;
   }

@@ -42,6 +42,11 @@ public class TestInitializationTest extends TestBase
       assertThat( xmlTestSet_00_01.getTest() ).hasSize( 1 );
       assertThat( xmlTestSet_00_02.getTest() ).hasSize( 1 );
 
+      assertThat( xmlTestSet_00   .getUserId() ).isNull();
+      assertThat( xmlTestSet_00_in.getUserId() ).isEqualTo( "USER_A" );
+      assertThat( xmlTestSet_00_01.getUserId() ).isEqualTo( "USER_B" );
+      assertThat( xmlTestSet_00_02.getUserId() ).isEqualTo( "USER_A" );
+
       // -----------------------------------------------------------------------------------------------------
 
       final XmlTest test_A = xmlTestSet_00   .getTest().get( 0 );
@@ -51,6 +56,24 @@ public class TestInitializationTest extends TestBase
       assertThat( test_A.getId() ).isEqualTo( "TestSet 00 / Test A" );
       assertThat( test_B.getId() ).isEqualTo( "TestSet 00 / TestSet 00-01 / Test B" );
       assertThat( test_C.getId() ).isEqualTo( "TestSet 00 / Set in set / TestSet 00-02 / Test C" );
+
+      assertThat( test_A.getUserId() ).isNull();
+      assertThat( test_B.getUserId() ).isEqualTo( "USER_B" );
+      assertThat( test_C.getUserId() ).isEqualTo( "USER_C" );
+
+      assertThat( test_A.getRequest().getHeaders().getHeader() ).hasSize( 1 );
+      assertThat( test_A.getRequest().getHeaders().getHeader().get( 0 ).getName()  ).isEqualTo( "header-name" );
+      assertThat( test_A.getRequest().getHeaders().getHeader().get( 0 ).getValue() ).isEqualTo( "header_BBB_value" );
+      assertThat( test_B.getRequest().getHeaders().getHeader() ).hasSize( 2 );
+      assertThat( test_B.getRequest().getHeaders().getHeader().get( 0 ).getName()  ).isEqualTo( "header-name" );
+      assertThat( test_B.getRequest().getHeaders().getHeader().get( 0 ).getValue() ).isEqualTo( "header_FFF_value" );
+      assertThat( test_B.getRequest().getHeaders().getHeader().get( 1 ).getName()  ).isEqualTo( "Authorization" );
+      assertThat( test_B.getRequest().getHeaders().getHeader().get( 1 ).getValue() ).isEqualTo( "bearer BBB" );
+      assertThat( test_C.getRequest().getHeaders().getHeader() ).hasSize( 2 );
+      assertThat( test_C.getRequest().getHeaders().getHeader().get( 0 ).getName()  ).isEqualTo( "header-name" );
+      assertThat( test_C.getRequest().getHeaders().getHeader().get( 0 ).getValue() ).isEqualTo( "header_ZZZ_value" );
+      assertThat( test_C.getRequest().getHeaders().getHeader().get( 1 ).getName()  ).isEqualTo( "Authorization" );
+      assertThat( test_C.getRequest().getHeaders().getHeader().get( 1 ).getValue() ).isEqualTo( "bearer CCC" );
 
       // -----------------------------------------------------------------------------------------------------
 

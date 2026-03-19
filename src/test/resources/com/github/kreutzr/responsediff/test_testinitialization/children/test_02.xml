@@ -6,7 +6,7 @@
       <variable id="var-00">XXX</variable>
     </variables>
 
-    <test id="Test C">
+    <test id="Test C" userId=" USER_C "> <!-- Keep the blanks here -->
       <variables>
         <variable id="var-01">YYY</variable>
       </variables>

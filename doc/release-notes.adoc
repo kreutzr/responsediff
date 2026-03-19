@@ -43,6 +43,7 @@ This is a regular maintenance release.
 === Features / Changes
 
 * Introduced configuration parameter "ticketSystemUrls" to allowed referencing more than one ticket system. The different ticket system URLs appear as key value pairs inside the resulting XML file.
+* User specific request headers are supported.
 
 === Bug fixes
 

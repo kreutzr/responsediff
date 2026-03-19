@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <XmlResponseDiffSetup id="Setup 00-01">
 
-  <testSet id="TestSet 00-01" report="all">
+  <testSet id="TestSet 00-01" report="all" userId=" USER_B "> <!-- Keep the blanks here -->
     <variables>
       <variable id="var-00">DDD</variable>
     </variables>

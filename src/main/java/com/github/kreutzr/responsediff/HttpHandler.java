@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.CancellationException;
@@ -1045,13 +1046,15 @@ public class HttpHandler
    * @param testId The current test id. Must not be null.
    * @param testFileName The file name the current test is configured in. Must not be null.
    * @param xmlExternalHeaders The external Headers to use. May be null.
+   * @param testUserId A user id defined for the current test to be used to choose user specific headers. May be null.
    */
   static void handleExternalHeaders(
     final XmlRequest xmlRequest,
     final String     serviceId,
     final String     testId,
     final String     testFileName,
-    final List< XmlHeader > xmlExternalHeaders
+    final List< XmlHeader > xmlExternalHeaders,
+    final String     testUserId
   )
   {
     LOG.trace( "handleExternalHeaders()" );
@@ -1065,6 +1068,13 @@ public class HttpHandler
     }
 
     for( final XmlHeader xmlExternalHeader : xmlExternalHeaders ) {
+      if( xmlExternalHeader.getUserId() != null && !xmlExternalHeader.getUserId().equals( testUserId ) ) {
+        // We add an external user specific request header only if
+        // - either it is not restricted to specific users
+        // - or the user id matches.
+        continue;
+      }
+
       final String name = xmlExternalHeader.getName();
 
       boolean found = false;

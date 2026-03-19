@@ -231,15 +231,15 @@ It is recommended to set the configuration parameters within a small script. A s
 * `testIdPattern`: Optional regular expression (in Java RegEx syntax) to restrict execution to specific tests. If nothing or null is passed, all tests are executed (default). Otherwise, only those tests whose `id` matches the passed expression are executed.
 * `storeResultPath`: Mandatory specification of the directory in which the test results should be saved as XML. (e.g., "../test-results/")
 * `reportWhiteNoise`: Optional flag indicating whether ignored technical differences (whiteNoise) should also be reported (`true`) or not (`false`). (Default is `false`)
-* `maskAuthorizationHeaderInCurl`: Optional Flag indicating whether values of the `Authentication` header shall be masked (`true`) or not (`false`). (default is `true`)
+* `maskAuthorizationHeaderInCurl`: Optional Flag indicating whether values of the `Authorization` header shall be masked (`true`) or not (`false`). (default is `true`)
 * `reportControlResponse`: Optional Flag indicating whether additionally to the response of the candidate and reference instances the response of the control instance shall be included to the exported XML file, too (`true`) or not (`false'). (default is `false`)
 * `executionContext`: Optional (comma separated) list of tokens, that are used for conditional test executions (see section <<Conditional Test Execution>>). The choice of tokens is free. The usage of the tokens is case insensitive.
 * `xsltFilePath`: Optional path to an XSLT file to be used to transform the generated XML report. The result of the transformation is saved next to the XML report under the same name (e.g., "reporter/report-to-adoc.xslt" (default) or "reporter/report-to-html.xslt"). **Note:** The transformation file "reporter/report-to-html.xslt" is very rudimentary and serves only as a technical example for creating your own reports. If you actually want to generate a report in HTML format, we recommend not changing the default transformer and the default file extension (`reportFileEnding`) and instead passing the value `html` in the `reportConversionFormats` parameter.
 * `reportFileEnding`: Optional file extension for the transformation result. (default is `adoc`)
 * `reportConversionFormats`: Optional list of target formats into which a generated AsciiDoc report should be converted. The list is comma-separated. The following enumeration values ​​are supported: `pdf`, `html`. This parameter is only considered if the `reportFileEnding` parameter has the value `adoc`. A prerequisite for successful conversion is, of course, that the XSLT file used (see `xsltFilePath` parameter) actually transforms the XML report into AsciiDoc. The result of the AsciiDoc conversion is stored next to the report file.
-* `candidateHeaders`: Optional headers that should be used when calling the candidate instance. e.g. [ { "name" : "Authorization", "value" : "bearer ..." } ])
-* `referenceHeaders`: Optional headers that should be used when calling the candidate instance. e.g. [ { "name" : "Authorization", "value" : "bearer ..." } ])
-* `controlHeaders`: Optional headers that should be used when calling the candidate instance. e.g. [ { "name" : "Authorization", "value" : "bearer ..." } ])
+* `candidateHeaders`: Optional headers that should be used when calling the candidate instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
+* `referenceHeaders`: Optional headers that should be used when calling the reference instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
+* `controlHeaders`: Optional headers that should be used when calling the control instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `epsilon`: Optional epsilon value for numerical comparisons where no specific epsilon was specified in the test. (default is 0.00000001)
 * `exitWithExitCode`: Optional flag whether deviations with an exit code other than 0 should be displayed (`true`), or not (`false`). (default is `true`)
 ====
@@ -1844,7 +1844,7 @@ Below, we see the value of such a measurement as a JSON structure and assume tha
 ====
 For evaluation purposes, the `<header>` tag has the attribute `path`. This attribute is considered *exclusively* for `<header>` tags within a `<expected><headers>` tag structure. The value of the `path` attribute must be expressed as JSONPath. All options from the section section "<<Checking values ​​(`values`)>>" are available for testing.
 
-.Testing a JSON Response Header
+.Testing of a JSON Response Header
 ====
 [source]
 ----
@@ -1865,6 +1865,60 @@ For evaluation purposes, the `<header>` tag has the attribute `path`. This attri
 </XmlResponseDiffSetup>
 ----
 <1> We assume an execution time (measured server-side) of 5 milliseconds, allowing a tolerance of 3 milliseconds. Therefore, the maximum acceptable execution time is 8 milliseconds. This example does not assume that the execution time can be less than 2 milliseconds.
+====
+
+=== User specific Request Headers
+
+Some tests or test sets may be tailored to specific users with particular roles. The technical identification of users is handled via the `Authorization` header, which is configured in the JSON provided when ResponseDiff is called using the keys `candidateHeaders`, `referenceHeaders`, and `controlHeaders`. To differentiate the `Authorization` headers of different users, the optional `userId` attribute must be used.
+
+.Configuration of a user specific request
+====
+[source]
+----
+{ ...,
+"candidateHeaders": [ { "name" : "Authorization", "value" : "bearer ...", "userId" : "PRIVILEGED_USER" }, { "name" : "Authorization", "value" : "bearer ...", "userId" : "RESTRICTED_USER" } ],
+"referenceHeaders": [ { "name" : "Authorization", "value" : "bearer ...", "userId" : "PRIVILEGED_USER" }, { "name" : "Authorization", "value" : "bearer ...", "userId" : "RESTRICTED_USER" } ],
+"controlHeaders": [ { "name" : "Authorization", "value" : "bearer ...", "userId" : "PRIVILEGED_USER" }, { "name" : "Authorization", "value" : "bearer ...", "userId" : "RESTRICTED_USER" } ],
+... }
+----
+====
+
+**Note:**
+
+* This attribute `userId` is optional as long as the tests only apply to one user. As soon as another user is included in the tests, this attribute becomes mandatory.
+* This attribute is used exclusively for request headers.
+* The specified value is case-sensitive.
+* The use of variables for this attribute is currently not supported.
+
+To allow referencing specific users, tests and test sets also have an optional `userId` attribute. This information is inherited by encapsulated tests and test sets, but can also be overwritten.
+
+If the `userId` attribute is set directly or through inheritance during a test, all headers without a specific `userId`, as well as all headers with a matching value, will be used in the query.
+
+
+.Usage of a user specific request
+====
+[source]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<XmlResponseDiffSetup id="...">
+  <testSet id="..." userId="PRIVILEGED_USER"> <1>
+    <test id="..."> <2>
+      ...
+    </test>
+    <testSet id="..." userId="RESTRICTED_USER"> <3>
+      <test id="...">
+        ...
+      </test>
+    </testSet>
+
+    <testSetInclude file="./included.xml" /> <4>
+  </testSet>
+</XmlResponseDiffSetup>
+----
+<1> For all tests, local and included TestSets, the user `PRIVILEGED_USER` is used.
+<2> This test inherits the attribute `userId` with the value `PRIVILEGED_USER` from the enclosing structure.
+<3> For this test set and the encapsulated tests, the attribute `userId` has been overridden.
+<4> This test set inherits the `userId` with the value `PRIVILEGED_USER` from the enclosing structure.
 ====
 
 == Automatic adaptation of tests when changing versions

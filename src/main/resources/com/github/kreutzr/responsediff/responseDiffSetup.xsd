@@ -120,6 +120,7 @@
     <xsd:attribute name="workPath"                   type="xsd:string"   use="optional" />
     <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
     <xsd:attribute name="orga"                       type="xsd:boolean"  use="optional" default="false" /> <!-- For reporting only -->
+    <xsd:attribute name="userId"                     type="xsd:string"   use="optional" />                 <!-- For user specific request headers only -->
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -268,6 +269,7 @@
     <xsd:attribute name="waitBefore"                 type="xsd:string"  use="optional" />
     <xsd:attribute name="ifExecutionContextContains" type="xsd:string"  use="optional" />
     <xsd:attribute name="orga"                       type="xsd:boolean" use="optional" default="false" /> <!-- For reporting only -->
+    <xsd:attribute name="userId"                     type="xsd:string"  use="optional" />                 <!-- For user specific request headers only -->
   </xsd:complexType>
 
   <!-- ///////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
@@ -332,6 +334,7 @@
         <xsd:attribute name="checkInverse"               type="xsd:boolean"  use="optional" default="false"/>
         <xsd:attribute name="ticketReference"            type="xsd:string"   use="optional" />
         <xsd:attribute name="ifExecutionContextContains" type="xsd:string"   use="optional" />
+        <xsd:attribute name="userId"                     type="xsd:string"   use="optional" />                <!-- For user specific request headers only -->
         <xsd:attribute name="path"                       type="xsd:string"   use="optional" />                <!-- For expected response values only -->
         <xsd:attribute name="logLevel"                   type="XmlLogLevel"  use="optional" default="ERROR"/> <!-- For expected response values only -->
       </xsd:extension>

@@ -65,6 +65,30 @@ public class TestBase
     List< XmlHeader > referenceHeaders = new ArrayList<>();
     List< XmlHeader > controlHeaders   = new ArrayList<>();
 
+    // Define user specific authentication headers
+    final XmlHeader xmlHeader_auth_A = new XmlHeader();
+    xmlHeader_auth_A.setName ( "Authorization" );
+    xmlHeader_auth_A.setValue( "bearer AAA" );
+    xmlHeader_auth_A.setUserId( "USER_A" );
+    final XmlHeader xmlHeader_auth_B = new XmlHeader();
+    xmlHeader_auth_B.setName ( "Authorization" );
+    xmlHeader_auth_B.setValue( "bearer BBB" );
+    xmlHeader_auth_B.setUserId( "USER_B" );
+    final XmlHeader xmlHeader_auth_C = new XmlHeader();
+    xmlHeader_auth_C.setName ( "Authorization" );
+    xmlHeader_auth_C.setValue( "bearer CCC" );
+    xmlHeader_auth_C.setUserId( "USER_C" );
+
+    candidateHeaders.add( xmlHeader_auth_A );
+    candidateHeaders.add( xmlHeader_auth_B );
+    candidateHeaders.add( xmlHeader_auth_C );
+    referenceHeaders.add( xmlHeader_auth_A );
+    referenceHeaders.add( xmlHeader_auth_B );
+    referenceHeaders.add( xmlHeader_auth_C );
+    controlHeaders  .add( xmlHeader_auth_A );
+    controlHeaders  .add( xmlHeader_auth_B );
+    controlHeaders  .add( xmlHeader_auth_C );
+
     responseDiff_ = new ResponseDiff(
       rootPath_,
       xmlFilePath,
