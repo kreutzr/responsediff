@@ -54,6 +54,7 @@ This is a regular maintenance release.
 
 * Upgrade "dependency-check-maven" plugin from 12.1.9 to 12.2.0
 * Upgrade assertj from 3.27.6 to 3.27.7
+* Upgrade glassfish.jaxb-runtime from 4.0.6 to 4.0.7
 * Upgrade jackson-databind from 2.20.1 to 2.21.1
 * Upgrade jakarta.xml.bind-api from 4.0.4 to 4.0.5
 * Upgrade jsonpath from 2.10.0 to 3.0.0
