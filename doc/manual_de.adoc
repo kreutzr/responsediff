@@ -1798,6 +1798,9 @@ Das Attribut `ifExecutionContextContains` wird in folgenden XML-Blocks akzeptier
 * `expected/headers/header`
 * `expected/values/value`
 
+[CAUTION]
+Wird ein Test aufgrund des Attributs `ifExecutionContextContains` nicht ausgeführt, so können natürlich auch keine Variablenwerte aus einer Antwort gelesen werden.
+
 .Bedingte Testausführung
 ====
 [source]

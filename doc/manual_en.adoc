@@ -1802,6 +1802,9 @@ The `ifExecutionContextContains` attribute is accepted in the following XML bloc
 * `expected/headers/header`
 * `expected/values/value`
 
+[CAUTION]
+If a test is not executed due to the `ifExecutionContextContains` attribute, then of course no variable values ​​can be read from a response.
+
 .Conditional test execution
 ====
 [source]
