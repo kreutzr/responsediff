@@ -1,0 +1,32 @@
+# ==============================================================================================
+# Start script for ResponseDiffProxy
+#
+# SYNTAX:
+# ./start-proxy
+#
+# Example:
+# ./start-proxy
+#
+# Invoke browser with localhost:<port>/START?title=<title> to start recording for a test setup with the given title.
+# Invoke browser with localhost:<port>/STOP to stop recording and generate the recorded test setup.
+# Invoke browser with localhost:<port>/QUIT to terminate the proxy. (Test setups that were not generated will be lost. => See STOP)
+#
+# Press Strg+C to terminate the proxy. (Test setups that were not generated will be lost. => See STOP)
+# ==============================================================================================
+#set -x
+
+port=8080
+targetBaseUrl='https://www.ionos.de/digitalguide/'
+storagePath='./proxy-storage'
+maxThreads=10
+basePathsToConsider='[]' 
+basePathsToIgnore='[]'
+
+
+bearerToken=$( curl -X POST ${candidateUrl}login -d '{"username":"xxx", "password" : "xxx" }' -H 'content-type: application/json' -s | tr -d '\r' | sed -nE 's/.*"uuid":"([^\"]*)".*/\1/p' )
+
+eval echo 'Starting ResponseDiff proxy'
+
+java -cp ./target/responsediff-1.4.1-SNAPSHOT.jar -Dlog4j2.configurationFile=file:./log4j2.xml com.github.kreutzr.responsediff.proxy.ResponseDiffProxy "$( eval echo '{ \"port\" : 8080, \"targetBaseUrl\" : \"${targetBaseUrl}\", \"storagePath\" : \"${storagePath}\", \"maxThreads\" : 10, \"basePathsToConsider\" : ${basePathsToConsider}, \"basePathsToIgnore\" : ${basePathsToIgnore}, \"defaultHeaders\" : [ { \"name\" : \"Authorization\", \"value\" : \"bearer ${bearerToken}\" } ] }' )"
+
+echo $?
