@@ -23,6 +23,7 @@ This is a regular maintenance release.
 
 === External libraries
 
+* Upgrade log4j from 2.25.3 to 2.25.4
 * ...
 
 === Known issues
