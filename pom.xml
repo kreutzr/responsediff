@@ -73,7 +73,7 @@
     <main.basedir>${project.basedir}</main.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Versions (latest check: 2026-03-28)-->
+    <!-- Versions (latest check: 2026-04-13)-->
     <version.asciidoctorj>3.0.1</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.4.14.0 ! Upgrading to jruby 10 would require Java 21 (see "https://github.com/asciidoctor/asciidoctorj/pull/1308"). -->
     <version.asciidoctorj-pdf>2.3.23</version.asciidoctorj-pdf>
     <version.assertj>3.27.7</version.assertj>
