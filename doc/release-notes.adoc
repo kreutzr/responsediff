@@ -19,7 +19,7 @@ This is a regular maintenance release.
 
 === Bug fixes
 
-* ...
+* Added javaagent declaration to pom.xml to avoid warnings when running mockito based tests and provide compatibility for Java version 21+.
 
 === External libraries
 
