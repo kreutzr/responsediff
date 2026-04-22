@@ -70,6 +70,7 @@
   </developers>
 
   <properties>
+    <argLine></argLine> <!-- Initial empty value. Required for maven-surefire-plugin . Re-check when introducing Jacoco because this will make use of the property, too. -->
     <main.basedir>${project.basedir}</main.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -108,6 +109,12 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-junit-jupiter</artifactId>
+        <version>${version.mockito}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
         <version>${version.mockito}</version>
         <scope>test</scope>
       </dependency>
@@ -224,6 +231,10 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -462,10 +473,26 @@
         ///////////////////////////////////////////////////
       -->
       <plugin>
+        <!-- Creates runtime variables of the format "groupId:artifactId:type" by reading all dependencies. Required for <argLine> configuration in maven-surefire-plugin (below). -->
+        <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.10.0</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>properties</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
         <!-- Separates the unit tests from the integration tests. -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.5.5</version>
+        <configuration>
+          <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+        </configuration>
         <executions>
           <execution>
             <id>unit-tests</id>
@@ -476,7 +503,7 @@
             <configuration>
               <includes>
                 <!-- Include unit tests within (unit) "test" phase. -->
-                 <include>**/*Test.java</include>
+                <include>**/*Test.java</include>
               </includes>
             </configuration>
           </execution>
