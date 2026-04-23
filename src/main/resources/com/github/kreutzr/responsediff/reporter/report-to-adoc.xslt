@@ -151,7 +151,8 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 |===
 </xsl:if>
 
-[source,curl]
+[.copy-code]
+[source,bash]
 ----
 <xsl:value-of select="request/curl"/>
 ----
@@ -393,6 +394,7 @@ xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="downlo
 </xsl:when>
 <xsl:otherwise>
 Body:
+[.copy-code]
 [source,json]
 ----
 <xsl:value-of select="body" />
@@ -424,6 +426,7 @@ xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="downlo
 </xsl:when>
 <xsl:otherwise>
 Body:
+[.copy-code]
 [source,json]
 ----
 <xsl:value-of select="body" />
@@ -455,6 +458,7 @@ xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="downlo
 </xsl:when>
 <xsl:otherwise>
 Body:
+[.copy-code]
 [source,json]
 ----
 <xsl:value-of select="body" />
@@ -486,6 +490,7 @@ xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="downlo
 </xsl:when>
 <xsl:otherwise>
 Body:
+[.copy-code]
 [source,json]
 ----
 <xsl:value-of select="body" />
@@ -498,8 +503,17 @@ Body:
   <!-- ========================================================================== -->
 
 <xsl:template match="header">
+  <xsl:variable name="trimmedContent" select="normalize-space(text())" />
 
-| <xsl:value-of select="./@name" /> | <xsl:value-of select="text()" />
+| <xsl:value-of select="./@name" /> <xsl:choose>
+<xsl:when test="starts-with($trimmedContent, '{') and substring($trimmedContent, string-length($trimmedContent)) = '}'">
+  a| [.copy-code]
+<xsl:value-of select="$trimmedContent" />
+</xsl:when>
+<xsl:otherwise>
+  | <xsl:value-of select="$trimmedContent" />
+  </xsl:otherwise>
+</xsl:choose>
 </xsl:template>
 
   <!-- ========================================================================== -->

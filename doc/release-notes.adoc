@@ -15,7 +15,7 @@ This is a regular maintenance release.
 
 === Features / Changes
 
-* ...
+* Added copy button for CURL, response body and header values that start with "{" and end with "}" and thereby appear to be JSON.
 
 === Bug fixes
 
