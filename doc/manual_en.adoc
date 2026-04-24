@@ -197,6 +197,7 @@ It is recommended to set the configuration parameters within a small script. A s
   "ticketServiceUrls" : "...",
   "xmlFilePath" : "...",
   "reportTitle" : "...",
+  "useLogo" : [true|false],
   "testIdPattern" : "...",
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
@@ -228,11 +229,12 @@ It is recommended to set the configuration parameters within a small script. A s
 * `ticketServiceUrls`: Optional, comma-separated list of the ticket system URLs to be used, so that the ticket number only needs to be appended (e.g., `http://localhost/tickets/`). If more than one URL is used, the URLs must be distinguished by an identifier (e.g., `ticketServiceUrls:"repo1=http://localhost/tickets/repo1/,repo2=http://localhost/tickets/repo2,old=http://localhost/legacy-ticketsystem/"`). If no identifier is specified for a URL, the identifier `default` is used internally (e.g., `ticketServiceUrls:"new=http://localhost/new-ticketsystem/,http://localhost/legacy-ticketsystem/"`). The identifiers can be used in the test definitions to reference the ticketing system to be used (e.g., `ticketReference="new:123"`). If no identifier is specified in a `ticketReference`, the identifier `default` is assumed to be meant (e.g., `ticketReference="456"`).
 * `xmlFilePath`: Mandatory specification of the XML file containing the setup to be tested. The path can be specified relative to the optionally specified `rootPath`.
 * `reportTitle`: Optional text that shall be used as report title when set. If not set the `description` text of the `XmlResponseDiffSetup` block is used as default. If set, the `description` is used as subtitle.
+* `useLogo`: Optional Flag, if a logo shall be used (`true`) when creating a report or not (`false`). (default is `false`)
 * `testIdPattern`: Optional regular expression (in Java RegEx syntax) to restrict execution to specific tests. If nothing or null is passed, all tests are executed (default). Otherwise, only those tests whose `id` matches the passed expression are executed.
 * `storeResultPath`: Mandatory specification of the directory in which the test results should be saved as XML. (e.g., "../test-results/")
 * `reportWhiteNoise`: Optional flag indicating whether ignored technical differences (whiteNoise) should also be reported (`true`) or not (`false`). (Default is `false`)
 * `maskAuthorizationHeaderInCurl`: Optional Flag indicating whether values of the `Authorization` header shall be masked (`true`) or not (`false`). (default is `true`)
-* `reportControlResponse`: Optional Flag indicating whether additionally to the response of the candidate and reference instances the response of the control instance shall be included to the exported XML file, too (`true`) or not (`false'). (default is `false`)
+* `reportControlResponse`: Optional Flag indicating whether additionally to the response of the candidate and reference instances the response of the control instance shall be included to the exported XML file, too (`true`) or not (`false`). (default is `false`)
 * `executionContext`: Optional (comma separated) list of tokens, that are used for conditional test executions (see section <<Conditional Test Execution>>). The choice of tokens is free. The usage of the tokens is case insensitive.
 * `xsltFilePath`: Optional path to an XSLT file to be used to transform the generated XML report. The result of the transformation is saved next to the XML report under the same name (e.g., "reporter/report-to-adoc.xslt" (default) or "reporter/report-to-html.xslt"). **Note:** The transformation file "reporter/report-to-html.xslt" is very rudimentary and serves only as a technical example for creating your own reports. If you actually want to generate a report in HTML format, we recommend not changing the default transformer and the default file extension (`reportFileEnding`) and instead passing the value `html` in the `reportConversionFormats` parameter.
 * `reportFileEnding`: Optional file extension for the transformation result. (default is `adoc`)
@@ -307,8 +309,12 @@ The following values ​​are provided for the `report` attributes on the test 
 ====== HTML from AsciiDoc
 It is easy to create a HTML report from a created AsciiDoc report. Simply append (comma separated) `html` to the configuration parameter `reportConversionFormats` (see section "<<Configuration>>"). Note that a huge HTML report may bring a browser to its limits. In such cases creating a PDF report is more suitable.
 
+The HTML report can be customized as described in the section <<Customized Report>>.
+
 ====== PDF from AsciiDoc
 As for HTML it is easy to create a PDF report from a created AsciiDoc report. Simply append (comma separated) `pdf` to the configuration parameter `reportConversionFormats` (see section "<<Configuration>>").
+
+The PDF report can be customized as described in the section <<Customized Report>>.
 
 ===== HTML
 Transformer file name: `report-to-html.xslt`
@@ -1923,6 +1929,35 @@ If the `userId` attribute is set directly or through inheritance during a test, 
 <3> For this test set and the encapsulated tests, the attribute `userId` has been overridden.
 <4> This test set inherits the `userId` with the value `PRIVILEGED_USER` from the enclosing structure.
 ====
+
+=== Customized Report
+
+It is often useful to customize the generated report to match your company's design. ResponseDiff offers the option to embed a logo and adjust colors and fonts. Furthermore, it is generally possible to customize the XSLT script that transforms the underlying XML report to AsciiDoc (`*.adoc`). Customizing colors and fonts is done in the second step, when the XML-transformed AsciiDoc report is converted into the target formats (e.g., HTML and PDF).
+
+==== Embedding a Logo
+
+For a logo to be displayed in the report,
+
+* the logo as the file `logo.png` must be located directly next to the XSLT file (e.g., `report-to-adoc.xslt`) used for report generation (see `xsltFilePath` in the "<<Configuration>>" section) and
+* the parameter `useLogo` (also see the "<<Configuration>>" section) must be passed as `true` when calling the script.
+
+[NOTE]
+For demonstration purposes, the file `logo.png` (the ResponseDiff logo) is included in the `reporter` directory upon delivery. The `useLogo` parameter is already passed in the prepared script `start-responseDiff`.
+
+==== Customizing the Design for HTML
+
+The report initially uses a default stylesheet. To customize colors and fonts, a file `custom-html-overrides.html` must be placed directly next to the XSLT file (e.g., `report-to-adoc.xslt`) used to generate the report (see `xsltFilePath` in the "<<Configuration>>" section). The file can contain any CSS selectors and declarations, all enclosed in a classic `<style>` HTML block. There are no restrictions on the CSS you can use.
+
+[NOTE]
+Upon delivery, the file `\_custom-html-overrides.html` is included in the `reporter` directory for demonstration purposes. It shows an example of how customization can be implemented using standard CSS syntax. Because very bright colors were chosen in the example file, the file has been intentionally renamed with an underscore (`_`) so that it is not used during report generation. Since the file is an HTML fragment that is inserted at the end of the `<head>` block during conversion, it is also possible, in principle, to place a `<script>` block within the file and embed custom JavaScript code.
+
+==== Customizing the Design for PDF
+
+The report initially uses a default theme. To customize colors and fonts, a file named `custom-pdf-theme.yml` must be placed directly next to the XSLT file (e.g., `report-to-adoc.xslt`) used for report generation (see `xsltFilePath` in the "<<Configuration>>" section). It is recommended to leave the line `extends: default` as is and only specify the properties that should be overridden. In principle, there are no restrictions regarding customization options.
+
+[NOTE]
+For demonstration purposes, the file `\_custom-pdf-theme.yml` is included in the `reporter` directory upon delivery. It shows an example of how to embed a PDF theme. Because very bright colors were chosen in the example file, the file has been intentionally renamed with an underscore (`_`) so that it is not used during report generation.
+
 
 == Automatic adaptation of tests when changing versions
 

@@ -45,6 +45,7 @@ public class TestBase
   {
     String  xmlFilePath                    = null;
     String  reportTitle                    = null;
+    boolean useLogo                        = false;
     String  testIdPattern                  = null;
     String  xsltFilePath                   = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
     String  reportFileEnding               = "adoc";
@@ -93,6 +94,7 @@ public class TestBase
       rootPath_,
       xmlFilePath,
       reportTitle,
+      useLogo,
       testIdPattern,
       xsltFilePath,
       reportFileEnding,

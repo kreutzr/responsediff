@@ -62,6 +62,7 @@ public class ResponseDiff
    private final String                    referenceFilePath_;
    private final boolean                   exitWithExitCode_;
 
+   private       boolean                   useLogo_;
    private       XmlResponseDiffSetup      xmlTestSetup_;
    private       Map< String, DiffFilter > filterRegistry_; // NOTE: Since filters are identified by id not by class, multiple instances of the same filter class are supported.
 
@@ -72,6 +73,7 @@ public class ResponseDiff
     * @param rootPath The root path from where all relative file paths start. Must not be null.
     * @param xmlFilePath The configuration file (XML) that describes the test setup.
     * @param reportTitle The report title. May be null.
+    * @param useLogo Flag, if a logo shall be rendered for the report (true) or not (false). May be null. Fallback is false.
     * @param testIdPattern The id pattern of the tests to execute. May be null. (default null means that all tests are executed)
     * @param xsltFilePath The path to the XSLT file to use. May be null.
     * @param reportFileEnding The file ending of the report that may be created by XSLT at the the given xsltFilePath.
@@ -96,6 +98,7 @@ public class ResponseDiff
      final String                rootPath,
      final String                xmlFilePath,
      final String                reportTitle,
+     final boolean               useLogo,
      final String                testIdPattern,
      final String                xsltFilePath,
      final String                reportFileEnding,
@@ -121,6 +124,7 @@ public class ResponseDiff
    throws Exception
    {
      reportTitle_                   = reportTitle;
+     useLogo_                       = useLogo;
      testIdPattern_                 = testIdPattern;
      xsltFilePath_                  = ( xsltFilePath == null ) ? null : rootPath + xsltFilePath;
      reportFileEnding_              = reportFileEnding;
@@ -261,6 +265,7 @@ public class ResponseDiff
 
      // NEEDS FIX C: The following code lines should be placed outside this method. => Check if required by tests.
      xmlTestSetup_.setTicketServiceUrl( ticketServiceUrl_ );
+     xmlTestSetup_.setUseLogo( useLogo_ );
 
      if( !ticketServiceUrls_.isEmpty() ) {
        final XmlTicketServiceUrls xmlTicketServiceUrls = new XmlTicketServiceUrls();
@@ -345,6 +350,15 @@ public class ResponseDiff
 
      LOG.info( "Storing XML report." );
 
+     // Avoid broken images in reports (if useLogo was configured as "true" but no logo.png was provided next to the XSLT file).
+     // NOTE: Thios must be done before the test setup is stored as XML!
+     final String logoSourcePath = new File( xsltFilePath_ ).getParent();
+     if( !AsciiDocConverter.getLogoSourceExists( logoSourcePath ) ) {
+       LOG.warn( "No logo file \"" + AsciiDocConverter.LOGO_FILE_NAME + "\" found at \"" + logoSourcePath +  "\". No logo will be added to reports." );
+       useLogo_ = false;
+       xmlTestSetup_.setUseLogo( false );
+     }
+
      // Store test setup with all analysis results
      final String xmlReportFileName = XmlFileHandler.storeXmlReport( xmlTestSetup_, storeReportPath_, null );
 
@@ -384,11 +398,11 @@ public class ResponseDiff
              try {
                switch ( targetFormat ) {
                  case "pdf":
-                   AsciiDocConverter.toPdf( reportFilePath, targetFilePath );
+                   AsciiDocConverter.toPdf( reportFilePath, targetFilePath, xsltFilePath_, useLogo_ );
                    conversionCount += 1;
                    break;
                  case "html":
-                   AsciiDocConverter.toHtml( reportFilePath, targetFilePath );
+                   AsciiDocConverter.toHtml( reportFilePath, targetFilePath, xsltFilePath_, useLogo_ );
                    conversionCount += 1;
                    break;
                  default:
@@ -456,6 +470,7 @@ public class ResponseDiff
      String   rootPath                      = new File( "" ).getAbsolutePath() + File.separator;
      String   xmlFilePath                   = null;
      String   reportTitle                   = null;
+     boolean  useLogo                       = false;
      String   testIdPattern                 = null;
      String   xsltFilePath                  = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
      String   reportFileEnding              = "adoc";
@@ -480,6 +495,7 @@ public class ResponseDiff
      rootPath                      = Converter.asString ( config.getRootPath(),                      rootPath );
      xmlFilePath                   = Converter.asString ( config.getXmlFilePath(),                   xmlFilePath );
      reportTitle                   = Converter.asString ( config.getReportTitle(),                   reportTitle );
+     useLogo                       = Converter.asBoolean( config.getUseLogo(),                       useLogo );
      testIdPattern                 = Converter.asString ( config.getTestIdPattern(),                 testIdPattern );
      xsltFilePath                  = Converter.asString ( config.getXsltFilePath(),                  xsltFilePath );
      reportFileEnding              = Converter.asString ( config.getReportFileEnding(),              reportFileEnding );
@@ -559,6 +575,7 @@ public class ResponseDiff
          rootPath,
          xmlFilePath,
          reportTitle,
+         useLogo,
          testIdPattern,
          xsltFilePath,
          reportFileEnding,

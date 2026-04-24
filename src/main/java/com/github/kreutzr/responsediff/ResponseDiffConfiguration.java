@@ -10,6 +10,7 @@ public class ResponseDiffConfiguration
   private String            rootPath_;
   private String            xmlFilePath_;
   private String            reportTitle_;
+  private Boolean           useLogo_;
   private String            testIdPattern_;
   private String            xsltFilePath_;
   private String            reportFileEnding_;
@@ -73,6 +74,20 @@ public class ResponseDiffConfiguration
   public void setReportTitle( final String reportTitle )
   {
     reportTitle_ = reportTitle;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public Boolean getUseLogo()
+  {
+    return useLogo_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setUseLogo( final Boolean useLogo )
+  {
+    useLogo_ = useLogo;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

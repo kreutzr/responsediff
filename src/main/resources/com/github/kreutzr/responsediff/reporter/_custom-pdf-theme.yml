@@ -1,0 +1,10 @@
+extends: default
+page:
+  margin: [0.75in, 1in, 0.75in, 1in]
+base:
+  font-color: #0000ff
+heading:
+  font-color: #ffff00
+code:
+  background-color: #ff3333
+  border-color: #cccccc

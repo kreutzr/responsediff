@@ -16,12 +16,14 @@ public class AsciiDocConverterTest
     try {
       // Given
       final URL url = AsciiDocConverterTest.class.getClassLoader().getResource( "com/github/kreutzr/responsediff/reporter/AsciiDocConverterTest.adoc" );
-      final String sourceFilePath = url.getFile();
-      final int pos = sourceFilePath.lastIndexOf( "." );
-      final String targetFilePath = sourceFilePath.substring( 0, pos+1 ) + "pdf";
+      final String reportFilePath = url.getFile();
+      final int pos = reportFilePath.lastIndexOf( "." );
+      final String targetFilePath = reportFilePath.substring( 0, pos+1 ) + "pdf";
+      final String transformerFilePath = targetFilePath; // NEEDS FIX C: Add test with custom style
+      final boolean useLogo = false;
 
       // When
-      AsciiDocConverter.toPdf( sourceFilePath, targetFilePath );
+      AsciiDocConverter.toPdf( reportFilePath, targetFilePath, transformerFilePath, useLogo );
 
       // Then
       final File report = new File( targetFilePath );
@@ -46,12 +48,14 @@ public class AsciiDocConverterTest
     try {
       // Given
       final URL url = AsciiDocConverterTest.class.getClassLoader().getResource( "com/github/kreutzr/responsediff/reporter/AsciiDocConverterTest.adoc" );
-      final String sourceFilePath = url.getFile();
-      final int pos = sourceFilePath.lastIndexOf( "." );
-      final String targetFilePath = sourceFilePath.substring( 0, pos+1 ) + "html";
+      final String reportFilePath = url.getFile();
+      final int pos = reportFilePath.lastIndexOf( "." );
+      final String targetFilePath = reportFilePath.substring( 0, pos+1 ) + "html";
+      final String transformerFilePath = targetFilePath; // NEEDS FIX C: Add test with custom style
+      final boolean useLogo = false;
 
       // When
-      AsciiDocConverter.toHtml( sourceFilePath, targetFilePath );
+      AsciiDocConverter.toHtml( reportFilePath, targetFilePath, transformerFilePath, useLogo );
 
       // Then
       final File report = new File( targetFilePath );

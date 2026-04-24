@@ -197,6 +197,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
   "ticketServiceUrls" : "...",
   "xmlFilePath" : "...",
   "reportTitle" : "...",
+  "useLogo" : [true|false],
   "testIdPattern" : "...",
   "storeResultPath" : "...",
   "reportWhiteNoise" : [true|false],
@@ -227,11 +228,12 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
 * `ticketServiceUrls`: Optionale, Komma-separierte Auflistung der zu verwendenden Ticketsystem-URLs, so dass die Ticketnummer nur noch angehangen werden muss (z.B. `http://localhost/tickets/`). Wenn mehr als eine URL zum Einsatz kommt, müssen die URLs über einer Kennung unterschieden werden (z.B. `ticketServiceUrls:"repo1=http://localhost/tickets/repo1/,repo2=http://localhost/tickets/repo2,old=http://localhost/legacy-ticketsystem/"`). Wird bei einer URL keine Kennung angegeben, so wird intern die Kennung `default` verwendet (z.B. `ticketServiceUrls:"new=http://localhost/new-ticketsystem/,http://localhost/legacy-ticketsystem/"`). Die Kennungen können in den Testdefinitionen verwendet werden, um das zu verwendende Ticketsystem zu referenzieren (z.B. `ticketReference="new:123"`). Wird in einer `ticketReference` keine Kennung angegeben, so wird angenommen, dass die Kennung `default` gemeint ist (z.B. `ticketReference="456"`).
 * `xmlFilePath`: Mandatorische Angabe der XML-Datei, welche das zu testende Setup beinhaltet. Der Pfad kann relativ zum optional angegebenen `rootPath` angegeben werden.
 * `reportTitle`: Optionaler Text, der als Reporttitel verwendet werden soll. Per Default wird die `description` aus dem `XmlResponseDiffSetup`-Block verwendet. Ist der Parameter gesetzt, so wird die `description` als Untertitel verwendet.
+* `useLogo`: Optionales Flag, ob beim Erzeugen von Reports ein Logo verwendet werden soll (`true`) oder nicht (`false`). (default ist `false`)
 * `testIdPattern`: Optionaler regulärer Ausdruck (in Java RegEx Syntax), um die Ausführung auf einzelne Tests einzuschränken. Wird nichts oder null übergeben, so werden alle Tests ausgeführt (default). Andernfalls werden nur diejenigen Tests ausgeführt, deren `id` zum übergebenen Ausdruck passt.
 * `storeResultPath`: Mandatorische Angabe des Verzeichnisses, in dem die Ergebnisse der Tests als XML gespeichert werden sollen. (z.B. "../test-results/")
 * `reportWhiteNoise`: Optionales Flag, ob auch ignorierte, technische Unterschiede (whiteNoise) ausgewiesen werden sollen (`true`) oder nicht (`false`). (default ist `false`)
 * `maskAuthorizationHeaderInCurl`: Optionales Flag, ob Werte des `Authorization`-Headers maskiert werden sollen (`true`) oder nicht (`false`). (default ist `true`)
-* `reportControlResponse`: Optionales Flag, ob in der ausgeleiteten XML-Datei neben den Antworten der Kandidat- und Referenz-Instanzen auch die Antwort der Kontroll-Instanz enthalten sein soll ('true') oder nicht ('false'). (default ist `false')
+* `reportControlResponse`: Optionales Flag, ob in der ausgeleiteten XML-Datei neben den Antworten der Kandidat- und Referenz-Instanzen auch die Antwort der Kontroll-Instanz enthalten sein soll (`true`) oder nicht (`false`). (default ist `false`)
 * `executionContext`: Optionale Auflistung (Komma-separiert) von Token, die bei bedingten Tests beachtet werden müssen (siehe Abschnitt <<Bedingte Testausführung>>). Die Wahl der Token ist frei. Es wird nicht zwischen Groß- und Kleinschreibung unterschieden.
 * `xsltFilePath`: Optionaler Pfad zu einer XSLT-Datei, die zur Transformation des erzeugten XML-Reports verwendet werden soll. Das Ergebnis der Transformation wird neben dem XML-Report unter gleichem Namen abgelegt (z.B. "reporter/report-to-adoc.xslt" (default) oder "reporter/report-to-html.xslt"). **Beachte:** Die Transformationsdatei "reporter/report-to-html.xslt" ist sehr rudimentär und dient lediglich als technisches Beispiel für die Erstellung eigener Reports. Soll tatsächlich ein Report im HTML-Format erzeugt werden, so wird empfohlen, den Default-Transformer und die Default-Dateiendung (`reportFileEnding`) nicht zu verändern und stattdessen im Parameter `reportConversionFormats` den Wert `html` zu übergeben.
 * `reportFileEnding`: Optionale Dateiendung für das Transformationsergebnis. (default ist `adoc`)
@@ -306,8 +308,12 @@ Folgende Werte sind für die `report`-Attribute an den TestSets und Tests vorges
 ====== HTML via AsciiDoc
 Es ist einfach, einen HTML-Report aus einem erzeugten AsciiDoc-Report zu erzeugen. Es reicht `html` (Komma-separiert) dem Wert des Konfigurationsparameters `reportConversionFormats` anzuhängen (siehe Abschnit "<<Konfiguration>>"). Es ist zu beachten, dass ein umfangreicher HTML-Report ggfs. einen Browser an seine Grenzen bringen kann. In diesen Fällen ist es geeigneter, einen PDF-Report zu erzeugen.
 
+Eine Individualisierung des HTML-Reports kann wie in Abschnitt <<Individualisierter Report>> beschrieben vorgenommen werden.
+
 ====== PDF via AsciiDoc
 Wie für HTML ist es einfach, einen PDF-Report aus einem erzeugten AsciiDoc-Report zu erzeugen. Es reicht `pdf` (Komma-separiert) dem Wert des Konfigurationsparameters `reportConversionFormats` anzuhängen (siehe Abschnit "<<Konfiguration>>").
+
+Eine Individualisierung des PDF-Reports kann wie in Abschnitt <<Individualisierter Report>> beschrieben vorgenommen werden.
 
 ===== HTML
 Name der Transformatordatei: `report-to-html.xslt`
@@ -1917,6 +1923,35 @@ Ist das Attribut `userId` bei einem Test direkt oder durch Vererbung gesetzt, so
 <3> Für diesen TestSet und die eingeschlossenen Tests wurde das Attribut `userId` überschrieben.
 <4> Dieses TestSet erbt die `userId` mit Wert `PRIVILEGED_USER` aus der umschließenden Struktur.
 ====
+
+=== Individualisierter Report
+
+Nicht selten ist es sinnvoll, den erzeugten Report an das eigene Firmendesign anzupassen. Hierzu bietet ResponseDiff die Möglichkeit, ein Logo einzubinden, sowie Farben und Schriften anzupassen. Zudem ist es generell möglich, das XSLT-Skript, welches den zugrundeliegenden XML-Report nach AsciiDoc (`*.adoc`) transformiert, individuell zu gestalten. Die Anpassung bzgl. Farben und Schriften erfolgt im zweiten Schritt, in dem der aus XML transformierte AsciiDoc-Report in die Zielformate (z.B. HTML und PDF) konvertiert wird.
+
+==== Einbinden eines Logos
+
+Damit ein Logo im Report angezeigt wird, muss
+
+* das Logo als Datei `logo.png` direkt neben der XSLT-Datei (z.B. `report-to-adoc.xslt`) liegen, die zur Reporterzeugung verwendete werden soll (vgl. `xsltFilePath` im Abschnitt "<<Konfiguration>>") und
+* der Parameter `useLogo` (vgl. ebenfalls Abschnitt "<<Konfiguration>>") beim Aufruf als `true` übergeben werden.
+
+[NOTE]
+Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `logo.png` (das ResponseDiff-Logo). Die Übergabe des Parameters `useLogo` ist im vorbereiteten Skript `start-responseDiff` bereits vorgenommen.
+
+==== Anpassen des Designs für HTML
+
+Dem Report liegt initial ein Default-StyleSheet zugrunde. Um Farben und Schriften anzupassen muss eine Datei `custom-html-overrides.html` direkt neben der XSLT-Datei (z.B. `report-to-adoc.xslt`) liegen, die zur Reporterzeugung verwendete werden soll (vgl. `xsltFilePath` im Abschnitt "<<Konfiguration>>"). Der Inhalt kann beliebige CSS-Selektoren und -Deklarationen beinhalten, die ein einem klassischen `<style>`-HTML-Block zusammengefasst sind. Es gibt keine Einschränkung hinsichtlich der CSS-Verwendung.
+
+[NOTE]
+Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `\_custom-html-overrides.html`. Sie zeigt exemplarisch, wie eine Anpassung mit Standard CSS-Syntax realisiert werden kann. Da in der Beispieldatei sehr grelle Farben gewählt wurden, ist die Datei absichtlich mit einem `_` so umbenannt, dass sie bei der Reporterzeugung nicht verwendet wird. Da es sich bei der Datei um ein HTML-Fragment handelt, welches bei der Konvertierung am Ende des `<head>`-Blocks eingefügt wird, ist es prinzipiell auch möglich in der Datei einen `<script>`-Block zu platzieren und individuellen JavaScript-Code einzubetten.
+
+==== Anpassen des Designs für PDF
+
+Dem Report liegt initial ein Default-Theme zugrunde. Um Farben und Schriften anzupassen muss eine Datei `custom-pdf-theme.yml` direkt neben der XSLT-Datei (z.B. `report-to-adoc.xslt`) liegen, die zur Reporterzeugung verwendete werden soll (vgl. `xsltFilePath` im Abschnitt "<<Konfiguration>>"). Es ist ratsam die Zeile `extends: default` zu belassen und nur die Eigenschaften anzugeben, die überschrieben werden sollen. Prinzipiell gibt es keine Einschränkung hinsichtlich der Anpassungsmögichkeiten.
+
+[NOTE]
+Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `\_custom-pdf-theme.yml`. Sie zeigt exemplarisch, wie die Einbettung eines PDF-Themes realisiert werden kann. Da in der Beispielldatei sehr grelle Farben gewählt wurden, ist die Datei absichtlich mit einem `_` so umbenannt, dass sie bei der Reporterzeugung nicht verwendet wird.
+
 
 == Automatische Anpassung der Tests bei Versionswechsel
 

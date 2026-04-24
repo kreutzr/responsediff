@@ -18,6 +18,10 @@
 :toclevels: 5
 :icons: font
 :icon-set: fas
+<xsl:if test="useLogo = 'true'">:imagesdir: .
+
+image::logo.png[]
+</xsl:if>
 
 <xsl:apply-templates select="analysis"/>
 
