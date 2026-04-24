@@ -155,11 +155,19 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 |===
 </xsl:if>
 
+<xsl:choose>
+<xsl:when test="./request/curl != ''">
 [.copy-code]
 [source,bash]
 ----
 <xsl:value-of select="request/curl"/>
 ----
+</xsl:when>
+<xsl:otherwise>
+-
+
+</xsl:otherwise>
+</xsl:choose>
 
 <xsl:apply-templates select="analysis"/>
 
@@ -539,7 +547,10 @@ Body:
 
 | <xsl:value-of select="./@level" /><xsl:if test="./@executionContextConstraint != ''"> (context="<xsl:value-of select="./@executionContextConstraint" />")</xsl:if>
 | <xsl:value-of select="./@path" />
-| <xsl:call-template name="search-and-replace"> <!-- Replace first "*" of regular expressions to avoid confusing AsciiDoc. -->
+<xsl:choose><xsl:when test="./@path = '$.meta.stacktrace'">
+a| [.copy-code]
+</xsl:when><xsl:otherwise> | </xsl:otherwise></xsl:choose>
+  <xsl:call-template name="search-and-replace"> <!-- Replace first "*" of regular expressions to avoid confusing AsciiDoc. -->
   <xsl:with-param name="input" select="text()"/>
   <xsl:with-param name="search-string">*</xsl:with-param>
   <xsl:with-param name="replace-string">\*</xsl:with-param>
