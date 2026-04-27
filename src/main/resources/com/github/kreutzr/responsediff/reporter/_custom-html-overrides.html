@@ -1,6 +1,71 @@
 <style>
-/* Nur die Abweichungen definieren */
-h1, h2 { color: #0000ff !important; }
-.listingblock pre.highlight { background-color: #eeeeee; border-left: 5px solid #0000ff; }
-#header { border-bottom: 2px solid #0000ff; }
+:root {
+    --rd-blue-header: #34495e;  /* Gesättigter, kräftiger für den Haupt-Header */
+    --rd-blue-table: #dbe4ed;   /* Etwas blauer als vorher für die th-Zellen */
+    --rd-blue-text: #2c3e50;    /* Das klassische Logo-Blau für Text */
+    --rd-orange: #f39c12;       /* Akzentfarbe */
+    --rd-border: #bdc3c7;
+}
+
+/* Haupt-Header des Reports */
+#header {
+    border-bottom: 5px solid var(--rd-blue-header);
+    padding-bottom: 1.5rem;
+}
+
+h1, h2, h3 {
+    color: var(--rd-blue-header) !important;
+}
+
+/* --- Tabellen-Logik --- */
+
+/* 1. Der obere Tabellenkopf (thead) */
+table.tableblock thead th {
+    background: var(--rd-blue-header) !important;
+    color: #ffffff !important; /* Weißer Text für harten Kontrast auf dem dunklen Blau */
+    border-bottom: 3px solid var(--rd-orange) !important; /* Kleiner Akzent-Strich */
+    padding: 12px 10px !important;
+}
+
+/* 2. Die th-Zellen im Body (die ehemals "dedede" Zellen) */
+table.tableblock tbody tr th {
+    background: var(--rd-blue-table) !important;
+    color: var(--rd-blue-text) !important;
+    border-right: 1px solid var(--rd-border) !important;
+    border-bottom: 1px solid var(--rd-border) !important;
+    font-weight: 600;
+}
+
+/* 3. Normale Datenzellen (td) */
+table.tableblock tbody tr td {
+    border-bottom: 1px solid var(--rd-blue-table) !important;
+}
+
+/* Listing / Code-Blöcke */
+.listingblock pre.highlight {
+    background-color: #f8fafd;
+    border: 1px solid var(--rd-border);
+    border-left: 5px solid var(--rd-orange);
+}
+
+/* Copy-Button */
+.copy-btn {
+    background: var(--rd-blue-header) !important;
+    color: white !important;
+    border: none !important;
+    padding: 4px 12px !important;
+    border-radius: 4px !important;
+    font-weight: bold !important;
+}
+
+.copy-btn:hover {
+    background: var(--rd-orange) !important;
+}
+
+/* Footer */
+#footer {
+    background: var(--rd-blue-header) !important;
+    color: white !important;
+}
+#footer-text { color: white !important; opacity: 0.8; }
 </style>

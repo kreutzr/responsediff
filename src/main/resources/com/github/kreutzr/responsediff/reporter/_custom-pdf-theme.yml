@@ -2,9 +2,9 @@ extends: default
 page:
   margin: [0.75in, 1in, 0.75in, 1in]
 base:
-  font-color: #0000ff
+  font-color: #34495e
 heading:
-  font-color: #ffff00
+  font-color: #34495e
 code:
-  background-color: #ff3333
-  border-color: #cccccc
+  background-color: #f8fafd
+  border-color: #bdc3c7
