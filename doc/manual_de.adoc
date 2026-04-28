@@ -1943,14 +1943,14 @@ Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszw
 Dem Report liegt initial ein Default-StyleSheet zugrunde. Um Farben und Schriften anzupassen muss eine Datei `custom-html-overrides.html` direkt neben der XSLT-Datei (z.B. `report-to-adoc.xslt`) liegen, die zur Reporterzeugung verwendete werden soll (vgl. `xsltFilePath` im Abschnitt "<<Konfiguration>>"). Der Inhalt kann beliebige CSS-Selektoren und -Deklarationen beinhalten, die ein einem klassischen `<style>`-HTML-Block zusammengefasst sind. Es gibt keine Einschränkung hinsichtlich der CSS-Verwendung.
 
 [NOTE]
-Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `\_custom-html-overrides.html`. Sie zeigt exemplarisch, wie eine Anpassung mit Standard CSS-Syntax realisiert werden kann. Da in der Beispieldatei sehr grelle Farben gewählt wurden, ist die Datei absichtlich mit einem `_` so umbenannt, dass sie bei der Reporterzeugung nicht verwendet wird. Da es sich bei der Datei um ein HTML-Fragment handelt, welches bei der Konvertierung am Ende des `<head>`-Blocks eingefügt wird, ist es prinzipiell auch möglich in der Datei einen `<script>`-Block zu platzieren und individuellen JavaScript-Code einzubetten.
+Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `\_custom-html-overrides.html`. Sie zeigt exemplarisch, wie eine Anpassung mit Standard CSS-Syntax realisiert werden kann. Da es sich bei der Datei um ein HTML-Fragment handelt, welches bei der Konvertierung am Ende des `<head>`-Blocks eingefügt wird, ist es prinzipiell auch möglich in der Datei einen `<script>`-Block zu platzieren und individuellen JavaScript-Code einzubetten.
 
 ==== Anpassen des Designs für PDF
 
 Dem Report liegt initial ein Default-Theme zugrunde. Um Farben und Schriften anzupassen muss eine Datei `custom-pdf-theme.yml` direkt neben der XSLT-Datei (z.B. `report-to-adoc.xslt`) liegen, die zur Reporterzeugung verwendete werden soll (vgl. `xsltFilePath` im Abschnitt "<<Konfiguration>>"). Es ist ratsam die Zeile `extends: default` zu belassen und nur die Eigenschaften anzugeben, die überschrieben werden sollen. Prinzipiell gibt es keine Einschränkung hinsichtlich der Anpassungsmögichkeiten.
 
 [NOTE]
-Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `\_custom-pdf-theme.yml`. Sie zeigt exemplarisch, wie die Einbettung eines PDF-Themes realisiert werden kann. Da in der Beispielldatei sehr grelle Farben gewählt wurden, ist die Datei absichtlich mit einem `_` so umbenannt, dass sie bei der Reporterzeugung nicht verwendet wird.
+Bei der Auslieferung befindet sich im Verzeichnis `reporter` zu Demonstrationszwecken die Datei `\_custom-pdf-theme.yml`. Sie zeigt exemplarisch, wie die Einbettung eines PDF-Themes realisiert werden kann. Die Syntax ist stark abhängig von der verwendeten 3rd-Party-Bibliothek AsciiDoctor-PDF.
 
 
 == Automatische Anpassung der Tests bei Versionswechsel

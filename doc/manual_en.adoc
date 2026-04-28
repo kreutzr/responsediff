@@ -1949,14 +1949,14 @@ For demonstration purposes, the file `logo.png` (the ResponseDiff logo) is inclu
 The report initially uses a default stylesheet. To customize colors and fonts, a file `custom-html-overrides.html` must be placed directly next to the XSLT file (e.g., `report-to-adoc.xslt`) used to generate the report (see `xsltFilePath` in the "<<Configuration>>" section). The file can contain any CSS selectors and declarations, all enclosed in a classic `<style>` HTML block. There are no restrictions on the CSS you can use.
 
 [NOTE]
-Upon delivery, the file `\_custom-html-overrides.html` is included in the `reporter` directory for demonstration purposes. It shows an example of how customization can be implemented using standard CSS syntax. Because very bright colors were chosen in the example file, the file has been intentionally renamed with an underscore (`_`) so that it is not used during report generation. Since the file is an HTML fragment that is inserted at the end of the `<head>` block during conversion, it is also possible, in principle, to place a `<script>` block within the file and embed custom JavaScript code.
+Upon delivery, the file `\_custom-html-overrides.html` is included in the `reporter` directory for demonstration purposes. It shows an example of how customization can be implemented using standard CSS syntax. Since the file is an HTML fragment that is inserted at the end of the `<head>` block during conversion, it is also possible, in principle, to place a `<script>` block within the file and embed custom JavaScript code.
 
 ==== Customizing the Design for PDF
 
 The report initially uses a default theme. To customize colors and fonts, a file named `custom-pdf-theme.yml` must be placed directly next to the XSLT file (e.g., `report-to-adoc.xslt`) used for report generation (see `xsltFilePath` in the "<<Configuration>>" section). It is recommended to leave the line `extends: default` as is and only specify the properties that should be overridden. In principle, there are no restrictions regarding customization options.
 
 [NOTE]
-For demonstration purposes, the file `\_custom-pdf-theme.yml` is included in the `reporter` directory upon delivery. It shows an example of how to embed a PDF theme. Because very bright colors were chosen in the example file, the file has been intentionally renamed with an underscore (`_`) so that it is not used during report generation.
+For demonstration purposes, the file `\_custom-pdf-theme.yml` is included in the `reporter` directory upon delivery. It shows an example of how to embed a PDF theme. The syntax strongly depends on the used 3rd part library AsciiDoctor-PDF.
 
 
 == Automatic adaptation of tests when changing versions

@@ -1,0 +1,101 @@
+page:
+  layout: portrait
+  margin: [1.3cm, 1.5cm, 1.8cm, 1.5cm]
+
+base:
+  font_color: #2c3e50
+  font_size: 9
+  line_height: 1.2
+
+toc:
+  # Punktlinien
+  dot_leader_levels: 1 2 3 4 5
+  dot_leader_font_color: #bdc3c7
+  indent: 15
+
+title_page:
+  # Rückt den Titel weit nach unten
+  title_top: 70%
+  title_font_size: 32
+  title_font_color: #34495e
+  title_font_style: bold
+  # Untertitel (deine Zeile mit dem Datum)
+  subtitle_font_size: 14
+  subtitle_font_color: #7f8c8d
+  subtitle_margin_top: 10
+
+heading:
+  font_color: #34495e
+  font_style: bold
+  # Globaler Standardabstand für alle Überschriften
+  margin_top: 12
+  margin_bottom: 6
+
+  # Level 1 (H1) - Haupttitel
+  h1_font_size: 24
+  h1_margin_top: 20
+  h1_margin_bottom: 12
+  h1_border_bottom_width: 3
+  h1_border_bottom_color: #34495e
+
+  # Level 2 (H2) - Sektionen
+  h2_font_size: 18
+  h2_margin_top: 16
+  h2_margin_bottom: 8
+
+  # Level 3 (H3) - Untersektionen
+  h3_font_size: 14
+  h3_margin_top: 12
+  h3_margin_bottom: 6
+
+  # Level 4 (H4)
+  h4_font_size: 12
+  h4_margin_top: 10
+  h4_margin_bottom: 4
+
+table:
+  cell_padding: [6, 6, 6, 6]
+  background_color: #ffffff
+  border_color: #bdc3c7
+  border_width: 0.5
+
+  # 1. Die echte Kopfzeile (Measure, Value...)
+  # Nutzt 'head' für die Zeile und 'header-cell' für den Inhalt
+  head_background_color: #34495e
+  head_font_color: #ffffff
+  head_font_style: bold
+  head_padding: [6, 6, 6, 6]
+  header_cell_font_color: #000000
+  header_cell_font_style: bold
+  header_cell_border_bottom_width: 2
+  header_cell_border_bottom_color: #f39c12
+  header_cell_background_color: #dbe4ed
+
+  # 2. Die Spalten-Header (begin, end...) aus [cols="15h,..."]
+  # Der entscheidende Key in v2.x ist 'body_cell_head'
+  body_cell_head_font_color: #000000
+  body_cell_head_font_style: bold
+
+  # 3. Restlicher Body
+  body_stripe_background_color: #fcfdfe
+
+code:
+  font_family: Courier
+  font_size: 9
+  background_color: #f8fafd
+  border_color: #bdc3c7
+  border_width: 0.5
+  border_left_width: 4
+  border_left_color: #f39c12
+  padding: [6, 6, 6, 6]
+
+footer:
+  height: 1cm
+  border_top_width: 1
+  border_top_color: #bdc3c7
+  recto:
+    right:
+      content: '{page-number}'
+  verso:
+    left:
+      content: '{page-number}'
