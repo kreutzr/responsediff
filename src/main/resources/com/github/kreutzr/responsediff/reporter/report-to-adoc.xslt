@@ -18,8 +18,8 @@
 :toclevels: 5
 :icons: font
 :icon-set: fas
-<xsl:if test="useLogo = 'true'">:imagesdir: .
 
+<xsl:if test="useLogo = 'true'">:imagesdir: .
 image::logo.png[]
 </xsl:if>
 
@@ -60,8 +60,8 @@ image::logo.png[]
 <xsl:when test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( not($result = 'success') or contains(./@report,'orga') ) )" >
 
 [cols="15h,85"]
-|===
 
+|===
 | FileName | <xsl:value-of select="fileName"/>
 
 <xsl:if test="./description != ''">
@@ -138,8 +138,8 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:if test="( (./description != '') or (./@waitBefore != '') or (./@ticketReference != '') or (./@breakOnFailure) )">
 
 [cols="15h,85"]
-|===
 
+|===
 <xsl:if test="./description != ''">
 | Description | <xsl:value-of select="description"/>
 </xsl:if>
@@ -365,8 +365,11 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
   <!-- ========================================================================== -->
 
 <xsl:template match="analysis">
+
+{empty} +
 *Analysis*
 [cols="15h,18,15h,18,15h,19"]
+
 |===
 | Measure | Value | Measure | Value | Measure | Value
 
@@ -387,10 +390,13 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
   <!-- ========================================================================== -->
 
 <xsl:template match="httpResponse">
+
+{empty} +
 *Candidate HTTP Response*
 
 Headers:
-[cols="15,85"]
+[cols="15h,85"]
+
 |===
 | Name | Value
 
@@ -405,6 +411,8 @@ xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="downlo
 
 </xsl:when>
 <xsl:otherwise>
+
+{empty} +
 Body:
 [.copy-code]
 [source,json]
@@ -422,7 +430,8 @@ Body:
 *Original candidate HTTP Response*
 
 Headers:
-[cols="15,85"]
+[cols="15h,85"]
+
 |===
 | Name | Value
 
@@ -431,12 +440,16 @@ Headers:
 
 <xsl:choose>
 <xsl:when test="download">
+
+{empty} +
 Download:
 
 xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="download/size" /> bytes)
 
 </xsl:when>
 <xsl:otherwise>
+
+{empty} +
 Body:
 [.copy-code]
 [source,json]
@@ -451,10 +464,13 @@ Body:
   <!-- ========================================================================== -->
 
 <xsl:template match="referenceResponse">
+
+{empty} +
 *Reference HTTP Response*
 
 Headers:
-[cols="15,85"]
+[cols="15h,85"]
+
 |===
 | Name | Value
 
@@ -463,12 +479,16 @@ Headers:
 
 <xsl:choose>
 <xsl:when test="download">
+
+{empty} +
 Download:
 
 xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="download/size" /> bytes)
 
 </xsl:when>
 <xsl:otherwise>
+
+{empty} +
 Body:
 [.copy-code]
 [source,json]
@@ -486,7 +506,8 @@ Body:
 *Control HTTP Response*
 
 Headers:
-[cols="15,85"]
+[cols="15h,85"]
+
 |===
 | Name | Value
 
@@ -495,12 +516,16 @@ Headers:
 
 <xsl:choose>
 <xsl:when test="download">
+
+{empty} +
 Download:
 
 xref:<xsl:value-of select="download/filename" />[] (<xsl:value-of select="download/size" /> bytes)
 
 </xsl:when>
 <xsl:otherwise>
+
+{empty} +
 Body:
 [.copy-code]
 [source,json]
@@ -516,7 +541,6 @@ Body:
 
 <xsl:template match="header">
   <xsl:variable name="trimmedContent" select="normalize-space(text())" />
-
 | <xsl:value-of select="./@name" /> <xsl:choose>
 <xsl:when test="starts-with($trimmedContent, '{') and substring($trimmedContent, string-length($trimmedContent)) = '}'">
   a| [.copy-code]
@@ -532,8 +556,10 @@ Body:
 
 <xsl:template match="messages">
 
+{empty} +
 *Error messages*
-[cols="15,18,67"]
+[cols="15h,18,67"]
+
 |===
 | Level | JsonPath | Message
 
