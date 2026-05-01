@@ -2063,7 +2063,7 @@ Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, 
 [source]
 ----
 <XmlResponseDiffSetup ...>
-  <testSet id="Complex test" order="strict" report="success,fail,skip,warn,orga">
+  <testSet id="Complex test" order="strict" report="success,fail,skip,warn,o_rga">
     <testSet id="before" breakOnFailure="true" orga="true"> <1>
       ...
     </testSet>
@@ -2078,7 +2078,7 @@ Da gerade Fehler beim Aufbau des Test-Szenarios zu Folgefehlern führen werden, 
 ----
 <1> Mittels `breakOnFailure` werden Folgefehler bei der eigentlichen Testausführung vermieden, wenn dieses TestSet nicht fehlerfrei ausgeführt werden konnte.
 <2> Die TestSets mit IDs `test` und `after` werden im Report als "übersprungen" markiert, wenn das Vorbereitungs-TestSet `before` nicht erfolgreich war.
-<3> Das TestSet wird (wie auch <1>) im Report wegen der Markierung `orga="true"` berücksichtigt, wenn sich im umschließenden `report`-Attribut kein Eintrag `orga`  findet (vgl. Abschnitt `<<AsciiDoc (default)>>`).
+<3> Das TestSet wird (wie auch Punkt 1) im Report wegen der Markierung `orga="true"` berücksichtigt, wenn sich im umschließenden `report`-Attribut kein Eintrag `orga`  findet (vgl. Abschnitt `<<AsciiDoc (default)>>`).
 ====
 
 Wird die Setup-Datei zu umfangreich, können die "Aufbau"- (`before`) und "Abbau"- (`after`) TestSets in eigene Dateien ausgelagert und per `testSetInclude`-Tag eingebunden werden. Eine Auslagerung ist zudem sinnvoll, wenn die so ausgelagerten Aufrufe auch an anderer Stelle Verwendung finden sollen. Ein gewünschtes Attribut `breakOnFailure` muss bei Auslagerung in der ausgelagerten Datei gesetzt werden.

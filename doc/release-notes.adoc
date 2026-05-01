@@ -15,7 +15,7 @@ This is a regular maintenance release.
 
 === Features / Changes
 
-* Added copy button for CURL, response body and header values that start with "{" and end with "}" and thereby appear to be JSON.
+* Added copy button in HTML report for CURL, response body and header values that start with "{" and end with "}" and thereby appear to be JSON.
 * Added support for report customization (logo, colors, fonts) for HTML and PDF.
 
 === Bug fixes
@@ -26,6 +26,7 @@ This is a regular maintenance release.
 
 * Upgrade "asciidoctor-maven-plugin" plugin from 2.2.6 to 3.2.0
 * Upgrade "dependency-check-maven" plugin from 12.2.0 to 12.2.1
+* Upgrade "jackson-databind" from 2.21.2 to 2.21.3
 * Upgrade "jaxb2-maven-plugin" plugin from 3.3.0 to 4.1.0
 * Upgrade "license-maven-plugin" plugin from 4.6 to 5.0.0
 * Upgrade log4j from 2.25.3 to 2.25.4

@@ -1731,7 +1731,7 @@ The value corresponds to the length of the received byte array - i.e. the compre
 
 The JSONPath-Syntax does not allow dots in attribute names because these are reserved as path separators. It is also not possible to mask dots (see section "<<Supported JSONPath syntax>>"). Using the <<NormalizeJsonBodyResponseFilter>> gives you the opportunity to adjust received attribute names.
 
-If dots in attribute names are not adjusted, misleading deviations may be reported in the test, indicating a missing value in the candidate instance (e.g., " `... expected: ... *but was: null*"` ). This is caused by comparing the reference value with the candidate value or the configured expected value (`expected`), whereby an attempt is made to read the value from the candidate response via JSONPath, which fails due to the different structure.
+If dots in attribute names are not adjusted, misleading deviations may be reported in the test, indicating a missing value in the candidate instance (e.g., " `... expected: ... *but was: null*` "). This is caused by comparing the reference value with the candidate value or the configured expected value (`expected`), whereby an attempt is made to read the value from the candidate response via JSONPath, which fails due to the different structure.
 
 
 === Generic Test Sets
@@ -2069,7 +2069,7 @@ Since errors in the setup of the test scenario will lead to subsequent errors, i
 [source]
 ----
 <XmlResponseDiffSetup ...>
-  <testSet id="Complex test" order="strict" report="success,fail,skip,warn,orga">
+  <testSet id="Complex test" order="strict" report="success,fail,skip,warn,o_rga">
     <testSet id="before" breakOnFailure="true" orga="true"> <1>
       ...
     </testSet>
@@ -2084,7 +2084,7 @@ Since errors in the setup of the test scenario will lead to subsequent errors, i
 ----
 <1> Setting the `breakOnFailure` attribute prevents subsequent errors during the actual test execution if this test set could not be executed successfully.
 <2> The test sets with IDs `test` and `after` are marked as "skipped" in the report if the preparation test set `before` was unsuccessful.
-<3> The test set is (as <1>) not included in the report in detail due to the `orga="true"` flag if no `orga` entry is found in the surrounding `report` attribute (see section `<<AsciiDoc (default)>>`).
+<3> The test set is (as point 1) not included in the report in detail due to the `orga="true"` flag if no `orga` entry is found in the surrounding `report` attribute (see section `<<AsciiDoc (default)>>`).
 ====
 
 If the setup file becomes too large, the "setup" (`before`) and "teardown" (`after`) test sets can be swapped out to separate files and included using the `testSetInclude` tag. Swapping out is also useful if the swapped out calls are to be used elsewhere. A desired `breakOnFailure` attribute must be set in the swapped out file when swapping out.
