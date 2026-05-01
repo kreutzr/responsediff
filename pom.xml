@@ -700,8 +700,8 @@
                       <includes>
                         <include>report-to-adoc.xslt</include>
                         <include>logo.png</include>
-                        <include>_custom-html-overrides.html</include>
-                        <include>_custom-pdf-theme.yml</include>
+                        <include>custom-html-overrides.html</include>
+                        <include>custom-pdf-theme.yml</include>
                       </includes>
                     </resource>
                   </resources>
