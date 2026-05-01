@@ -6,11 +6,12 @@ the propability that any risk is originating from it is pretty much zero.
 ## Supported Versions
 
 Since ResponseDiff provides full backward compatibility it is always save to use the latest release.
-Therefore the latest release is supported (only) - which is by now writing version 1.4.0 .
+Therefore the latest release is supported (only) - which is by now writing version 1.5.0 .
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.4.0   | :white_check_mark: |
+| 1.5.0   | :white_check_mark: |
+| 1.4.0   | :x:                |
 | 1.3.0   | :x:                |
 | 1.2.0   | :x:                |
 | 1.1.0   | :x:                |

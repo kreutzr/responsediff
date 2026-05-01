@@ -5,13 +5,34 @@
 
 image::img/responsediff-logo_320x160.png[ResponseDiff]
 
-== V1.4.1 (2025-xx-xx)
+== V1.5.1 (2025-xx-xx)
 === Type
 This is a regular maintenance release.
 
 === Hints
 
 * ...
+
+=== Features / Changes
+
+* ...
+
+=== Bug fixes
+
+* ...
+
+=== External libraries
+
+* ...
+
+=== Known issues
+
+* ...
+
+
+== V1.5.0 (2025-05-01)
+=== Type
+This is a regular maintenance release.
 
 === Features / Changes
 
@@ -30,11 +51,6 @@ This is a regular maintenance release.
 * Upgrade "jaxb2-maven-plugin" plugin from 3.3.0 to 4.1.0
 * Upgrade "license-maven-plugin" plugin from 4.6 to 5.0.0
 * Upgrade log4j from 2.25.3 to 2.25.4
-* ...
-
-=== Known issues
-
-* ...
 
 
 == V1.4.0 (2025-03-28)
