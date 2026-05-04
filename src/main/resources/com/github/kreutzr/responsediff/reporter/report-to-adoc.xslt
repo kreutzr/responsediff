@@ -59,7 +59,7 @@ image::logo.png[]
 </xsl:call-template><xsl:choose>
 <xsl:when test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( not($result = 'success') or contains(./@report,'orga') ) )" >
 
-[cols="15h,85"]
+[cols="16h,84"]
 
 |===
 | FileName | <xsl:value-of select="fileName"/>
@@ -137,7 +137,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 <xsl:when test="( not(./@orga = 'true') and ( contains(./@report,$result) or contains(./@report,'all') ) ) or ( ./@orga = 'true' and ( ( $result != 'success' ) or contains(./@report,'orga') ) )" >
 <xsl:if test="( (./description != '') or (./@waitBefore != '') or (./@ticketReference != '') or (./@breakOnFailure) )">
 
-[cols="15h,85"]
+[cols="16h,84"]
 
 |===
 <xsl:if test="./description != ''">
@@ -157,6 +157,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 <xsl:choose>
 <xsl:when test="./request/curl != ''">
+{empty}
 [.copy-code]
 [source,bash]
 ----
@@ -368,7 +369,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 
 {empty} +
 *Analysis*
-[cols="15h,18,15h,18,15h,19"]
+[cols="16h,17,16h,17,16h,18"]
 
 |===
 | Measure | Value | Measure | Value | Measure | Value
@@ -395,7 +396,7 @@ XSLT: <xsl:value-of select="system-property('xsl:version')"/>
 *Candidate HTTP Response*
 
 Headers:
-[cols="15h,85"]
+[cols="16h,84"]
 
 |===
 | Name | Value
@@ -430,7 +431,7 @@ Body:
 *Original candidate HTTP Response*
 
 Headers:
-[cols="15h,85"]
+[cols="16h,84"]
 
 |===
 | Name | Value
@@ -469,7 +470,7 @@ Body:
 *Reference HTTP Response*
 
 Headers:
-[cols="15h,85"]
+[cols="16h,84"]
 
 |===
 | Name | Value
@@ -506,7 +507,7 @@ Body:
 *Control HTTP Response*
 
 Headers:
-[cols="15h,85"]
+[cols="16h,84"]
 
 |===
 | Name | Value
@@ -558,7 +559,7 @@ Body:
 
 {empty} +
 *Error messages*
-[cols="15h,18,67"]
+[cols="16h,17,67"]
 
 |===
 | Level | JsonPath | Message

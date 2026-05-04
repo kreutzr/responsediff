@@ -15,6 +15,7 @@ This is a regular maintenance release.
 
 === Features / Changes
 
+* Some report style fine tuning
 * ...
 
 === Bug fixes

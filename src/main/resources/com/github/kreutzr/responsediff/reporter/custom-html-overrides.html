@@ -1,56 +1,67 @@
 <style>
 :root {
-    --rd-blue-header: #34495e;  /* Gesättigter, kräftiger für den Haupt-Header */
-    --rd-blue-table: #dbe4ed;   /* Etwas blauer als vorher für die th-Zellen */
-    --rd-blue-text: #2c3e50;    /* Das klassische Logo-Blau für Text */
-    --rd-orange: #f39c12;       /* Akzentfarbe */
+    --rd-header: #34495e;
+    --rd-table-background-sub: #dbe4ed;
+    --rd-table-font-color: #2c3e50;
+    --rd-accent: #f39c12;
     --rd-border: #bdc3c7;
 }
 
 /* Haupt-Header des Reports */
 #header {
-    border-bottom: 5px solid var(--rd-blue-header);
+    border-bottom: 5px solid var(--rd-header);
+    padding-bottom: 1.5rem;
+}
+
+#header .details {
+    color: var(--rd-border) !important;
+    border: 0px;
     padding-bottom: 1.5rem;
 }
 
 h1, h2, h3 {
-    color: var(--rd-blue-header) !important;
+    color: var(--rd-header) !important;
 }
 
 /* --- Tabellen-Logik --- */
 
+table.tableblock {
+  margin-bottom: 0px;
+}
+
 /* 1. Der obere Tabellenkopf (thead) */
 table.tableblock thead th {
-    background: var(--rd-blue-header) !important;
-    color: #ffffff !important; /* Weißer Text für harten Kontrast auf dem dunklen Blau */
-    border-bottom: 3px solid var(--rd-orange) !important; /* Kleiner Akzent-Strich */
+    background: var(--rd-header) !important;
+    color: #ffffff !important;
+    border: 1px solid var(--rd-border) !important;
+    border-right: 1px solid var(--rd-table-background-sub) !important;
+    border-bottom: 3px solid var(--rd-accent) !important;
     padding: 12px 10px !important;
 }
 
-/* 2. Die th-Zellen im Body (die ehemals "dedede" Zellen) */
+/* 2. Die th-Zellen im Body */
 table.tableblock tbody tr th {
-    background: var(--rd-blue-table) !important;
-    color: var(--rd-blue-text) !important;
-    border-right: 1px solid var(--rd-border) !important;
-    border-bottom: 1px solid var(--rd-border) !important;
+    background: var(--rd-table-background-sub) !important;
+    color: var(--rd-table-font-color) !important;
+    border: 1px solid var(--rd-border) !important;
     font-weight: 600;
 }
 
 /* 3. Normale Datenzellen (td) */
 table.tableblock tbody tr td {
-    border-bottom: 1px solid var(--rd-blue-table) !important;
+    border: 1px solid var(--rd-border) !important;
 }
 
 /* Listing / Code-Blöcke */
 .listingblock pre.highlight {
     background-color: #f8fafd;
     border: 1px solid var(--rd-border);
-    border-left: 5px solid var(--rd-orange);
+    border-left: 5px solid var(--rd-accent);
 }
 
 /* Copy-Button */
 .copy-btn {
-    background: var(--rd-blue-header) !important;
+    background: var(--rd-header) !important;
     color: white !important;
     border: none !important;
     padding: 4px 12px !important;
@@ -59,12 +70,12 @@ table.tableblock tbody tr td {
 }
 
 .copy-btn:hover {
-    background: var(--rd-orange) !important;
+    background: var(--rd-accent) !important;
 }
 
 /* Footer */
 #footer {
-    background: var(--rd-blue-header) !important;
+    background: var(--rd-header) !important;
     color: white !important;
 }
 #footer-text { color: white !important; opacity: 0.8; }

@@ -8,42 +8,42 @@ base:
   line_height: 1.2
 
 toc:
-  # Punktlinien
+  # Dotted lines in TOC
   dot_leader_levels: 1 2 3 4 5
   dot_leader_font_color: #bdc3c7
   indent: 15
 
 title_page:
-  # Rückt den Titel weit nach unten
+  # Move title lower
   title_top: 70%
   title_font_size: 32
   title_font_color: #34495e
   title_font_style: bold
-  # Untertitel (deine Zeile mit dem Datum)
+  # Subtitle (line with date)
   subtitle_font_size: 14
-  subtitle_font_color: #7f8c8d
+  subtitle_font_color: #2c3e50
   subtitle_margin_top: 10
 
 heading:
   font_color: #34495e
   font_style: bold
-  # Globaler Standardabstand für alle Überschriften
+  # Globaler margin for all headlines (even for those not mentioned below). Pre-initialization required by AsciiDoctor-PDF.
   margin_top: 12
   margin_bottom: 6
 
-  # Level 1 (H1) - Haupttitel
+  # Level 1 (H1)
   h1_font_size: 24
   h1_margin_top: 20
   h1_margin_bottom: 12
   h1_border_bottom_width: 3
   h1_border_bottom_color: #34495e
 
-  # Level 2 (H2) - Sektionen
+  # Level 2 (H2)
   h2_font_size: 18
   h2_margin_top: 16
   h2_margin_bottom: 8
 
-  # Level 3 (H3) - Untersektionen
+  # Level 3 (H3)
   h3_font_size: 14
   h3_margin_top: 12
   h3_margin_bottom: 6
@@ -57,6 +57,8 @@ table:
   cell_padding: [6, 6, 6, 6]
   background_color: #ffffff
   border_color: #bdc3c7
+  # This is currently ignored by AsciiDoctor => The left color is not shown.
+  border_left_color: #ffffff
   border_width: 0.5
 
   # 1. Die echte Kopfzeile (Measure, Value...)
@@ -68,6 +70,7 @@ table:
   header_cell_font_color: #000000
   header_cell_font_style: bold
   header_cell_border_bottom_width: 2
+  # This is currently ignored by AsciiDoctor => The accent color is not shown.
   header_cell_border_bottom_color: #f39c12
   header_cell_background_color: #dbe4ed
 
@@ -84,9 +87,10 @@ code:
   font_size: 9
   background_color: #f8fafd
   border_color: #bdc3c7
-  border_width: 0.5
-  border_left_width: 4
+  border_width: [1, 1, 1, 4]
+  # This is currently ignored by AsciiDoctor => The accent color is not shown.
   border_left_color: #f39c12
+  border_style: solid
   padding: [6, 6, 6, 6]
 
 footer:
