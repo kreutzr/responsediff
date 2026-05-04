@@ -19,6 +19,7 @@ This is a regular maintenance release.
 
 === Bug fixes
 
+* Upgrade "dependency-check-maven" plugin from 12.2.1 to 12.2.2
 * ...
 
 === External libraries
