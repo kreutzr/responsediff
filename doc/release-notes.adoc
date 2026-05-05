@@ -15,8 +15,8 @@ This is a regular maintenance release.
 
 === Features / Changes
 
-* Some report style fine tuning
-* ...
+* Some report style fine tuning.
+* Initial variables may be configured when invoking ResponseDiff.
 
 === Bug fixes
 

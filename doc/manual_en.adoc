@@ -207,9 +207,10 @@ It is recommended to set the configuration parameters within a small script. A s
   "xsltFilePath" : "...",
   "reportFileEnding" : "...",
   "reportConversionFormats" : "...",
-  "candidateHeaders" : [ { "name" : "...", "value" : "..." } ],
-  "referenceHeaders" : [ { "name" : "...", "value" : "..." } ],
-  "controlHeaders"   : [ { "name" : "...", "value" : "..." } ],
+  "candidateHeaders" : [ { "name" : "...", "value" : "..." }, ... ],
+  "referenceHeaders" : [ { "name" : "...", "value" : "..." }, ... ],
+  "controlHeaders"   : [ { "name" : "...", "value" : "..." }, ... ],
+  "initialVariables" : [ { "id" : "...", "value" : "..." }, ... ],
   "epsilon" : ...,
   "exitWithExitCode" : [true|false]
 }
@@ -242,6 +243,8 @@ It is recommended to set the configuration parameters within a small script. A s
 * `candidateHeaders`: Optional headers that should be used when calling the candidate instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `referenceHeaders`: Optional headers that should be used when calling the reference instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `controlHeaders`: Optional headers that should be used when calling the control instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
+
+* `initialVariables`: Optional list of variables to be included in the test setup (see parameter `xmlFilePath`). Existing setup variables with the same `id` will be overwritten for the test run. The variables passed here are marked with the attribute `configured` (value `true`) in the generated XML file.
 * `epsilon`: Optional epsilon value for numerical comparisons where no specific epsilon was specified in the test. (default is 0.00000001)
 * `exitWithExitCode`: Optional flag whether deviations with an exit code other than 0 should be displayed (`true`), or not (`false`). (default is `true`)
 ====
@@ -1277,6 +1280,10 @@ The data type of the variables to be read can be specified using the `type` attr
 Variables read in this way are available for all subsequent tests.
 The specification (`path`), which defines which parts of the response should be read, is done using JSONPath syntax. Variables that should be read from the response message are, of course, only considered for JSON responses. Variables that should be read from the headers are always considered. The JSONPath expression for header variables must begin with `$.headers.` followed by the header name.
 
+[CAUTION]
+====
+ResponseDiff does not allow overwriting already defined variables with response values, as this would unnecessarily complicate the traceability of the calls and their parameters. If an overwrite attempt is detected, a warning message is issued and the original value is retained.
+====
 
 [CAUTION]
 ====

@@ -210,6 +210,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
   "candidateHeaders" : [ { "name" : "...", "value" : "..." } ],
   "referenceHeaders" : [ { "name" : "...", "value" : "..." } ],
   "controlHeaders"   : [ { "name" : "...", "value" : "..." } ],
+  "initialVariables" : [ { "id" : "...", "value" : "..." }, ... ],
   "epsilon" : ...,
   "exitWithExitCode" : [true|false]
 }
@@ -241,6 +242,7 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
 * `candidateHeaders`: Optionale Header, die beim Aufruf der Kandidat-Instanz fix verwendet werden sollen. (z.B. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `referenceHeaders`: Optionale Header, die beim Aufruf der Referenz-Instanz fix verwendet werden sollen. (z.B. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `controlHeaders`: Optionale Header, die beim Aufruf der Kontroll-Instanz fix verwendet werden sollen. (z.B. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
+* `initialVariables`: Optionale Liste von Variablen, die in das TestSetup (vgl. Parameter `xmlFilePath`) übernommen werden sollen. Existierende Setup-Variablen mit gleicher `id` werden dabei für den Testlauf überschrieben. Die hier übergebenen Variablen sind in der erzeugten XML-Datei mit dem Attribut `configured` (Wert `true`) markiert.
 * `epsilon`: Optionaler Epsilon-Wert für Zahlenvergleiche, bei denen kein spezielles Epsilon im Test angegeben wurde. (default ist 0.00000001)
 * `exitWithExitCode`: Optionales Flag, ob Abweichungen durch einen Exit code ungleich 0 angezeigt werden sollen (`true`), oder nicht (`false`). (default ist `true`)
 ====
@@ -1276,6 +1278,10 @@ Für die auszulesenden Variablen kann mittels des `type`-Attributs der Datentyp 
 So ausgelesene Variablen stehen allen nachfolgenden Tests zur Verfügung.
 Die Angabe (`path`), die definiert, welche Stellen der Antwort ausgelesen werden sollen, erfolgt per JSONPath-Syntax. Variablen, die aus der Antwortnachricht gelesen werden sollen, werden natürlich nur bei JSON-Antworten berücksichtigt. Variablen, die aus den Headern ausgelesen werden sollen, werden immer berücksichtigt. Der JSONPath-Ausdruck für Header-Variablen muss mit `$.headers.` beginnen, gefolgt vom Header-Namen.
 
+[CAUTION]
+====
+ResponseDiff erlaubt nicht das Überschreiben von bereits definierten Variablen durch Antwortwerte, da dies die Nachvollziehbarkeit der Aufrufe und ihrer Parameter unnötig verkomplizieren würde. Wird ein Überschreibungsversuch erkannt, so wird eine Warnmeldung ausgegeben und der Originalwert beibehalten.
+====
 
 [CAUTION]
 ====

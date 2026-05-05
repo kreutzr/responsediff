@@ -86,9 +86,10 @@
   <xsd:complexType name="XmlVariable">
     <xsd:simpleContent>
        <xsd:extension base="xsd:string">
-           <xsd:attribute name="id"   type="xsd:string"   use="required" />
-           <xsd:attribute name="path" type="xsd:string"   use="optional" />                 <!-- Required for reading variables from a response body. Use this in Response variables block. -->
-           <xsd:attribute name="type" type="XmlValueType" use="optional" default="string"/> <!-- Required for reading variables from a response body. Use this in Response variables block. -->
+           <xsd:attribute name="id"         type="xsd:string"   use="required" />
+           <xsd:attribute name="path"       type="xsd:string"   use="optional" />                 <!-- Required for reading variables from a response body. Use this in Response variables block. -->
+           <xsd:attribute name="type"       type="XmlValueType" use="optional" default="string"/> <!-- Required for reading variables from a response body. Use this in Response variables block. -->
+           <xsd:attribute name="configured" type="xsd:boolean"  use="optional" default="false"/>  <!-- Required to indicate, that a variable was set by a passed configuration. -->
        </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>

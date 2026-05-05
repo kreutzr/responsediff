@@ -70,7 +70,8 @@ public class CloneTestSetup
 
 
     // Handle test sets
-    final XmlResponseDiffSetup xmlTestSetup = XmlFileHandler.readSetup( sourcePath, false );
+    final List< XmlVariable >  xmlVariables = null;
+    final XmlResponseDiffSetup xmlTestSetup = XmlFileHandler.readSetup( sourcePath, xmlVariables, false );
 
     final Iterator< XmlTestSet > it = xmlTestSetup.getTestSet().iterator();
     while( it.hasNext() ) {

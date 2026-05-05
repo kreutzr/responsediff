@@ -106,7 +106,7 @@ public class TestSetHandler
       );
 
     final XmlResponseDiffSetup referenceXmlSetup = referenceFilePath != null
-      ? XmlFileHandler.readSetup( referenceFilePath, false )
+      ? XmlFileHandler.readSetup( referenceFilePath, null, false )
       : null;
 
     final int structureDepth = 1;

@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.XMLConstants;
@@ -53,6 +54,7 @@ public class XmlFileHandler
   /**
    * Reads a XmlResponseDiffSetup with the the given fileName.
    * @param xmlFilePath The name (including the path) of the XML file to read. May be null.
+   * @param initialVariables Optional list of initial XmlVariable objects that shall be inserted into the root test setup. May be null.
    * @param initialize Flag, if the read XmlSetup shall be initialized (true) or not (false).
    * @return The deserialized XmlResponseDiffSetup. If xmlFilePath is null, an empty XmlResponseDiffSetup is returned.
    * @throws JAXBException
@@ -60,6 +62,7 @@ public class XmlFileHandler
    */
   static XmlResponseDiffSetup readSetup(
     final String xmlFilePath,
+    final List< XmlVariable > initialVariables,
     final boolean initialize
   )
   throws JAXBException, SAXException, ParseException
@@ -79,7 +82,7 @@ public class XmlFileHandler
       LOG.error( message );
     }
 
-    return readSetup( xmlFilePath, schema, null, initialize, "" );
+    return readSetup( xmlFilePath, schema, null, initialVariables, initialize, "" );
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +92,7 @@ public class XmlFileHandler
    * @param xmlFilePath The name (including the path) of the XML file to read. Must not be null.
    * @param schema An optional Schema to use for XSD validation. May be null.
    * @param xmlTestSetParent The XmlTestSetParent. May be null.
+   * @param initialVariables Optional list of initial XmlVariable objects that shall be inserted into the root test setup. May be null.
    * @param initialize Flag, if the read XmlSetup shall be initialized (true) or not (false).
    * @param testSetPath The path of the current TestSet. Must not be null.
    * @return The deserialized XmlResponseDiffSetup.
@@ -100,6 +104,7 @@ public class XmlFileHandler
     final String xmlFilePath,
     final Schema schema,
     final XmlTestSet xmlTestSetParent,
+    final List< XmlVariable > initialVariables,
     final boolean initialize,
     final String testSetPath
   )
@@ -129,6 +134,33 @@ public class XmlFileHandler
      catch( final Throwable ex ) {
        LOG.error( "Error reading setup file \"" + xmlFile.getAbsolutePath() + "\". ", ex );
        throw new RuntimeException( "Error reading setup file. Test run aborted.");
+     }
+
+     // Pre-initialize variables
+     if( initialVariables != null && !initialVariables.isEmpty() ) {
+       XmlVariables xmlVariables = setup.getVariables();
+       if( xmlVariables == null ) {
+         xmlVariables = new XmlVariables();
+         setup.setVariables( xmlVariables );
+       }
+
+       // Remove clashing XmlVariables defined within the read setup.
+       for( final XmlVariable xmlVariable : initialVariables ) {
+         final String id = xmlVariable.getId();
+         final Iterator< XmlVariable > it = xmlVariables.getVariable().iterator();
+         while( it.hasNext() ) {
+           final XmlVariable existingXmlVariable = it.next();
+           if( existingXmlVariable.getId().equals( id ) ) {
+             it.remove();
+           }
+         }
+       }
+
+       // Append configured XmlVariables
+       for( final XmlVariable xmlVariable : initialVariables ) {
+         xmlVariable.setConfigured( Boolean.TRUE );
+         xmlVariables.variable.add( xmlVariable );
+       }
      }
 
      if( !initialize ) {
@@ -237,6 +269,7 @@ public class XmlFileHandler
           includeFileName,
           schema,
           xmlTestSet,
+          null, // initialVariables
           initialize,
           includeFilePath
         );

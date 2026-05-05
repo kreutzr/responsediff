@@ -3,6 +3,8 @@ package com.github.kreutzr.responsediff;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -32,7 +34,8 @@ public class ResponseWithJsonHeaderTest extends TestBase
       // ==========================
       // When
       // ==========================
-      responseDiff_.setXmlFilePath( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseWithJsonHeader/setup.xml" );
+      final List< XmlVariable > initialVariables = null;
+      responseDiff_.initFromFile( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseWithJsonHeader/setup.xml", initialVariables );
       responseDiff_.runLocalTests();
 
       // ==========================

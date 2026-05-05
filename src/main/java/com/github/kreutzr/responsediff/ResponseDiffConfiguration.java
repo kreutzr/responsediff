@@ -7,32 +7,33 @@ import java.util.List;
  */
 public class ResponseDiffConfiguration
 {
-  private String            rootPath_;
-  private String            xmlFilePath_;
-  private String            reportTitle_;
-  private Boolean           useLogo_;
-  private String            testIdPattern_;
-  private String            xsltFilePath_;
-  private String            reportFileEnding_;
-  private String            reportConversionFormats_;
-  private String            storeResultPath_;
-  private boolean           reportWhiteNoise_;
-  private boolean           maskAuthorizationHeaderInCurl_ = true;
-  private boolean           reportControlResponse_ = false;
-  private String            executionContext_;
-  private String            ticketServiceUrl_; // Deprecated: Will be removed in version 2.0.
-  private String            ticketServiceUrls_;
-  private String            candidateServiceUrl_;
-  private List< XmlHeader > candidateHeaders_;
-  private String            referenceServiceUrl_;
-  private List< XmlHeader > referenceHeaders_;
-  private String            controlServiceUrl_;
-  private List< XmlHeader > controlHeaders_;
-  private long              responseTimeoutMs_ = 1000;
-  private double            epsilon_ = 0.00000001;
-  private String            referenceFilePath_;
-  private boolean           exitWithExitCode_ = true;
-  private long              startupSleepMs_ = -1;
+  private String              rootPath_;
+  private String              xmlFilePath_;
+  private String              reportTitle_;
+  private Boolean             useLogo_;
+  private String              testIdPattern_;
+  private String              xsltFilePath_;
+  private String              reportFileEnding_;
+  private String              reportConversionFormats_;
+  private String              storeResultPath_;
+  private boolean             reportWhiteNoise_;
+  private boolean             maskAuthorizationHeaderInCurl_ = true;
+  private boolean             reportControlResponse_ = false;
+  private String              executionContext_;
+  private String              ticketServiceUrl_; // Deprecated: Will be removed in version 2.0.
+  private String              ticketServiceUrls_;
+  private String              candidateServiceUrl_;
+  private List< XmlHeader >   candidateHeaders_;
+  private String              referenceServiceUrl_;
+  private List< XmlHeader >   referenceHeaders_;
+  private String              controlServiceUrl_;
+  private List< XmlHeader >   controlHeaders_;
+  private long                responseTimeoutMs_ = 1000;
+  private double              epsilon_ = 0.00000001;
+  private String              referenceFilePath_;
+  private boolean             exitWithExitCode_ = true;
+  private long                startupSleepMs_ = -1;
+  private List< XmlVariable > initialVariables_ = null;
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -404,6 +405,20 @@ public class ResponseDiffConfiguration
   public void setStartupSleepMs( final long startupSleepMs )
   {
     startupSleepMs_ = startupSleepMs;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public List< XmlVariable > getInitialVariables()
+  {
+    return initialVariables_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setInitialVariables( final List< XmlVariable > initialVariables )
+  {
+	  initialVariables_ = initialVariables;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,8 @@ public class TestSetHandlerTest
     try {
       // Given
       final String               xmlFilePath  = rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/external/0000/setup.xml";
-      final XmlResponseDiffSetup xmlTestSetup = XmlFileHandler.readSetup( xmlFilePath, true );
+      final List< XmlVariable >  xmlVariables = null;
+      final XmlResponseDiffSetup xmlTestSetup = XmlFileHandler.readSetup( xmlFilePath, xmlVariables, true );
 
       final XmlTestSet xmlTestSet = xmlTestSetup.getTestSet().get( 0 );
       final XmlTest    xmlTest    = xmlTestSet.getTest().get( 0 );
@@ -74,7 +75,8 @@ public class TestSetHandlerTest
     try {
       // Given
       final String               xmlFilePath  = rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseVariables/setup.xml";
-      final XmlResponseDiffSetup setUp        = XmlFileHandler.readSetup( xmlFilePath, true );
+      final List< XmlVariable >  xmlVariables = null;
+      final XmlResponseDiffSetup setUp        = XmlFileHandler.readSetup( xmlFilePath, xmlVariables, true );
       final XmlTestSet           xmlTestSet   = setUp.getTestSet().get( 0 );
       final XmlTest              xmlTest      = xmlTestSet.getTest().get( 0 );
       final String               serviceId    = TestSetHandler.CANDIDATE;

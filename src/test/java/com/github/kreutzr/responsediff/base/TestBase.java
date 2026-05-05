@@ -43,24 +43,25 @@ public class TestBase
   @BeforeAll
   public static void init() throws Exception
   {
-    String  xmlFilePath                    = null;
-    String  reportTitle                    = null;
-    boolean useLogo                        = false;
-    String  testIdPattern                  = null;
-    String  xsltFilePath                   = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
-    String  reportFileEnding               = "adoc";
-    String  reportConversionFormats        = ""; // html, pdf (CAUTION: This will produce a lot of reports in the test-result folder)
-    String  storeResultPath                = "./test-results/";
-    boolean reportWhiteNoise               = false;
-    boolean maskAuthorizationHeaderInCurl  = true;
-    boolean reportControlResponse          = false;
-    String  executionContextAsString       = null;
-    String  ticketServiceUrl               = null; // Deprecated: Will be removed in Version 2.0.
-    Map< String, String> ticketServiceUrls = new TreeMap<>();
-    Long    responseTimeoutMs              = 1000L;
-    Double  epsilon                        = 0.00000001;
-    String  referenceFilePath              = null;
-    Boolean exitWithExitCode               = false; // Disable for local IDE testing
+    String  xmlFilePath                     = null;
+    String  reportTitle                     = null;
+    boolean useLogo                         = false;
+    String  testIdPattern                   = null;
+    String  xsltFilePath                    = "src/main/resources/com/github/kreutzr/responsediff/reporter/report-to-adoc.xslt";
+    String  reportFileEnding                = "adoc";
+    String  reportConversionFormats         = ""; // html, pdf (CAUTION: This will produce a lot of reports in the test-result folder)
+    String  storeResultPath                 = "./test-results/";
+    boolean reportWhiteNoise                = false;
+    boolean maskAuthorizationHeaderInCurl   = true;
+    boolean reportControlResponse           = false;
+    String  executionContextAsString        = null;
+    String  ticketServiceUrl                = null; // Deprecated: Will be removed in Version 2.0.
+    Map< String, String > ticketServiceUrls = new TreeMap<>();
+    Long    responseTimeoutMs               = 1000L;
+    Double  epsilon                         = 0.00000001;
+    String  referenceFilePath               = null;
+    List < XmlVariable > initialVariables   = null;
+    Boolean exitWithExitCode                = false; // Disable for local IDE testing
 
     List< XmlHeader > candidateHeaders = new ArrayList<>();
     List< XmlHeader > referenceHeaders = new ArrayList<>();
@@ -115,6 +116,7 @@ public class TestBase
       responseTimeoutMs,
       epsilon,
       referenceFilePath,
+      initialVariables,
       exitWithExitCode
     );
 
@@ -229,6 +231,27 @@ public class TestBase
     for( final XmlVariable xmlVariable : xmlVariables.getVariable() ) {
       if( xmlVariable.getId().equals( id ) ) {
         return xmlVariable.getValue();
+      }
+    }
+    return null;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Reads the configured flag of a XmlVariable with the given id from the given XmlVariables.
+   * @param xmlVariables The XmlVariables to lookup. May be null.
+   * @param id The variable id to lookup. Must not be null.
+   * @return If a variable with matching id can be found the value of the configured-Flag is returned. Otherwise null is returned.
+   */
+  protected Boolean isConfigured( final XmlVariables xmlVariables, final String id )
+  {
+    if( xmlVariables == null ) {
+      return null;
+    }
+    for( final XmlVariable xmlVariable : xmlVariables.getVariable() ) {
+      if( xmlVariable.getId().equals( id ) ) {
+        return xmlVariable.isConfigured();
       }
     }
     return null;

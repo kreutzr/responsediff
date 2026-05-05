@@ -44,7 +44,8 @@ public class ResponseVariablesTest extends TestBase
       // ==========================
       // When
       // ==========================
-      responseDiff_.setXmlFilePath( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseVariables/setup.xml" );
+      final List< XmlVariable > initialVariables = null;
+      responseDiff_.initFromFile( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseVariables/setup.xml", initialVariables );
       responseDiff_.runLocalTests();
 
       // ==========================

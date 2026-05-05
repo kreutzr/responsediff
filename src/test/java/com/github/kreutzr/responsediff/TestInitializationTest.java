@@ -3,6 +3,9 @@ package com.github.kreutzr.responsediff;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -25,7 +28,10 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // When
       // ==========================
-      responseDiff_.setXmlFilePath( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_testinitialization/setup.xml" );
+      final XmlVariable varInit_00 = new XmlVariable(); varInit_00.setId( "INIT_00" ); varInit_00.setValue( "1" );
+      final XmlVariable varInit_01 = new XmlVariable(); varInit_01.setId( "INIT_01" ); varInit_01.setValue( "TEST" );
+      final List< XmlVariable > initialVariables = Arrays.asList( varInit_00, varInit_01 );
+      responseDiff_.initFromFile( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_testinitialization/setup.xml", initialVariables );
       responseDiff_.runLocalTests();
 
       // ==========================
@@ -85,27 +91,61 @@ public class TestInitializationTest extends TestBase
         final XmlVariables test_B_Variables        = test_B          .getVariables();
         final XmlVariables test_C_Variables        = test_C          .getVariables();
 
-        assertThat( setUp_Variables.getVariable() ).hasSize( 1 );
+        assertThat( setUp_Variables.getVariable() ).hasSize( 3 );
         assertThat( getVariableValue( setUp_Variables, "var-00" ) ).isEqualTo( "AAA" );
+        assertThat( isConfigured    ( setUp_Variables, "var-00" ) ).isEqualTo( false );
+        assertThat( getVariableValue( setUp_Variables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( setUp_Variables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( setUp_Variables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( setUp_Variables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( testSet_00_Variables.getVariable() ).hasSize( 1 );
+        assertThat( testSet_00_Variables.getVariable() ).hasSize( 3 );
         assertThat( getVariableValue( testSet_00_Variables, "var-00" ) ).isEqualTo( "AAA" );
+        assertThat( isConfigured    ( testSet_00_Variables, "var-00" ) ).isEqualTo( false );
+        assertThat( getVariableValue( testSet_00_Variables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( testSet_00_Variables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( testSet_00_Variables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( testSet_00_Variables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( testSet_00_01_Variables.getVariable() ).hasSize( 1 );
+        assertThat( testSet_00_01_Variables.getVariable() ).hasSize( 3 );
         assertThat( getVariableValue( testSet_00_01_Variables, "var-00" ) ).isEqualTo( "DDD" );
+        assertThat( isConfigured    ( testSet_00_01_Variables, "var-00" ) ).isEqualTo( false );
+        assertThat( getVariableValue( testSet_00_01_Variables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( testSet_00_01_Variables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( testSet_00_01_Variables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( testSet_00_01_Variables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( test_A_Variables.getVariable() ).hasSize( 2 );
+        assertThat( test_A_Variables.getVariable() ).hasSize( 4 );
         assertThat( getVariableValue( test_A_Variables, "var-00" ) ).isEqualTo( "BBB" );
+        assertThat( isConfigured    ( test_A_Variables, "var-00" ) ).isEqualTo( false );
         assertThat( getVariableValue( test_A_Variables, "var-01" ) ).isEqualTo( "CCC" );
+        assertThat( isConfigured    ( test_A_Variables, "var-01" ) ).isEqualTo( false );
+        assertThat( getVariableValue( test_A_Variables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( test_A_Variables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( test_A_Variables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( test_A_Variables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( test_B_Variables.getVariable() ).hasSize( 2 );
+        assertThat( test_B_Variables.getVariable() ).hasSize( 4 );
         assertThat( getVariableValue( test_B_Variables, "var-00" ) ).isEqualTo( "DDD" );
+        assertThat( isConfigured    ( test_B_Variables, "var-00" ) ).isEqualTo( false );
         assertThat( getVariableValue( test_B_Variables, "var-01" ) ).isEqualTo( "EEE" );
+        assertThat( isConfigured    ( test_B_Variables, "var-01" ) ).isEqualTo( false );
+        assertThat( getVariableValue( test_B_Variables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( test_B_Variables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( test_B_Variables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( test_B_Variables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( test_C_Variables.getVariable() ).hasSize( 3 );
+        assertThat( test_C_Variables.getVariable() ).hasSize( 5 );
         assertThat( getVariableValue( test_C_Variables, "var-00"    ) ).isEqualTo( "XXX" );
+        assertThat( isConfigured    ( test_C_Variables, "var-00" ) ).isEqualTo( false );
         assertThat( getVariableValue( test_C_Variables, "var-01"    ) ).isEqualTo( "YYY" );
+        assertThat( isConfigured    ( test_C_Variables, "var-01" ) ).isEqualTo( false );
         assertThat( getVariableValue( test_C_Variables, "var-inner" ) ).isEqualTo( "${var-00}" );
+        assertThat( isConfigured    ( test_C_Variables, "var-inner" ) ).isEqualTo( false );
+        assertThat( getVariableValue( test_C_Variables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( test_C_Variables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( test_C_Variables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( test_C_Variables, "INIT_01" ) ).isEqualTo( true );
       }
 
       // -----------------------------------------------------------------------------------------------------
@@ -116,19 +156,39 @@ public class TestInitializationTest extends TestBase
         final XmlVariables test_A_RequestVariables         = test_A          .getRequest().getVariables();
         final XmlVariables test_B_RequestVariables         = test_B          .getRequest().getVariables();
 
-        assertThat( testSet_00_RequestVariables.getVariable() ).hasSize( 1 );
+        assertThat( testSet_00_RequestVariables.getVariable() ).hasSize( 3 );
         assertThat( getVariableValue( testSet_00_RequestVariables, "var-00" ) ).isEqualTo( "AAA" );
+        assertThat( isConfigured    ( testSet_00_RequestVariables, "var-00" ) ).isEqualTo( false );
+        assertThat( getVariableValue( testSet_00_RequestVariables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( getVariableValue( testSet_00_RequestVariables, "INIT_01" ) ).isEqualTo( "TEST" );
 
-        assertThat( testSet_00_01_RequestVariables.getVariable() ).hasSize( 1 );
+        assertThat( testSet_00_01_RequestVariables.getVariable() ).hasSize( 3 );
         assertThat( getVariableValue( testSet_00_01_RequestVariables, "var-00" ) ).isEqualTo( "DDD" );
+        assertThat( isConfigured    ( testSet_00_01_RequestVariables, "var-00" ) ).isEqualTo( false );
+        assertThat( getVariableValue( testSet_00_01_RequestVariables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( testSet_00_01_RequestVariables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( testSet_00_01_RequestVariables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( testSet_00_01_RequestVariables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( test_A_RequestVariables.getVariable() ).hasSize( 2 );
+        assertThat( test_A_RequestVariables.getVariable() ).hasSize( 4 );
         assertThat( getVariableValue( test_A_RequestVariables, "var-00" ) ).isEqualTo( "BBB" );
+        assertThat( isConfigured    ( test_A_RequestVariables, "var-00" ) ).isEqualTo( false );
         assertThat( getVariableValue( test_A_RequestVariables, "var-01" ) ).isEqualTo( "CCC" );
+        assertThat( isConfigured    ( test_A_RequestVariables, "var-01" ) ).isEqualTo( false );
+        assertThat( getVariableValue( test_A_RequestVariables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( test_A_RequestVariables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( test_A_RequestVariables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( test_A_RequestVariables, "INIT_01" ) ).isEqualTo( true );
 
-        assertThat( test_B_RequestVariables.getVariable() ).hasSize( 2 );
+        assertThat( test_B_RequestVariables.getVariable() ).hasSize( 4 );
         assertThat( getVariableValue( test_B_RequestVariables, "var-00" ) ).isEqualTo( "FFF" );
+        assertThat( isConfigured    ( test_B_RequestVariables, "var-00" ) ).isEqualTo( false );
         assertThat( getVariableValue( test_B_RequestVariables, "var-01" ) ).isEqualTo( "EEE" );
+        assertThat( isConfigured    ( test_B_RequestVariables, "var-01" ) ).isEqualTo( false );
+        assertThat( getVariableValue( test_B_RequestVariables, "INIT_00" ) ).isEqualTo( "1" );
+        assertThat( isConfigured    ( test_B_RequestVariables, "INIT_00" ) ).isEqualTo( true );
+        assertThat( getVariableValue( test_B_RequestVariables, "INIT_01" ) ).isEqualTo( "TEST" );
+        assertThat( isConfigured    ( test_B_RequestVariables, "INIT_01" ) ).isEqualTo( true );
       }
 
       // -----------------------------------------------------------------------------------------------------
@@ -141,15 +201,19 @@ public class TestInitializationTest extends TestBase
 
         assertThat( testSet_00_ResponseVariables.getVariable() ).hasSize( 1 );
         assertThat( getVariableValue( testSet_00_ResponseVariables, "var-99" ) ).isEqualTo( "XXX" );
+        assertThat( isConfigured    ( testSet_00_ResponseVariables, "var-99" ) ).isEqualTo( false );
 
         assertThat( testSet_00_01_ResponseVariables.getVariable() ).hasSize( 1 );
         assertThat( getVariableValue( testSet_00_01_ResponseVariables, "var-99" ) ).isEqualTo( "XXX" );
+        assertThat( isConfigured    ( testSet_00_01_ResponseVariables, "var-99" ) ).isEqualTo( false );
 
         assertThat( test_A_ResponseVariables.getVariable() ).hasSize( 1 );
         assertThat( getVariableValue( test_A_ResponseVariables, "var-99" ) ).isEqualTo( "XXX" );
+        assertThat( isConfigured    ( test_A_ResponseVariables, "var-99" ) ).isEqualTo( false );
 
         assertThat( test_B_ResponseVariables.getVariable() ).hasSize( 1 );
         assertThat( getVariableValue( test_B_ResponseVariables, "var-99" ) ).isEqualTo( "XXX" );
+        assertThat( isConfigured    ( test_B_ResponseVariables, "var-99" ) ).isEqualTo( false );
       }
     }
   }
@@ -170,7 +234,8 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // When
       // ==========================
-      responseDiff_.setXmlFilePath( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseInheritance/setup.xml" );
+      final List< XmlVariable > initialVariables = null;
+      responseDiff_.initFromFile( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseInheritance/setup.xml", initialVariables );
       responseDiff_.runLocalTests();
 
       // ==========================
@@ -234,7 +299,8 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // When
       // ==========================
-      responseDiff_.setXmlFilePath( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseInheritance/setup.xml" );
+      final List< XmlVariable > initialVariables = null;
+      responseDiff_.initFromFile( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseInheritance/setup.xml", initialVariables );
       responseDiff_.runLocalTests();
 
       // ==========================
@@ -297,7 +363,8 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // When
       // ==========================
-      responseDiff_.setXmlFilePath( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseInheritance/setup.xml" );
+      final List< XmlVariable > initialVariables = null;
+      responseDiff_.initFromFile( rootPath_ + "src/test/resources/com/github/kreutzr/responsediff/test_responseInheritance/setup.xml", initialVariables );
       responseDiff_.runLocalTests();
 
       // ==========================

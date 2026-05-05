@@ -91,6 +91,7 @@ public class ResponseDiff
     * @param timeoutMs The timeout in milliseconds to receive a HTTP response.
     * @param epsilon The epsilon for decimal comparison. Must not be null.
     * @param referenceFilePath Optional filename that points to a XML report that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
+    * @param initialVariables Optional list of initial XmlVariable objects that shall be inserted into the root test setup. May be null.
     * @param exitWithExitCode Flag, if an exit code shall be returned or not. (Pass false for local development.)
     * @throws Exception If an error occurs during the initialization, an Exception is thrown
     */
@@ -119,6 +120,7 @@ public class ResponseDiff
      final long                  timeoutMs,
      final double                epsilon,
      final String                referenceFilePath,
+     final List< XmlVariable >   initialVariables,
      final boolean               exitWithExitCode
    )
    throws Exception
@@ -151,7 +153,7 @@ public class ResponseDiff
 
      xmlTestSetup_                  = null;
      filterRegistry_                = null;
-     setXmlFilePath( xmlFilePath );
+     initFromFile( xmlFilePath, initialVariables ); // This will set xmlTestSetup_ and filterRegistry_
 
      if( candidateServiceUrl_ == null ) {
        throw new RuntimeException( "A candidate server url is required." );
@@ -228,15 +230,17 @@ public class ResponseDiff
      }
      return map;
    }
+
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
    /**
-    * Allows to change the XML test setup.
-    * <br/><b>NOTE:</b> This (re-)sets xmlTestSetup_ as a <b>side effect</b>!
+    * Allows to (re-)initialize the XML test setup.
+    * <br/><b>NOTE:</b> This (re-)sets xmlTestSetup_ and filterRegistry_ as a <b>side effect</b>!
     * @param xmlFilePath The configuration file (XML) that describes the test setup.
+    * @param initialVariables Optional list of initial XmlVariable objects that shall be inserted into the root test setup. May be null.
     * @throws Exception
     */
-   public void setXmlFilePath( final String xmlFilePath ) throws Exception
+   public void initFromFile( final String xmlFilePath, final List< XmlVariable > initialVariables ) throws Exception
    {
      String testSetupPath = null;
      if( xmlFilePath != null ) {                                    // xmlFilePath = "C:\develop\responseDiff\myTest\setup.xml"
@@ -254,7 +258,7 @@ public class ResponseDiff
        }
      }
 
-     xmlTestSetup_   = XmlFileHandler.readSetup( xmlFilePath, true );
+     xmlTestSetup_   = XmlFileHandler.readSetup( xmlFilePath, initialVariables, true );
      filterRegistry_ = FilterRegistryHelper.getFilterRegistry( xmlTestSetup_, testSetupPath );
 
      setRuntimeInformation( xmlTestSetup_ );
@@ -285,6 +289,11 @@ public class ResponseDiff
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   /**
+    * Inserts the runtime information into the given setup.
+    * @param xmlTestSetup The setup to use. Must not be null.
+    * @throws IOException
+    */
    private void setRuntimeInformation( final XmlResponseDiffSetup xmlTestSetup )
    throws IOException
    {
@@ -490,6 +499,7 @@ public class ResponseDiff
      String   referenceFilePath             = null;
      Boolean  exitWithExitCode              = true; // Disable for local IDE testing
      long     startupSleepMs                = -1;
+     List< XmlVariable> initialVariables    = null;
 
      // Read parameters from configuration
      rootPath                      = Converter.asString ( config.getRootPath(),                      rootPath );
@@ -515,6 +525,7 @@ public class ResponseDiff
      referenceFilePath             = Converter.asString ( config.getReferenceFilePath(),             referenceFilePath );
      exitWithExitCode              = Converter.asBoolean( config.isExitWithExitCode(),               exitWithExitCode );
      startupSleepMs                = Converter.asLong   ( config.getStartupSleepMs(),                startupSleepMs );
+     initialVariables              = config.getInitialVariables();
 
      Map< String, String > ticketServiceUrls = new TreeMap<>();
      if( ticketServiceUrlsAsString != null ) {
@@ -596,6 +607,7 @@ public class ResponseDiff
          responseTimeoutMs,
          epsilon,
          referenceFilePath != null && !referenceFilePath.isEmpty() ? ( rootPath + referenceFilePath ) : null,
+         initialVariables,
          exitWithExitCode
       );
 
