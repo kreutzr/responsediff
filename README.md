@@ -11,6 +11,9 @@ Values received in a response may be read via **JSONPath** and then used as **pa
 The results of the performed tests are compiled together with **statistics** and their **curl** commands into a **report** (Asciidoc and PDF by default).
 The entire raw data (variables, requests and respones) is made available for **further inspection and debugging as XML**.
 
+
+If the comparison mode is disabled, ResponseDiff can also be used to process successive server requests. Parameters defined in a script can be passed as variables, making it very flexible. ResponseDiff can therefore be used as a simple and cost-effective alternative to commercial, UI-based tools like Postman or Bruno.
+
 **Manuals** are currently provided in [English](doc/manual_en.adoc) and [German](doc/manual_de.adoc).
 
 The **release-notes** can be found [here](doc/release-notes.adoc).

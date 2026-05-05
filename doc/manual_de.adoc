@@ -24,6 +24,10 @@ Zusätzlich unterstützt ResponseDiff die Übernahme bestehender Tests bei Einf�
 
 Die Software kann lokal aber auch in einer Build-Pipeline eingesetzt werden. Die beim Betrieb erfassten Abweichungen werden in einem Report zusammengestellt, der sowohl zur visuellen oder technischen Analyse als auch zu Diagnosezwecken genutzt werden kann. Das Ausgabeformat des Reports ist insofern frei wählbar, als dass der technisch erzeugte XML-Report durch Angabe einer Transformationsdatei (XSLT) automatisch in das gewünschte Zielformat gewandelt wird.
 
+**Skript-basierte HTTP-Workflows**
+
+Wird der Vergleichsmodus deaktiviert, so kann ResponseDiff auch zur Abarbeitung von aufeinander aufbauenden Server-Anfragen verwendet werden. In einem Skript definierter Parameter können dabei als Variablen übergeben werdden, was die Verwendung sehr flexibel macht. ResponseDiff kann somit als einfache und kostengünstige Alternative zu kommerziellen, UI-basierten Werkzeugen wie Postman oder Bruno eingesetzt werden. Weitere Informationen zu diesem Modus finden sich im Abschnitt <<Konfiguration>> unter den Parametern `initialVariables` und `compareResponses`.
+
 == Beispiel-Szenario
 Im Folgenden nennen wir unsere zu überprüfende Software "MyTool". Wir nehmen an, dass MyTool bereits in Version 1.0.0 ausgeliefert wurde.
 Für die Nachfolgeversion 1.1.0 wurde
@@ -210,8 +214,9 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
   "candidateHeaders" : [ { "name" : "...", "value" : "..." } ],
   "referenceHeaders" : [ { "name" : "...", "value" : "..." } ],
   "controlHeaders"   : [ { "name" : "...", "value" : "..." } ],
-  "initialVariables" : [ { "id" : "...", "value" : "..." }, ... ],
   "epsilon" : ...,
+  "initialVariables" : [ { "id" : "...", "value" : "..." }, ... ],
+  "compareResponses" : [true|false],
   "exitWithExitCode" : [true|false]
 }
 ----
@@ -242,8 +247,9 @@ Es empfieht sich, das Setzen der Konfigurationsparameter innerhalb eines kleinen
 * `candidateHeaders`: Optionale Header, die beim Aufruf der Kandidat-Instanz fix verwendet werden sollen. (z.B. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `referenceHeaders`: Optionale Header, die beim Aufruf der Referenz-Instanz fix verwendet werden sollen. (z.B. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `controlHeaders`: Optionale Header, die beim Aufruf der Kontroll-Instanz fix verwendet werden sollen. (z.B. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
-* `initialVariables`: Optionale Liste von Variablen, die in das TestSetup (vgl. Parameter `xmlFilePath`) übernommen werden sollen. Existierende Setup-Variablen mit gleicher `id` werden dabei für den Testlauf überschrieben. Die hier übergebenen Variablen sind in der erzeugten XML-Datei mit dem Attribut `configured` (Wert `true`) markiert.
 * `epsilon`: Optionaler Epsilon-Wert für Zahlenvergleiche, bei denen kein spezielles Epsilon im Test angegeben wurde. (default ist 0.00000001)
+* `initialVariables`: Optionale Liste von Variablen, die in das TestSetup (vgl. Parameter `xmlFilePath`) übernommen werden sollen. Existierende Setup-Variablen mit gleicher `id` werden dabei für den Testlauf überschrieben. Die hier übergebenen Variablen sind in der erzeugten XML-Datei mit dem Attribut `configured` (Wert `true`) markiert.
+* `compareResponses`: Optionales Flag, ob Server-Antworten vergleichen werden sollen (`true`) oder nicht (`false`). (default ist `true`)
 * `exitWithExitCode`: Optionales Flag, ob Abweichungen durch einen Exit code ungleich 0 angezeigt werden sollen (`true`), oder nicht (`false`). (default ist `true`)
 ====
 

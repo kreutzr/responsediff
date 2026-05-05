@@ -34,6 +34,7 @@ public class ResponseDiffConfiguration
   private boolean             exitWithExitCode_ = true;
   private long                startupSleepMs_ = -1;
   private List< XmlVariable > initialVariables_ = null;
+  private boolean             compareResponses_ = true;
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -419,6 +420,20 @@ public class ResponseDiffConfiguration
   public void setInitialVariables( final List< XmlVariable > initialVariables )
   {
 	  initialVariables_ = initialVariables;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public boolean isCompareResponses()
+  {
+    return compareResponses_;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public void setCompareResponses( final boolean compareResponses )
+  {
+	  compareResponses_ = compareResponses;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -59,8 +59,9 @@ public class TestBase
     Map< String, String > ticketServiceUrls = new TreeMap<>();
     Long    responseTimeoutMs               = 1000L;
     Double  epsilon                         = 0.00000001;
-    String  referenceFilePath               = null;
     List < XmlVariable > initialVariables   = null;
+    boolean compareResponses                = true;
+    String  referenceFilePath               = null;
     Boolean exitWithExitCode                = false; // Disable for local IDE testing
 
     List< XmlHeader > candidateHeaders = new ArrayList<>();
@@ -115,8 +116,9 @@ public class TestBase
       controlHeaders,
       responseTimeoutMs,
       epsilon,
-      referenceFilePath,
       initialVariables,
+      compareResponses,
+      referenceFilePath,
       exitWithExitCode
     );
 

@@ -24,6 +24,10 @@ In addition, ResponseDiff supports the adoption of existing tests when introduci
 
 The software can be used locally or in a build pipeline. The deviations recorded during operation are compiled in a report, which can be used both for visual or technical analysis and for diagnostic purposes. The output format of the report is freely selectable, as the technically generated XML report can be automatically transformed into the desired target format by specifying a transformation file (XSLT).
 
+**Script-Based HTTP Workflows**
+
+If the comparison mode is disabled, ResponseDiff can also be used to process successive server requests. Parameters defined in a script can be passed as variables, making it very flexible. ResponseDiff can therefore be used as a simple and cost-effective alternative to commercial, UI-based tools like Postman or Bruno. Further information about this mode can be found in the <<Configuration>> section under the parameters `initialVariables` and `compareResponses`.
+
 == Example Scenario
 In the following, we refer to our software to be tested as "MyTool". We assume that MyTool was already released in version 1.0.0.
 For the successor version 1.1.0, the following changes were made:
@@ -210,8 +214,9 @@ It is recommended to set the configuration parameters within a small script. A s
   "candidateHeaders" : [ { "name" : "...", "value" : "..." }, ... ],
   "referenceHeaders" : [ { "name" : "...", "value" : "..." }, ... ],
   "controlHeaders"   : [ { "name" : "...", "value" : "..." }, ... ],
-  "initialVariables" : [ { "id" : "...", "value" : "..." }, ... ],
   "epsilon" : ...,
+  "initialVariables" : [ { "id" : "...", "value" : "..." }, ... ],
+  "compareResponses" : [true|false],
   "exitWithExitCode" : [true|false]
 }
 ----
@@ -219,7 +224,6 @@ It is recommended to set the configuration parameters within a small script. A s
 
 [NOTE]
 ====
-
 * `rootPath`: Optional base directory for subsequent relative path specifications (e.g., "C:/home/rkreutz/work/develop/test/responsediff/"). If this parameter is omitted, the execution directory is assumed.
 * `candidateServiceUrl`: Mandatory URL of the candidate instance (e.g. "http://localhost:10500/my-tool")
 * `referenceServiceUrl`: Optional URL of the reference instance (e.g. "http://localhost:10510/my-tool")
@@ -243,9 +247,9 @@ It is recommended to set the configuration parameters within a small script. A s
 * `candidateHeaders`: Optional headers that should be used when calling the candidate instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `referenceHeaders`: Optional headers that should be used when calling the reference instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
 * `controlHeaders`: Optional headers that should be used when calling the control instance. (e.g. `[ { "name" : "Authorization", "value" : "bearer ..." } ]`)
-
-* `initialVariables`: Optional list of variables to be included in the test setup (see parameter `xmlFilePath`). Existing setup variables with the same `id` will be overwritten for the test run. The variables passed here are marked with the attribute `configured` (value `true`) in the generated XML file.
 * `epsilon`: Optional epsilon value for numerical comparisons where no specific epsilon was specified in the test. (default is 0.00000001)
+* `initialVariables`: Optional list of variables to be included in the test setup (see parameter `xmlFilePath`). Existing setup variables with the same `id` will be overwritten for the test run. The variables passed here are marked with the attribute `configured` (value `true`) in the generated XML file.
+* `compareResponses`: Optional flag to determine whether server responses should be compared (`true`) or not (`false`). (default is `true`)
 * `exitWithExitCode`: Optional flag whether deviations with an exit code other than 0 should be displayed (`true`), or not (`false`). (default is `true`)
 ====
 

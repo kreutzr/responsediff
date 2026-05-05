@@ -53,9 +53,9 @@ public class ResponseDiff
    private final Map< String, String >     ticketServiceUrls_;
    private final String                    candidateServiceUrl_;
    private final List< XmlHeader >         candidateHeaders_;
-   private final String                    referenceServiceUrl_;
+   private       String                    referenceServiceUrl_;
    private final List< XmlHeader >         referenceHeaders_;
-   private final String                    controlServiceUrl_;
+   private       String                    controlServiceUrl_;
    private final List< XmlHeader >         controlHeaders_;
    private final long                      timeoutMs_;
    private final double                    epsilon_;
@@ -90,8 +90,9 @@ public class ResponseDiff
     * @param controlHeaders   A XmlHeaders object. May be null. This is required for e.g. passing server individual authentication headers.
     * @param timeoutMs The timeout in milliseconds to receive a HTTP response.
     * @param epsilon The epsilon for decimal comparison. Must not be null.
-    * @param referenceFilePath Optional filename that points to a XML report that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
     * @param initialVariables Optional list of initial XmlVariable objects that shall be inserted into the root test setup. May be null.
+    * @param compareResponses Flag, if responses shall be compared (true) or not (false).
+    * @param referenceFilePath Optional filename that points to a XML report that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
     * @param exitWithExitCode Flag, if an exit code shall be returned or not. (Pass false for local development.)
     * @throws Exception If an error occurs during the initialization, an Exception is thrown
     */
@@ -119,8 +120,9 @@ public class ResponseDiff
      final List< XmlHeader >     controlHeaders,
      final long                  timeoutMs,
      final double                epsilon,
-     final String                referenceFilePath,
      final List< XmlVariable >   initialVariables,
+     final boolean               compareResponses,
+     final String                referenceFilePath,
      final boolean               exitWithExitCode
    )
    throws Exception
@@ -158,17 +160,25 @@ public class ResponseDiff
      if( candidateServiceUrl_ == null ) {
        throw new RuntimeException( "A candidate server url is required." );
      }
-     if( referenceServiceUrl_ == null ) {
-       if( referenceFilePath_ == null ) {
-         throw new RuntimeException( "Either a reference server url or a reference file path is required ." );
+     if( compareResponses ) {
+       // Validate mandatory parameters
+       if( referenceServiceUrl_ == null ) {
+         if( referenceFilePath_ == null ) {
+           throw new RuntimeException( "Either a reference server url or a reference file path is required ." );
+         }
+       }
+       else if( referenceServiceUrl_.equalsIgnoreCase( candidateServiceUrl_ ) ) {
+         LOG.warn( "The candidate and reference server are identical. It is most probably a misconfiguration." );
+       }
+       if( controlServiceUrl_ != null
+           && ( candidateServiceUrl_.equalsIgnoreCase( controlServiceUrl_ ) || referenceServiceUrl_.equalsIgnoreCase( controlServiceUrl_ ) ) ) {
+         throw new RuntimeException( "The control server url must differ from the reference and candidate server urls." );
        }
      }
-     else if( referenceServiceUrl_.equalsIgnoreCase( candidateServiceUrl_ ) ) {
-       LOG.warn( "The candidate and reference server are identical. It is most probably a misconfiguration." );
-     }
-     if( controlServiceUrl_ != null
-         && ( candidateServiceUrl_.equalsIgnoreCase( controlServiceUrl_ ) || referenceServiceUrl_.equalsIgnoreCase( controlServiceUrl_ ) ) ) {
-       throw new RuntimeException( "The control server url must differ from the reference and candidate server urls." );
+     else {
+       // We ignore reference and control service URLs becaue we don't compare responses.
+	   referenceServiceUrl_ = null;
+	   controlServiceUrl_   = null;
      }
    }
 
@@ -496,10 +506,11 @@ public class ResponseDiff
      String   controlServiceUrl             = null;
      Long     responseTimeoutMs             = 1000L;
      Double   epsilon                       = Constants.EPSILON;
+     List< XmlVariable> initialVariables    = null;
+     boolean  compareResponses              = true;
      String   referenceFilePath             = null;
      Boolean  exitWithExitCode              = true; // Disable for local IDE testing
      long     startupSleepMs                = -1;
-     List< XmlVariable> initialVariables    = null;
 
      // Read parameters from configuration
      rootPath                      = Converter.asString ( config.getRootPath(),                      rootPath );
@@ -522,10 +533,12 @@ public class ResponseDiff
      controlServiceUrl             = Converter.asString ( config.getControlServiceUrl(),             controlServiceUrl );
      responseTimeoutMs             = Converter.asLong   ( config.getResponseTimeoutMs(),             responseTimeoutMs );
      epsilon                       = Converter.asDouble ( config.getEpsilon(),                       epsilon );
+     initialVariables              = config.getInitialVariables();
+     compareResponses              = Converter.asBoolean( config.isCompareResponses(),               compareResponses );
      referenceFilePath             = Converter.asString ( config.getReferenceFilePath(),             referenceFilePath );
      exitWithExitCode              = Converter.asBoolean( config.isExitWithExitCode(),               exitWithExitCode );
      startupSleepMs                = Converter.asLong   ( config.getStartupSleepMs(),                startupSleepMs );
-     initialVariables              = config.getInitialVariables();
+
 
      Map< String, String > ticketServiceUrls = new TreeMap<>();
      if( ticketServiceUrlsAsString != null ) {
@@ -606,8 +619,9 @@ public class ResponseDiff
          controlHeaders,
          responseTimeoutMs,
          epsilon,
-         referenceFilePath != null && !referenceFilePath.isEmpty() ? ( rootPath + referenceFilePath ) : null,
          initialVariables,
+         compareResponses,
+         referenceFilePath != null && !referenceFilePath.isEmpty() ? ( rootPath + referenceFilePath ) : null,
          exitWithExitCode
       );
 
