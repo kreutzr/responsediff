@@ -74,11 +74,11 @@
     <main.basedir>${project.basedir}</main.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Versions (latest check: 2026-05-04)-->
+    <!-- Versions (latest check: 2026-05-08)-->
     <version.asciidoctorj>3.0.1</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.4.14.0 ! Upgrading to jruby 10 would require Java 21 (see "https://github.com/asciidoctor/asciidoctorj/pull/1308"). -->
     <version.asciidoctorj-pdf>2.3.23</version.asciidoctorj-pdf>
     <version.assertj>3.27.7</version.assertj>
-    <version.glassfish.jaxb-runtime>4.0.7</version.glassfish.jaxb-runtime>
+    <version.glassfish.jaxb-runtime>4.0.8</version.glassfish.jaxb-runtime>
     <version.jackson-databind>2.21.3</version.jackson-databind>
     <version.jakarta.xml.bind-api>4.0.5</version.jakarta.xml.bind-api>
     <version.jsonpath>3.0.0</version.jsonpath>

@@ -22,6 +22,7 @@ This is a regular maintenance release.
 === Bug fixes
 
 * Upgrade "dependency-check-maven" plugin from 12.2.1 to 12.2.2
+* Upgrade glassfish.jaxb-runtime from 4.0.7 to 4.0.8
 * ...
 
 === External libraries
