@@ -21,7 +21,7 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // Given
       // ==========================
-      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
+      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ ); // NOTE: We accept "Path for expected value not found" messages (because we do pass {} instead of a proper response body) in the log and concentrate on the inheritance!
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 
@@ -227,7 +227,7 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // Given
       // ==========================
-      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
+      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ ); // NOTE: We accept "Path for expected value not found" messages (because we do pass {} instead of a proper response body) in the log and concentrate on the inheritance!
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 
@@ -292,7 +292,7 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // Given
       // ==========================
-      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
+      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ ); // NOTE: We accept "Path for expected value not found" messages (because we do pass {} instead of a proper response body) in the log and concentrate on the inheritance!
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 
@@ -356,7 +356,7 @@ public class TestInitializationTest extends TestBase
       // ==========================
       // Given
       // ==========================
-      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
+      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ ); // NOTE: We accept "Path for expected value not found" messages (because we do pass {} instead of a proper response body) in the log and concentrate on the inheritance!
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 //      initResponseMock( httpHandler, null, 200, "{}", xmlHeaders_ );
 

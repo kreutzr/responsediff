@@ -252,6 +252,7 @@ public class ResponseDiff
     */
    public void initFromFile( final String xmlFilePath, final List< XmlVariable > initialVariables ) throws Exception
    {
+     //LOG.info( "Initializing from file: " + xmlFilePath );
      String testSetupPath = null;
      if( xmlFilePath != null ) {                                    // xmlFilePath = "C:\develop\responseDiff\myTest\setup.xml"
        final Path parentPath = Path.of( xmlFilePath ).getParent();  // parentPath  = "C:\develop\responseDiff\myTest"
