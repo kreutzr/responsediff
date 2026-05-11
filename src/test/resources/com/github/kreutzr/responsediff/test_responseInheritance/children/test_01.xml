@@ -3,15 +3,16 @@
 
   <testSet id="TestSet 00-01" report="all">
     <description>Test set 00-01</description>
+    <request endpoint="my-endpoint" />
 
-	  <response>
+    <response>
       <filters>
         <filter id="zzz"/>
       </filters>
-	    <ignore>
-	      <header>ZZZ</header>
-	      <explanation>ZZZ</explanation>
-	    </ignore>
+      <ignore>
+        <header>ZZZ</header>
+        <explanation>ZZZ</explanation>
+      </ignore>
       <expected>
           <httpStatus>203</httpStatus>
           <headers>
@@ -22,13 +23,13 @@
              <value path="NNN" >NNN</value>
           </values>
         </expected>
-	  </response>
+    </response>
 
     <test id="Test C">
       <response>
-	      <filters>
-	        <filter id="ccc"/>
-	      </filters>
+        <filters>
+          <filter id="ccc"/>
+        </filters>
         <ignore>
           <header>CCC</header>
           <explanation>CCC</explanation>

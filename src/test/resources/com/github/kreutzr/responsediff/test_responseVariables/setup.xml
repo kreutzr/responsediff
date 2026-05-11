@@ -3,7 +3,6 @@
   <description>Test that response variables are handled server instance specific</description>
 
   <testSet id="Response Variables" order="strict" report="all">
-
     <response>
       <expected>
         <headers>
