@@ -23,6 +23,7 @@ This is a regular maintenance release.
 
 * Upgrade "dependency-check-maven" plugin from 12.2.1 to 12.2.2
 * Upgrade glassfish.jaxb-runtime from 4.0.7 to 4.0.8
+* Upgrade log4j from 2.25.4 to 2.26.0
 * ...
 
 === External libraries
