@@ -19,7 +19,7 @@ Therefore the latest release is supported (only) - which is by now writing versi
 
 ## Avoiding vulnerabilities
 
-Every 2 - 4 week I check all project dependencies for updates and apply any update found as long as it does not introduce vulnerabilities by itself.
+At least every 2 weeks (actually it is more twice a week) I check all project dependencies for updates and apply any update found as long as it does not introduce vulnerabilities by itself.
 Special care is being taken if an entry exists in the file "owasp_cve_security_suppress.xml".
 If an update introduces a new vulnerability it is only applied if it comes with a CVE score less than a previous one.
 
