@@ -23,7 +23,7 @@ This is a regular maintenance release.
 
 * Upgrade "dependency-check-maven" plugin from 12.2.1 to 12.2.2
 * Upgrade glassfish.jaxb-runtime from 4.0.7 to 4.0.9
-* Upgrade jackson-databind from 2.21.3 to 2.21.4
+* Upgrade jackson-databind from 2.21.3 to 2.22.0
 * Upgrade junit-jupiter from 6.0.3 to 6.1.0
 * Upgrade log4j from 2.25.4 to 2.26.0
 * Upgrade slf4j from 2.0.17 to 2.0.18
@@ -55,9 +55,9 @@ This is a regular maintenance release.
 
 * Upgrade "asciidoctor-maven-plugin" plugin from 2.2.6 to 3.2.0
 * Upgrade "dependency-check-maven" plugin from 12.2.0 to 12.2.1
-* Upgrade "jackson-databind" from 2.21.2 to 2.21.3
 * Upgrade "jaxb2-maven-plugin" plugin from 3.3.0 to 4.1.0
 * Upgrade "license-maven-plugin" plugin from 4.6 to 5.0.0
+* Upgrade jackson-databind from 2.21.2 to 2.21.3
 * Upgrade log4j from 2.25.3 to 2.25.4
 
 
