@@ -176,7 +176,7 @@ public class ResponseDiff
        }
      }
      else {
-       // We ignore reference and control service URLs becaue we don't compare responses.
+       // We ignore reference and control service URLs because we don't compare responses.
 	   referenceServiceUrl_ = null;
 	   controlServiceUrl_   = null;
      }
