@@ -26,7 +26,7 @@ The software can be used locally or in a build pipeline. The deviations recorded
 
 **Script-Based HTTP Workflows**
 
-If the comparison mode is disabled, ResponseDiff can also be used to process successive server requests. Parameters defined in a script can be passed as variables, making it very flexible. ResponseDiff can therefore be used as a simple and cost-effective alternative to commercial, UI-based tools like Postman or Bruno. Further information about this mode can be found in the <<Configuration>> section under the parameters `initialVariables` and `compareResponses`.
+If the comparison mode is disabled, ResponseDiff and its setup can also be used to process successive server requests. Parameters defined in a script may be passed as variables, making the use very flexible. ResponseDiff can therefore be used as a simple and cost-effective alternative to commercial, UI-based tools like Postman or Bruno. Further information about this mode can be found in the <<Configuration>> section under the parameters `initialVariables` and `compareResponses`.
 
 == Example Scenario
 In the following, we refer to our software to be tested as "MyTool". We assume that MyTool was already released in version 1.0.0.

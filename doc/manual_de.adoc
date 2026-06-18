@@ -26,7 +26,7 @@ Die Software kann lokal aber auch in einer Build-Pipeline eingesetzt werden. Die
 
 **Skript-basierte HTTP-Workflows**
 
-Wird der Vergleichsmodus deaktiviert, so kann ResponseDiff auch zur Abarbeitung von aufeinander aufbauenden Server-Anfragen verwendet werden. In einem Skript definierter Parameter können dabei als Variablen übergeben werdden, was die Verwendung sehr flexibel macht. ResponseDiff kann somit als einfache und kostengünstige Alternative zu kommerziellen, UI-basierten Werkzeugen wie Postman oder Bruno eingesetzt werden. Weitere Informationen zu diesem Modus finden sich im Abschnitt <<Konfiguration>> unter den Parametern `initialVariables` und `compareResponses`.
+Wird der Vergleichsmodus deaktiviert, so kann ResponseDiff mit seinem Setup auch zur Abarbeitung von aufeinander aufbauenden Server-Anfragen verwendet werden. In einem Skript definierter Parameter können dabei optional als Variablen übergeben werden, was die Verwendung sehr flexibel macht. ResponseDiff kann somit als einfache und kostengünstige Alternative zu kommerziellen, UI-basierten Werkzeugen wie Postman oder Bruno eingesetzt werden. Weitere Informationen zu diesem Modus finden sich im Abschnitt <<Konfiguration>> unter den Parametern `initialVariables` und `compareResponses`.
 
 == Beispiel-Szenario
 Im Folgenden nennen wir unsere zu überprüfende Software "MyTool". Wir nehmen an, dass MyTool bereits in Version 1.0.0 ausgeliefert wurde.
