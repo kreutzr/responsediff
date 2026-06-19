@@ -1,0 +1,10 @@
+# ==============================================================================================
+# Generates a JaCoCo code coverage report for ResponseDiff.
+#
+# SYNTAX:
+# ./start-jacoco
+#
+# The HTML report is written to: target/site/jacoco/index.html
+# ==============================================================================================
+
+mvn org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report
