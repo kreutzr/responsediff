@@ -22,6 +22,8 @@ This is a regular maintenance release.
 === Bug fixes
 
 * Upgrade "dependency-check-maven" plugin from 12.2.1 to 12.2.2
+* Upgrade "maven-dependency-plugin" plugin from 3.10.0 to 3.11.0
+* Upgrade "maven-surefire-plugin" plugin from 3.5.5 to 3.5.6
 * Upgrade glassfish.jaxb-runtime from 4.0.7 to 4.0.9
 * Upgrade jackson-databind from 2.21.3 to 2.22.0
 * Upgrade junit-jupiter from 6.0.3 to 6.1.0

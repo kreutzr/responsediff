@@ -477,7 +477,7 @@
         <!-- Creates runtime variables of the format "groupId:artifactId:type" by reading all dependencies. Required for <argLine> configuration in maven-surefire-plugin (below). -->
         <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.11.0</version>
           <executions>
             <execution>
               <goals>
@@ -490,7 +490,7 @@
         <!-- Separates the unit tests from the integration tests. -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
         <configuration>
           <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
         </configuration>
