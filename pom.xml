@@ -49,7 +49,7 @@
   </distributionManagement>
 
   <scm>
-   <connection>scm:git:git://github.com/kreutzr/responsediff.git</connection>
+    <connection>scm:git:git://github.com/kreutzr/responsediff.git</connection>
     <developerConnection>scm:git:ssh://github.com:kreutz/responsediff.git</developerConnection>
     <url>https://github.com/kreutzr/responsediff</url>
   </scm>
@@ -74,7 +74,6 @@
     <main.basedir>${project.basedir}</main.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <!-- Versions (latest check: 2026-06-05)-->
     <version.asciidoctorj>3.0.1</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.4.14.0 ! Upgrading to jruby 10 would require Java 21 (see "https://github.com/asciidoctor/asciidoctorj/pull/1308"). -->
     <version.asciidoctorj-pdf>2.3.23</version.asciidoctorj-pdf>
     <version.assertj>3.27.7</version.assertj>
@@ -91,6 +90,55 @@
     <version.mockito>5.23.0</version.mockito>
     <version.mockito-inline>5.2.0</version.mockito-inline>
     <version.slf4j>2.0.18</version.slf4j> <!-- 2.1.0-alpha1 works. -->
+
+    <!--
+    mvnrepo.* properties — precise mvnrepository.com URLs for each tracked artifact.
+    Used by start-check-dependency-updates.py to avoid name clashes on mvnrepository.com
+    and to produce clickable links in the update summary.
+    Naming convention: <mvnrepo.ARTIFACT_ID>URL</mvnrepo.ARTIFACT_ID>
+    Every <dependency> in <dependencyManagement> and every <plugin> with an explicit
+    <version> must have a corresponding entry here; the script warns about missing ones.
+    -->
+
+    <!-- JAR dependencies -->
+    <mvnrepo.asciidoctorj>https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj</mvnrepo.asciidoctorj>
+    <mvnrepo.asciidoctorj-pdf>https://mvnrepository.com/artifact/org.asciidoctor/asciidoctorj-pdf</mvnrepo.asciidoctorj-pdf>
+    <mvnrepo.assertj-core>https://mvnrepository.com/artifact/org.assertj/assertj-core</mvnrepo.assertj-core>
+    <mvnrepo.disruptor>https://mvnrepository.com/artifact/com.lmax/disruptor</mvnrepo.disruptor>
+    <mvnrepo.jackson-databind>https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind</mvnrepo.jackson-databind>
+    <mvnrepo.jakarta.xml.bind-api>https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api</mvnrepo.jakarta.xml.bind-api>
+    <mvnrepo.jaxb-runtime>https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime</mvnrepo.jaxb-runtime>
+    <mvnrepo.json-path>https://mvnrepository.com/artifact/com.jayway.jsonpath/json-path</mvnrepo.json-path>
+    <mvnrepo.junit-jupiter-engine>https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-engine</mvnrepo.junit-jupiter-engine>
+    <mvnrepo.log4j-api>https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api</mvnrepo.log4j-api>
+    <mvnrepo.log4j-core>https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core</mvnrepo.log4j-core>
+    <mvnrepo.log4j-slf4j2-impl>https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl</mvnrepo.log4j-slf4j2-impl>
+    <mvnrepo.mockito-core>https://mvnrepository.com/artifact/org.mockito/mockito-core</mvnrepo.mockito-core>
+    <mvnrepo.mockito-inline>https://mvnrepository.com/artifact/org.mockito/mockito-inline</mvnrepo.mockito-inline>
+    <mvnrepo.mockito-junit-jupiter>https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter</mvnrepo.mockito-junit-jupiter>
+    <mvnrepo.slf4j-api>https://mvnrepository.com/artifact/org.slf4j/slf4j-api</mvnrepo.slf4j-api>
+
+    <!-- Maven plugins -->
+    <mvnrepo.asciidoctor-maven-plugin>https://mvnrepository.com/artifact/org.asciidoctor/asciidoctor-maven-plugin</mvnrepo.asciidoctor-maven-plugin>
+    <mvnrepo.build-helper-maven-plugin>https://mvnrepository.com/artifact/org.codehaus.mojo/build-helper-maven-plugin</mvnrepo.build-helper-maven-plugin>
+    <mvnrepo.checksum-maven-plugin>https://mvnrepository.com/artifact/net.ju-n.maven.plugins/checksum-maven-plugin</mvnrepo.checksum-maven-plugin>
+    <mvnrepo.cyclonedx-maven-plugin>https://mvnrepository.com/artifact/org.cyclonedx/cyclonedx-maven-plugin</mvnrepo.cyclonedx-maven-plugin>
+    <mvnrepo.dependency-check-maven>https://mvnrepository.com/artifact/org.owasp/dependency-check-maven</mvnrepo.dependency-check-maven>
+    <mvnrepo.jaxb2-maven-plugin>https://mvnrepository.com/artifact/org.codehaus.mojo/jaxb2-maven-plugin</mvnrepo.jaxb2-maven-plugin>
+    <mvnrepo.license-maven-plugin>https://mvnrepository.com/artifact/com.mycila/license-maven-plugin</mvnrepo.license-maven-plugin>
+    <mvnrepo.maven-compiler-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin</mvnrepo.maven-compiler-plugin>
+    <mvnrepo.maven-dependency-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-dependency-plugin</mvnrepo.maven-dependency-plugin>
+    <mvnrepo.maven-gpg-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-gpg-plugin</mvnrepo.maven-gpg-plugin>
+    <mvnrepo.maven-javadoc-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin</mvnrepo.maven-javadoc-plugin>
+    <mvnrepo.maven-release-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-release-plugin</mvnrepo.maven-release-plugin>
+    <mvnrepo.maven-resources-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin</mvnrepo.maven-resources-plugin>
+    <mvnrepo.maven-shade-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin</mvnrepo.maven-shade-plugin>
+    <mvnrepo.maven-source-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-source-plugin</mvnrepo.maven-source-plugin>
+    <mvnrepo.maven-surefire-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin</mvnrepo.maven-surefire-plugin>
+    <mvnrepo.nexus-staging-maven-plugin>https://mvnrepository.com/artifact/org.sonatype.plugins/nexus-staging-maven-plugin</mvnrepo.nexus-staging-maven-plugin>
+    <mvnrepo.properties-maven-plugin>https://mvnrepository.com/artifact/org.codehaus.mojo/properties-maven-plugin</mvnrepo.properties-maven-plugin>
+    <mvnrepo.replacer>https://mvnrepository.com/artifact/com.google.code.maven-replacer-plugin/replacer</mvnrepo.replacer>
+    <mvnrepo.xml-maven-plugin>https://mvnrepository.com/artifact/org.codehaus.mojo/xml-maven-plugin</mvnrepo.xml-maven-plugin>
 
     <maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
     <build-year>${maven.build.timestamp}</build-year>
