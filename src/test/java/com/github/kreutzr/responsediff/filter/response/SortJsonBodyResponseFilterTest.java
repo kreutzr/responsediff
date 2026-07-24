@@ -220,16 +220,17 @@ public class SortJsonBodyResponseFilterTest
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  // This is the example from the manual. Keep in synch!
   @Test
   public void testThatJsonArrayIsSortedSelectiveIfRequestedWithArrayJsonPaths()
   {
     // Given
     final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
     filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS, "true" );
-    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "$($.id),a($.x;$.y),b" );
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "$($.id),a($.x;$.y),b,x[1][0]" );
 
     final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
-    final String json =  "[ { \"id\" : \"002\", \"a\" : [ { \"x\" : 3, \"y\" : 1 }, { \"x\" : 2, \"y\" : 1 } ], \"b\" : [ 6,5,4 ], \"c\": [ 9,8,7 ] }, { \"id\" : \"001\", \"a\" : [ { \"x\" : 1, \"y\" : 2.1 }, { \"x\" : 1, \"y\" : 11.2 } ], \"b\" : [ 3,2,1 ], \"c\": [ 8,4,2 ] } ]";
+    final String json =  "[ { \"id\" : \"002\", \"a\" : [ { \"x\" : 3, \"y\" : 1 }, { \"x\" : 2, \"y\" : 1 } ], \"b\" : [ 6,5,4 ], \"c\": [ 9,8,7 ], \"x\": [ [ 3,2,1 ], [ [ 6,5,4 ], [ 9,8,7 ] ] ] }, { \"id\" : \"001\", \"a\" : [ { \"x\" : 1, \"y\" : 2.1 }, { \"x\" : 1, \"y\" : 11.2 } ], \"b\" : [ 3,2,1 ], \"c\": [ 8,4,2 ] } ]";
     xmlHttpResponse.setBody( json );
     xmlHttpResponse.setBodyIsJson( true );
 
@@ -246,7 +247,7 @@ public class SortJsonBodyResponseFilterTest
     }
 
     // Then
-    Assertions.assertEquals( "[{\"a\":[{\"x\":1,\"y\":2.1},{\"x\":1,\"y\":11.2}],\"b\":[1,2,3],\"c\":[8,4,2],\"id\":\"001\"},{\"a\":[{\"x\":2,\"y\":1},{\"x\":3,\"y\":1}],\"b\":[4,5,6],\"c\":[9,8,7],\"id\":\"002\"}]", sortedJson );
+    Assertions.assertEquals( "[{\"a\":[{\"x\":1,\"y\":2.1},{\"x\":1,\"y\":11.2}],\"b\":[1,2,3],\"c\":[8,4,2],\"id\":\"001\"},{\"a\":[{\"x\":2,\"y\":1},{\"x\":3,\"y\":1}],\"b\":[4,5,6],\"c\":[9,8,7],\"id\":\"002\",\"x\":[[3,2,1],[[4,5,6],[9,8,7]]]}]", sortedJson );
   }
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,5 +349,128 @@ public class SortJsonBodyResponseFilterTest
 
     // Then
     Assertions.assertEquals( "[{\"a\":[{\"x\":false,\"y\":3},{\"x\":true,\"y\":2}]}]", sortedJson );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatJsonArrayWorksForArraysOfArrays()
+  {
+    // Given
+    final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS, "true" );
+
+    final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+    final String json =  "[ { \"a\" : [ [ 3,2,1 ], [ 4,6,5 ] ] } ]";
+    xmlHttpResponse.setBody( json );
+    xmlHttpResponse.setBodyIsJson( true );
+
+    // When
+    String sortedJson = "NOT SORTED";
+    try
+    {
+      filter.apply( xmlHttpResponse );
+      sortedJson = xmlHttpResponse.getBody();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+    // Then
+    Assertions.assertEquals( "[{\"a\":[[1,2,3],[4,5,6]]}]", sortedJson );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatJsonArrayWorksIndexSelectiveForArraysOfArrays()
+  {
+    // Given
+    final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS, "true" );
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "a[1]" );
+
+    final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+    final String json =  "[ { \"a\" : [ [ 3,2,1 ], [ 4,6,5 ] ] } ]";
+    xmlHttpResponse.setBody( json );
+    xmlHttpResponse.setBodyIsJson( true );
+
+    // When
+    String sortedJson = "NOT SORTED";
+    try
+    {
+      filter.apply( xmlHttpResponse );
+      sortedJson = xmlHttpResponse.getBody();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+    // Then
+    Assertions.assertEquals( "[{\"a\":[[3,2,1],[4,5,6]]}]", sortedJson );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatJsonArrayWorksDeepIndexSelectiveForArraysOfArrays()
+  {
+    // Given
+    final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS, "true" );
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "a[0],a[1][0]" );
+
+    final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+    final String json =  "[ { \"a\" : [ [ 3,2,1 ], [ [ 6,5,4 ], [ 9,8,7 ] ] ] } ]";
+    xmlHttpResponse.setBody( json );
+    xmlHttpResponse.setBodyIsJson( true );
+
+    // When
+    String sortedJson = "NOT SORTED";
+    try
+    {
+      filter.apply( xmlHttpResponse );
+      sortedJson = xmlHttpResponse.getBody();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+    // Then
+    Assertions.assertEquals( "[{\"a\":[[1,2,3],[[4,5,6],[9,8,7]]]}]", sortedJson );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatSimpleDebuggingExampleWorks()
+  {
+    // Given
+    final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS, "true" );
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "a" );
+
+    final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+    final String json = "{ \"x\":{\"b\":0,\"a\" : [3,2,1] } }";
+    xmlHttpResponse.setBody( json );
+    xmlHttpResponse.setBodyIsJson( true );
+
+    // When
+    String sortedJson = "NOT SORTED";
+    try
+    {
+      filter.apply( xmlHttpResponse );
+      sortedJson = xmlHttpResponse.getBody();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+    // Then
+    Assertions.assertEquals( "{\"x\":{\"a\":[1,2,3],\"b\":0}}", sortedJson );
   }
 }

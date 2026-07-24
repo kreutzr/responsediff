@@ -761,8 +761,8 @@ The `SortJsonBodyResponseFilter` returns for the following JSON document
 [source,json]
 ----
 [
-  { "id" : "002", "a" : [ { "x" : 3, "y" : 1 }, { "x" : 2, "y" : 1 } ], "b" : [ 6,5,4 ], "c" : [ 9,8,7 ] },
-  { "id" : "001", "a" : [ { "x" : 1, "y" : 2.1 }, { "x" : 1, "y" : 11.2 } ], "b" : [ 3,2,1 ], "c" : [ 8,4,2 ] }
+  { "id" : "002", "a" : [ { "x" : 3, "y" : 1   }, { "x" : 2, "y" :  1   } ], "b" : [ 6,5,4 ], "c": [ 9,8,7 ], "x": [ [ 3,2,1 ], [ [ 6,5,4 ], [ 9,8,7 ] ] ] },
+  { "id" : "001", "a" : [ { "x" : 1, "y" : 2.1 }, { "x" : 1, "y" : 11.2 } ], "b" : [ 3,2,1 ], "c": [ 8,4,2 ] }
 ]
 ----
 
@@ -775,7 +775,7 @@ with this filter configuration
     <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter">
       <parameters>
          <parameter id="sortArrays">true</parameter>
-         <parameter id="sortArrays.keys">$($.id),a($.x;$.y),b</parameter>
+         <parameter id="sortArrays.keys">$($.id),a($.x;$.y),b,x[1][0]</parameter>
       </parameters>
     </filter>
     ...
@@ -785,14 +785,15 @@ this result:
 
 ----
 [
-  { "a" : [ { "x" : 1, "y" : 2.1 }, { "x" : 1, "y" : 11.2 } ], "b" : [ 1,2,3 ], "c" : [ 8,4,2 ], "id" : "001" },
-  { "a" : [ { "x" : 2, "y" : 1 }, { "x" : 3, "y" : 1 } ], "b" : [ 4,5,6 ], "c" : [ 9,8,7 ], "id" : "002" }
+  { "a" : [ { "x" : 1, "y" : 2.1 }, { "x" : 1, "y" : 11.2 } ], "b" : [ 1,2,3 ], "c": [ 8,4,2 ], "id" : "001" },
+  { "a" : [ { "x" : 2, "y" : 1   }, { "x" : 3, "y" :  1   } ], "b" : [ 4,5,6 ], "c": [ 9,8,7 ], "id" : "002", "x" : [ [ 3,2,1 ],[ [ 4,5,6 ], [ 9,8,7 ] ] ] }
 ]
 ----
 
 * The attribute names are sorted alphabetically.
 * Lists `a` and `b` are sorted. List `a` is sorted according to the values ​​in `$.x` and `$.y` (in that exact order), while list `b` is simply sorted by its total values. The sorting of list `b` would also work if the values ​​were further JSON structures—just (unprofessionally) sorted alphabetically according to their text representation.
 * List `c` is not sorted.
+* For list `x` only the element `x[1][0]` is sorted.
 * Finally, the elements of the root list `$` are sorted according to `$.id`.
 
 ====

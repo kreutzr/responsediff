@@ -760,7 +760,7 @@ Der `SortJsonBodyResponseFilter` liefert für das nachfolgende JSON-Dokument
 [source,json]
 ----
 [
-  { "id" : "002", "a" : [ { "x" : 3, "y" : 1   }, { "x" : 2, "y" :  1   } ], "b" : [ 6,5,4 ], "c": [ 9,8,7 ] },
+  { "id" : "002", "a" : [ { "x" : 3, "y" : 1   }, { "x" : 2, "y" :  1   } ], "b" : [ 6,5,4 ], "c": [ 9,8,7 ], "x": [ [ 3,2,1 ], [ [ 6,5,4 ], [ 9,8,7 ] ] ] },
   { "id" : "001", "a" : [ { "x" : 1, "y" : 2.1 }, { "x" : 1, "y" : 11.2 } ], "b" : [ 3,2,1 ], "c": [ 8,4,2 ] }
 ]
 ----
@@ -774,7 +774,7 @@ bei dieser Filterkonfiguration
     <filter id="sortJsonBody" clazz="com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter">
       <parameters>
          <parameter id="sortArrays">true</parameter>
-         <parameter id="sortArrays.keys">$($.id),a($.x;$.y),b</parameter>
+         <parameter id="sortArrays.keys">$($.id),a($.x;$.y),b,x[1][0]</parameter>
       </parameters>
     </filter>
     ...
@@ -785,13 +785,14 @@ dieses Ergebnis:
 ----
 [
   { "a" : [ { "x" : 1, "y" : 2.1 }, { "x" : 1, "y" : 11.2 } ], "b" : [ 1,2,3 ], "c": [ 8,4,2 ], "id" : "001" },
-  { "a" : [ { "x" : 2, "y" : 1   }, { "x" : 3, "y" :  1   } ], "b" : [ 4,5,6 ], "c": [ 9,8,7 ], "id" : "002" }
+  { "a" : [ { "x" : 2, "y" : 1   }, { "x" : 3, "y" :  1   } ], "b" : [ 4,5,6 ], "c": [ 9,8,7 ], "id" : "002", "x" : [ [ 3,2,1 ],[ [ 4,5,6 ], [ 9,8,7 ] ] ] }
 ]
 ----
 
 * Die Attributnamen werden alphabetisch sortiert.
 * Die Listen `a` und `b` werden sortiert. Die Liste `a` wird gemäß der Werte aus `$.x` und `$.y` (in genau dieser Reihenfolge) sortiert, während die Liste `b` einfach anhand ihrer Gesamtwerte sortiert wird. Die Sortierung der Liste `b` würde auch greifen, wenn es sich bei den Werten um weitere JSON-Strukturen handeln würde - nur eben (unfachlich) alphabetisch sortiert nach deren Text-Repräsentation.
 * Liste `c` wird nicht sortiert.
+* In der Liste `x` wird nur das Element `x[1][0]` sortiert.
 * Schließlich werden die Elemente der Wurzel-Liste `$` gemäß `$.id` sortiert.
 
 ====

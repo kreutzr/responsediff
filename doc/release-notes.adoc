@@ -18,6 +18,7 @@ This is a regular maintenance release.
 * Some report style fine tuning.
 * Initial variables may be configured when invoking ResponseDiff.
 * Allowed to skip response comparison and use ResponseDiff to trigger requests workflows only (e.g. as an Postman or Bruno alternative).
+* Allowed to define sort directives for arrays of arrays (e.g., "a[0],a[1][0]").
 
 === Bug fixes
 

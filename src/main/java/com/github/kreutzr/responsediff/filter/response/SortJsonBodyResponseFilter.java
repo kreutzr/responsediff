@@ -16,13 +16,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.kreutzr.responsediff.JsonPathHelper;
+import com.github.kreutzr.responsediff.XmlHttpResponse;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
 import com.github.kreutzr.responsediff.filter.DiffResponseFilterImpl;
 import com.github.kreutzr.responsediff.tools.Converter;
 import com.github.kreutzr.responsediff.tools.JsonHelper;
 import com.jayway.jsonpath.PathNotFoundException;
-import com.github.kreutzr.responsediff.XmlHttpResponse;
 
 /**
  * A filter that sorts the map entries of a JSON data set.
@@ -117,8 +118,10 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
           }
         }
 
+//System.out.println( "---------------------------\nkeysToSort=" + (keysToSort != null ? keysToSort.toString() : "null" ) );
+
         // Traverse JSON tree to sort arrays
-        traverse( root, "$", keysToSort );
+        traverse( root, "$", "$", keysToSort );
       }
 
       // Convert sorted JSON into String and update response body
@@ -132,9 +135,17 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Traverse the given node and its children in depth first order. Arrays are sorted during traversal if sort keys and optional sort directives for existing sort keys exist.
+   * @param node The current traversal node. Must not be null.
+   * @param name The name of the current traversal node with optional array index (e.g., "a[0]"). Must not be null.
+   * @param rawName The name of the current traversal node without array index (e.g., "a"). Must not be null.
+   * @param keysToSort The sort directives per array name. May be null.
+   */
   private void traverse(
     final JsonNode node,
     final String name,
+    final String rawName,
     final Map< String, List< String > > keysToSort
   )
   {
@@ -148,24 +159,37 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
       // Depth first sorting
       // ---------------------
       for( int i=0; i < node.size(); i++ ) {
-        traverse( node.get( i ), name + "[" + i + "]", keysToSort );
+        traverse( node.get( i ), name + "[" + i + "]", name, keysToSort );
       }
 
       // ---------------------
       // Sort if required
       // ---------------------
-      if(  keysToSort == null                   // Sort all if not specified further
-        || keysToSort.keySet().contains( name ) // Sort specified arrays
-      ) {
-        final List< String > sortPaths = ( keysToSort == null )
-          ? null
-          : keysToSort.get( name );
-
+      if( keysToSort == null ) // Sort all if not specified further
+      {
         if( LOG.isTraceEnabled() ) {
-          LOG.trace( "Sorting array entry " + name );
+          LOG.trace( "Sorting array entry " + name + " by default" );
         }
 
-        sortArrayByTreeMap( (ArrayNode)node, sortPaths );
+        sortArrayByTreeMap( (ArrayNode)node, null );
+      }
+      else {
+        String nameToUse = null; // Used to check, if any sort key applies
+        if( keysToSort.containsKey( name ) ) {          // Either "a[0]"
+          nameToUse = name;
+        }
+        else if( keysToSort.containsKey( rawName ) ) {  // Or "a"
+          nameToUse = rawName;
+        }
+
+        if( nameToUse != null ) {
+          final List< String > sortPaths = keysToSort.get( nameToUse );
+          if( LOG.isTraceEnabled() ) {
+            LOG.trace( "Sorting array entry " + nameToUse + ( sortPaths != null ? ( " with sortPaths" + sortPaths.toString() ) : "" ) );
+          }
+
+          sortArrayByTreeMap( (ArrayNode)node, sortPaths );
+        }
       }
     }
     else if( type == JsonNodeType.OBJECT ) {
@@ -176,11 +200,22 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
       final Iterator< Entry< String, JsonNode > > it = node.properties().iterator();
       while( it.hasNext() ) {
         final Entry< String, JsonNode > entry = it.next();
-        traverse( entry.getValue(), entry.getKey(), keysToSort );
+        final String entryKey = entry.getKey();
+        traverse( entry.getValue(), entryKey, entryKey, keysToSort );
       }
-    }
 
-    return;
+// Attempt to propagate sort activities to the resulting JSON structure.
+// Currently failing because in "a": [ [1,2], [3,4] ] the node $.a[0] is of type ARRAY and therefore has no name attribute to set.
+// => We need another approach
+//      final List< String > sortPaths = ( keysToSort == null )
+//        ? null
+//        : keysToSort.get( name ) ;
+//      if( sortPaths != null ) {
+//        ((ObjectNode)node).put( name + "-sortPaths", sortPaths.toString() );  // TODO: Declare magic String as Constant!
+//
+//        System.out.println( "Setting node attribute \"" + name + "-sortPaths\" to " + sortPaths.toString() );
+//      }
+    }
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,9 +257,9 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
         final JsonPathHelper jph = new JsonPathHelper( entryAsString ); // NOTE: performance! Why first convert to String and re-parse here?
         final StringBuilder sb = new StringBuilder();
         for( int j=0; j < sortPaths.size(); j++ ) {
-          final String jsonPath = sortPaths.get( j );
+          final String sortPath = sortPaths.get( j );
           try {
-            final Object obj = jph.getValue( jsonPath );
+            final Object obj = jph.getValue( sortPath );
             String comparePart = ""; // null values are sorted to the beginning
             if( obj != null ) {
               if( obj instanceof Boolean ) {
@@ -243,7 +278,7 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
             }
           }
           catch( final PathNotFoundException ex ) {
-            LOG.warn( "Unable to sort by \"" + jsonPath + "\". The sortArray key is ignored.", ex );
+            LOG.warn( "Unable to sort by \"" + sortPath + "\". The sort path key is ignored.", ex );
           }
         }
         entryAsString = sb.toString();
@@ -303,12 +338,12 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
 
       String entryAsString = entry.toString(); // NOTE: This is expensive => Therefore we convert only once
       if( sortPaths != null ) {
-        final JsonPathHelper jph = new JsonPathHelper( entryAsString ); // NOTE: performance! Why first convert to String and re-parse here?
+        final JsonPathHelper jph = new JsonPathHelper( entryAsString ); // NOTE: Performance? Unfortunately JsonPath does not accept a Json Node for initialization.
         final StringBuilder sb = new StringBuilder();
         for( int j=0; j < sortPaths.size(); j++ ) {
-          final String jsonPath = sortPaths.get( j );
+          final String sortPath = sortPaths.get( j );
           try {
-            final Object obj = jph.getValue( jsonPath );
+            final Object obj = jph.getValue( sortPath );
             String comparePart = ""; // null values are sorted to the beginning
             if( obj != null ) {
               if( obj instanceof Boolean ) {
@@ -327,11 +362,13 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
             }
           }
           catch( final PathNotFoundException ex ) {
-            LOG.warn( "Unable to sort by \"" + jsonPath + "\". The sortArray key is ignored.", ex );
+            LOG.warn( "Unable to sort by \"" + sortPath + "\". The sort path key is ignored.", ex );
           }
         }
         entryAsString = sb.toString();
       }
+
+//System.out.println( "entryAsString=" + entryAsString + " , sortPath=" + (sortPaths != null ? sortPaths.toString() : "null" ) );
 
       List< JsonNode > entryList = ref.get( entryAsString );
       if( entryList == null ) {
