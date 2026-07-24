@@ -369,6 +369,12 @@ public class JsonDiff
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Iterates over the given Json structures. Found differences are documented in member variables (side effect).
+   * @param candidate The candidate Json data set. Must not be null.
+   * @param reference The reference Json data set. Must not be null.
+   * @param path The current JsonPath as String. Must not be null.
+   */
   private void iterate( final JsonNode candidate, final JsonNode reference, final String path )
   {
     // NEEDS FIX B: Allow wildcards here.
@@ -417,6 +423,12 @@ public class JsonDiff
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Iterates over the given Json array node. Found differences are documented in member variables (side effect).
+   * @param candidate The candidate Json array node. Must not be null.
+   * @param reference The reference Json array node. Must not be null.
+   * @param path The current JsonPath as String. Must not be null.
+   */
   private void iterateArray( final JsonNode candidate, final JsonNode reference, final String path )
   {
     final int canLength = candidate.size();
@@ -424,7 +436,7 @@ public class JsonDiff
     final int length    = Math.min( canLength, refLength );
 
     // NEEDS FIX A: refactor this naive approach. Find matching array entries!
-    // => IDEA: We are able to sort the array with tthe reposnseSortFilter with identifying the relevant sort criteria
+    // => IDEA: We are able to sort the array with the reponseSortFilter by identifying the relevant sort criteria
     //          => We could try to use these criteria syntax to identify common entries (modified or unmodified)
     int i=0;
     while( i < length) {
@@ -459,6 +471,12 @@ public class JsonDiff
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Iterates over the given Json map node. Found differences are documented in member variables (side effect).
+   * @param candidate The candidate Json map node. Must not be null.
+   * @param reference The reference Json map node. Must not be null.
+   * @param path The current JsonPath as String. Must not be null.
+   */
   private void iterateMap( final JsonNode candidate, final JsonNode reference, final String path )
   {
     final Set< String > canKeys = getKeySet( candidate );
