@@ -77,14 +77,14 @@
     <version.asciidoctorj>3.0.1</version.asciidoctorj> <!-- NOTE: Check for updates that fixes included CVE in jruby-stdlib 9.4.14.0 ! Upgrading to jruby 10 would require Java 21 (see "https://github.com/asciidoctor/asciidoctorj/pull/1308"). -->
     <version.asciidoctorj-pdf>2.3.23</version.asciidoctorj-pdf>
     <version.assertj>3.27.7</version.assertj>
-    <version.glassfish.jaxb-runtime>4.0.8</version.glassfish.jaxb-runtime>
+    <version.glassfish.jaxb-runtime>4.0.9</version.glassfish.jaxb-runtime>
     <version.jackson-databind>2.22.1</version.jackson-databind>
     <version.jakarta.xml.bind-api>4.0.5</version.jakarta.xml.bind-api>
     <version.jsonpath>3.0.0</version.jsonpath>
     <!--
     <version.jsonsmart>2.6.0</version.jsonsmart> <!-x- NOTE: jsonPath (2.9.0) comes with vulnerable version 2.5.0 so we have to exclude it there. -x->
     -->
-    <version.junit-jupiter>6.1.0</version.junit-jupiter>
+    <version.junit-jupiter>6.1.2</version.junit-jupiter>
     <version.lmax.disruptor>4.0.0</version.lmax.disruptor>
     <version.log4j>2.26.1</version.log4j> <!-- TODO: 3.0.0-beta2 works. 3.0.0-beta3 is not yet supported by log4j-slf4j2-impl -->
     <version.mockito>5.23.0</version.mockito>
@@ -574,7 +574,7 @@
         -->
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
-        <version>5.0.0</version>
+        <version>5.1.1</version>
         <configuration>
           <dependencyEnforce>true</dependencyEnforce>
           <dependencyExceptionMessage>Illegal licence model found.</dependencyExceptionMessage>
@@ -892,7 +892,7 @@
             <!-- Create SBOM XML (and JSON) -->
             <groupId>org.cyclonedx</groupId>
             <artifactId>cyclonedx-maven-plugin</artifactId>
-            <version>2.9.1</version>
+            <version>2.9.3</version>
             <executions>
               <execution>
                 <phase>generate-resources</phase>

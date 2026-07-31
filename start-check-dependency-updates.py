@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ==============================================================================================
 # Reads pom.xml, extracts Maven artifact coordinates from <dependencyManagement> and <plugin>
-# declarations, then queries the Maven Central Search API for available stable updates.
+# declarations, then queries Maven Central for available stable updates.
 #
 # Artifact URLs (used for the summary output and to avoid name clashes on mvnrepository.com)
 # are stored as Maven properties in pom.xml using the naming convention:
@@ -17,10 +17,23 @@
 #   - latest MINOR update : newest stable version sharing the current major (higher minor)
 #   - latest MAJOR hint   : newest stable version with a higher major number (if any)
 #
-# Pre-release versions (alpha, beta, milestone, RC, SNAPSHOT, ...) are ignored.
+# Pre-release versions (alpha, beta, milestone, RC, CR, SNAPSHOT, .prN, ...) are ignored.
+# Explicit final-release qualifiers (x.y.z-final, x.y.z.RELEASE, x.y.z-GA, ...) are NOT
+# treated as pre-releases; they rank equal to the plain x.y.z version.
 #
-# Using the Maven Central Search API instead of scraping mvnrepository.com
-# avoids "I am not a robot" bot-detection dialogs reliably.
+# Version data is read from the authoritative Maven Central metadata file
+#
+#   https://repo1.maven.org/maven2/<groupId with / instead of .>/<artifactId>/maven-metadata.xml
+#
+# and NOT from the search.maven.org Solr API: that index lags behind by weeks to months
+# and silently omits recent releases (e.g. it did not know log4j-core 2.26.1 or
+# jackson-databind 2.19.1+), which caused artifacts to be reported as "up to date".
+# maven-metadata.xml is always current, complete (no row limit), needs no API key and
+# triggers no "I am not a robot" bot-detection dialogs.
+#
+# Each HTTP request uses a 15 second timeout. On timeouts, network errors, HTTP 429 and
+# HTTP 5xx up to 3 additional attempts are made, each after a 15 second pause. Retry
+# notices go to stderr so the stdout format stays machine-readable.
 #
 # SYNTAX:
 #   python ./start-check-dependency-updates.py [--json] [path/to/pom.xml]
@@ -38,11 +51,26 @@
 # Requires: Python 3.6+  (no third-party packages)
 # ==============================================================================================
 
+
+# Known Bugs:
+# - (none currently known)
+#
+# Fixed:
+# - Artifacts were reported as "up to date" although a newer patch existed
+#   (jackson-databind 2.22.1, log4j-core 2.26.1). Root cause was the stale
+#   search.maven.org Solr index, not the version comparison. maven-metadata.xml
+#   from repo1.maven.org is used now.
+# - Timeouts against the Maven Central API aborted the artifact immediately.
+#   Now: 15 s timeout, up to 3 additional attempts with a 15 s pause each.
+# - is_prerelease() did not recognise the ".prN" pre-release scheme (e.g. 2.9.0.pr1)
+#   and had no notion of explicit final-release qualifiers such as "-final".
+
 import argparse
 import io
 import json as json_mod
 import os
 import re
+import socket
 import sys
 import time
 import urllib.error
@@ -53,11 +81,17 @@ import xml.etree.ElementTree as ET
 # Force UTF-8 output so Unicode characters work on all platforms/consoles.
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-MAVEN_SEARCH_API  = "https://search.maven.org/solrsearch/select"
-POM_NS            = "http://maven.apache.org/POM/4.0.0"
-MVNREPO_PROP_PFX  = "mvnrepo."       # property prefix for artifact URLs in pom.xml
-REQUEST_DELAY_SEC = 0.4              # polite delay between API calls
-MAX_VERSIONS      = 200              # max versions to fetch per artifact
+MAVEN_CENTRAL_BASE = "https://repo1.maven.org/maven2"
+POM_NS             = "http://maven.apache.org/POM/4.0.0"
+MVNREPO_PROP_PFX   = "mvnrepo."      # property prefix for artifact URLs in pom.xml
+REQUEST_DELAY_SEC  = 0.4             # polite delay between API calls
+HTTP_TIMEOUT_SEC   = 15              # per-request timeout in seconds
+MAX_RETRIES        = 3               # additional attempts after the first failure
+RETRY_WAIT_SEC     = 15              # pause between attempts in seconds
+USER_AGENT         = "start-check-dependencies/2.0 (maven-version-checker)"
+
+# HTTP status codes worth retrying (transient server / rate-limit conditions).
+RETRYABLE_HTTP_CODES = (408, 425, 429, 500, 502, 503, 504, 509)
 
 RC_UP_TO_DATE  = 0   # no updates of any kind
 RC_MAJOR_AVAIL = 1   # only major updates exist (no minor/patch anywhere)   — lowest pressure
@@ -156,54 +190,162 @@ def parse_pom(filepath):
 
 # ── Maven Central lookup ──────────────────────────────────────────────────────
 
+def metadata_url(group_id, artifact_id):
+    """Build the maven-metadata.xml URL for an artifact on Maven Central."""
+    group_path = group_id.replace(".", "/")
+    return f"{MAVEN_CENTRAL_BASE}/{group_path}/{artifact_id}/maven-metadata.xml"
+
+
+def _is_retryable(exc):
+    """Return True if the exception describes a transient failure worth retrying."""
+    if isinstance(exc, urllib.error.HTTPError):
+        # 404 (unknown artifact) and other 4xx are permanent — do not retry those.
+        return exc.code in RETRYABLE_HTTP_CODES
+    if isinstance(exc, urllib.error.URLError):
+        return True                      # DNS / connection reset / connect timeout
+    if isinstance(exc, (socket.timeout, TimeoutError)):
+        return True                      # read timeout
+    if isinstance(exc, ET.ParseError):
+        return True                      # truncated / partial response
+    return isinstance(exc, OSError)
+
+
+def _http_get(url, label):
+    """
+    Fetch a URL and return the raw response body.
+
+    Retries transient failures (timeouts, connection errors, HTTP 429 / 5xx) up to
+    MAX_RETRIES additional times, pausing RETRY_WAIT_SEC seconds before each retry.
+    Retry notices are written to stderr so that the stdout format stays untouched.
+    Re-raises the last exception when all attempts have been used up.
+    """
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent":    USER_AGENT,
+            "Accept":        "application/xml, text/xml, */*",
+            # Ask CDNs for a fresh copy — cached metadata is what made this script
+            # miss brand new releases in the first place.
+            "Cache-Control": "no-cache",
+            "Pragma":        "no-cache",
+        },
+    )
+
+    last_exc = None
+    for attempt in range(1, MAX_RETRIES + 2):          # 1 initial + MAX_RETRIES retries
+        try:
+            with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_SEC) as resp:
+                return resp.read()
+        except Exception as e:                          # noqa: BLE001 — classified below
+            last_exc = e
+            if not _is_retryable(e) or attempt > MAX_RETRIES:
+                raise
+            print(
+                f"  NOTE: {label}: attempt {attempt}/{MAX_RETRIES + 1} failed ({e}) — "
+                f"retrying in {RETRY_WAIT_SEC}s",
+                file=sys.stderr,
+            )
+            sys.stderr.flush()
+            time.sleep(RETRY_WAIT_SEC)
+
+    raise last_exc                                     # pragma: no cover — unreachable
+
+
 def fetch_all_versions(group_id, artifact_id):
     """
     Return a list of all version strings published for this artifact on Maven Central.
-    Uses core=gav to get per-version documents.
-    """
-    params = urllib.parse.urlencode({
-        "q":    f'g:"{group_id}" AND a:"{artifact_id}"',
-        "core": "gav",
-        "rows": MAX_VERSIONS,
-        "wt":   "json",
-    })
-    req = urllib.request.Request(
-        f"{MAVEN_SEARCH_API}?{params}",
-        headers={"User-Agent": "start-check-dependencies/1.0 (maven-version-checker)"},
-    )
-    with urllib.request.urlopen(req, timeout=15) as resp:
-        data = json_mod.loads(resp.read())
 
-    docs = data.get("response", {}).get("docs", [])
-    return [d["v"] for d in docs if "v" in d]
+    Reads the authoritative maven-metadata.xml of the artifact. Returns an empty list
+    when the artifact does not exist on Maven Central (HTTP 404).
+    """
+    url = metadata_url(group_id, artifact_id)
+    try:
+        raw = _http_get(url, f"{group_id}:{artifact_id}")
+    except urllib.error.HTTPError as e:
+        if e.code in (404, 410):
+            return []                                  # unknown artifact → "not found"
+        raise
+
+    root = ET.fromstring(raw)
+    versions = []
+    for elem in root.findall("versioning/versions/version"):
+        text = (elem.text or "").strip()
+        if text:
+            versions.append(text)
+
+    if not versions:
+        # Very rare layout without <versions> — fall back to <release>/<latest>.
+        for tag in ("versioning/release", "versioning/latest"):
+            text = (root.findtext(tag) or "").strip()
+            if text:
+                versions.append(text)
+
+    return versions
 
 
 # ── Version helpers ───────────────────────────────────────────────────────────
 
+# Keywords that mark a pre-release when a version segment starts with them.
+# Optional trailing digits are allowed (alpha1, beta3, rc2, M1, pr4, …).
+#   pr        — jackson style pre-release, e.g. 2.9.0.pr1
+#   cr        — candidate release, e.g. 6.0.0.CR1
+#   ea        — early access, e.g. 1.0-ea
+#   m<digits> — milestone, e.g. 3.0.0.M2   (digits mandatory, see below)
+PRERELEASE_KEYWORDS = (
+    "alpha", "beta", "snapshot", "milestone", "preview", "pre",
+    "rc", "cr", "ea", "pr", "dev", "incubating", "candidate",
+)
+
+# Qualifiers that explicitly mark a FINAL release. These must never be treated as a
+# pre-release and must not make a version rank above the plain numeric version, so
+# "1.2.3-final" is considered equal to "1.2.3" rather than newer.
+RELEASE_QUALIFIERS = frozenset({
+    "final", "release", "ga", "sp", "stable",
+})
+
+
+def _split_segments(version):
+    """Split a version string into its dot/dash separated segments (lower-cased)."""
+    return [seg for seg in re.split(r"[.\-]", version.lower()) if seg != ""]
+
+
 def is_prerelease(version):
     """
     Return True if the version string contains a pre-release marker.
-    A marker must start at the beginning of a version segment (after . or - or at pos 0).
-    Trailing digits after the keyword are allowed (e.g. alpha1, beta3, rc2).
+
+    A marker must be a whole version segment, optionally followed by digits — so
+    "2.9.0.pr1", "3.0.0-beta3" and "6.0.0.CR1" are pre-releases, while "1.2.3-final",
+    "1.2.3.RELEASE" and "1.2.3-GA" are final releases. Segments such as "preview"
+    inside a longer word (e.g. "creative") do not match.
     """
-    v = version.lower()
-    # keywords that, once a segment starts with them, mark a pre-release
-    for kw in ("alpha", "beta", "snapshot", "preview", "cr", "ea"):
-        if re.search(r'(^|[.\-])' + kw, v):
+    for seg in _split_segments(version):
+        if seg in RELEASE_QUALIFIERS:
+            continue                                   # explicit final release marker
+        m = re.fullmatch(r"([a-z]+)(\d*)", seg)
+        if not m:
+            continue                                   # purely numeric or mixed segment
+        word, digits = m.group(1), m.group(2)
+        if word == "m":
+            # Milestone requires digits ("m2"); a bare "m" is not a marker.
+            if digits:
+                return True
+            continue
+        if word in PRERELEASE_KEYWORDS:
             return True
-    # milestone: M1, M2, M10 …
-    if re.search(r'(^|[.\-])m\d+', v):
-        return True
-    # release candidate: rc, rc1, rc2 …
-    if re.search(r'(^|[.\-])rc\d*($|[.\-\d])', v):
-        return True
     return False
 
 
 def _version_key(v):
-    """Convert version string to a sortable tuple. Numeric segments sort before text."""
+    """
+    Convert version string to a sortable tuple. Numeric segments sort before text.
+
+    Explicit final-release qualifiers are dropped so that "1.2.3-final" compares equal
+    to "1.2.3" and is therefore never reported as an update over it.
+    """
     parts = []
     for seg in re.split(r"[.\-]", v):
+        if seg == "" or seg.lower() in RELEASE_QUALIFIERS:
+            continue
         try:
             parts.append((0, int(seg)))
         except ValueError:
