@@ -20,6 +20,11 @@
 #    - Check on "Set as the latest version" (checkbox below)
 #    - Upload zipped ResponseDiff folder (See "Attach binaries by dropping them here or select them.")
 #    - Copy former release notes text and copy and adjust it here.
+#
+#      Release notes - full history (AsciiDoc): https://github.com/kreutzr/responsediff/blob/main/doc/release-notes.adoc
+#      Full Changelog: https://github.com/kreutzr/responsediff/compare/v1.5.0...v1.6.0
+#      Pre compiled JARs and script templates (for quick start) in attached file "ResponseDiff-V1.6.0.zip".
+#
 #    - Press "Publish release" button.
 #
 # Finally edit (new version -> SNAPSHOT)
