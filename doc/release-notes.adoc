@@ -5,7 +5,8 @@
 
 image::img/responsediff-logo_320x160.png[ResponseDiff]
 
-== V1.5.1 (2025-xx-xx)
+
+== V1.6.1 (2026-xx-xx)
 === Type
 This is a regular maintenance release.
 
@@ -15,14 +16,31 @@ This is a regular maintenance release.
 
 === Features / Changes
 
-* Some report style fine tuning.
-* Initial variables may be configured when invoking ResponseDiff.
-* Allowed to skip response comparison and use ResponseDiff to trigger requests workflows only (e.g. as an Postman or Bruno alternative).
-* Allowed to define sort directives for arrays of arrays (e.g., "a[0],a[1][0]").
+* ...
 
 === Bug fixes
 
 * ...
+
+=== External libraries
+
+* ...
+
+=== Known issues
+
+* ...
+
+
+== V1.6.0 (2026-08-01)
+=== Type
+This is a regular maintenance release.
+
+=== Features / Changes
+
+* Some report style fine tuning.
+* Initial variables may be configured when invoking ResponseDiff.
+* Allowed to skip response comparison and use ResponseDiff to trigger requests workflows only (e.g. as an Postman or Bruno alternative).
+* Allowed to define sort directives for arrays of arrays (e.g., "a[0],a[1][0]").
 
 === External libraries
 
@@ -37,12 +55,8 @@ This is a regular maintenance release.
 * Upgrade log4j from 2.25.4 to 2.26.1
 * Upgrade slf4j from 2.0.17 to 2.0.18
 
-=== Known issues
 
-* ...
-
-
-== V1.5.0 (2025-05-01)
+== V1.5.0 (2026-05-01)
 === Type
 This is a regular maintenance release.
 
@@ -65,7 +79,7 @@ This is a regular maintenance release.
 * Upgrade log4j from 2.25.3 to 2.25.4
 
 
-== V1.4.0 (2025-03-28)
+== V1.4.0 (2026-03-28)
 === Type
 This is a regular maintenance release.
 
