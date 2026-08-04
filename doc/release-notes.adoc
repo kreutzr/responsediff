@@ -24,7 +24,7 @@ This is a regular maintenance release.
 
 === External libraries
 
-* ...
+* Upgrade "dependency-check-maven" plugin from 12.2.2 to 13.0.0
 
 === Known issues
 
