@@ -78,7 +78,7 @@
     <version.asciidoctorj-pdf>2.3.23</version.asciidoctorj-pdf>
     <version.assertj>3.27.7</version.assertj>
     <version.glassfish.jaxb-runtime>4.0.9</version.glassfish.jaxb-runtime>
-    <version.jackson-databind>2.22.1</version.jackson-databind>
+    <version.jackson-databind>2.22.2</version.jackson-databind>
     <version.jakarta.xml.bind-api>4.0.5</version.jakarta.xml.bind-api>
     <version.jsonpath>3.0.0</version.jsonpath>
     <!--
