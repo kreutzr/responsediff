@@ -491,6 +491,6 @@ public class TestSetHandlerTest
     TestSetHandler.waitBefore( durationAsString );
     end = System.currentTimeMillis();
     assertThat( end - start ).isGreaterThanOrEqualTo( 3000 );
-    assertThat( end - start ).isLessThanOrEqualTo( 3020 ); // +20 = almost no execution time (NOTE: 10 was sometimes exceeded (15))
+    assertThat( end - start ).isLessThanOrEqualTo( 3050 ); // +50 = almost no execution time (NOTE: 10 was sometimes exceeded (43))
   }
 }

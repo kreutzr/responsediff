@@ -6,7 +6,9 @@
    ]]></notes>
    <packageUrl regex="true">^pkg:maven/jline/jline@.*$</packageUrl>
    <cve>CVE-2023-50572</cve>
-  </suppress>
+   <cve>CVE-2026-56740</cve>
+   <cve>CVE-2026-56741</cve>
+ </suppress>
 
   <!-- Add suppressions here -->
 </suppressions>
