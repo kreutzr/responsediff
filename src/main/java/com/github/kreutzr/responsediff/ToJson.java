@@ -92,8 +92,8 @@ public class ToJson
     final StringBuilder sb = new StringBuilder( "{" );
 
     sb.append( "\"id\":\""     ).append( xmlVariable.getId()    ).append( "\"" )
-      .append( "\",path\":\""  ).append( xmlVariable.getPath()  ).append( "\"" )
-      .append( "\",value\":\"" ).append( xmlVariable.getValue() ).append( "\"" )
+      .append( ",\"path\":\""  ).append( xmlVariable.getPath()  ).append( "\"" )
+      .append( ",\"value\":\"" ).append( xmlVariable.getValue() ).append( "\"" )
       ;
 
     return sb.append( "}" ).toString();
@@ -114,15 +114,15 @@ public class ToJson
 
     final StringBuilder sb = new StringBuilder( "{" );
 
-    sb.append( "\"begin\":"           ).append( xmlAnalysis.getBegin() )
-      .append( "\",end\":"            ).append( xmlAnalysis.getEnd() )
-      .append( "\",duration\":"       ).append( xmlAnalysis.getDuration() )
-      .append( "\",successCount\":"   ).append( xmlAnalysis.getSuccessCount() )
-      .append( "\",failCount\":"      ).append( xmlAnalysis.getFailCount() )
-      .append( "\",skipCount\":"      ).append( xmlAnalysis.getSkipCount() )
-      .append( "\",totalCount\":"     ).append( xmlAnalysis.getTotalCount() );
+    sb.append( "\"begin\":\""           ).append( xmlAnalysis.getBegin() )
+      .append( "\",\"end\":\""            ).append( xmlAnalysis.getEnd() )
+      .append( "\",\"duration\":\""       ).append( xmlAnalysis.getDuration() )
+      .append( "\",\"successCount\":"   ).append( xmlAnalysis.getSuccessCount() )
+      .append( ",\"failCount\":"      ).append( xmlAnalysis.getFailCount() )
+      .append( ",\"skipCount\":"      ).append( xmlAnalysis.getSkipCount() )
+      .append( ",\"totalCount\":"     ).append( xmlAnalysis.getTotalCount() );
 
-    sb.append( "\",messages\":[" );
+    sb.append( ",\"messages\":[" );
     if( xmlAnalysis.getMessages() != null && xmlAnalysis.getMessages().getMessage() != null ) {
       for( int i=0; i < xmlAnalysis.getMessages().getMessage().size(); i++ ) {
         final XmlMessage xmlMessage = xmlAnalysis.getMessages().getMessage().get( i );
@@ -154,9 +154,14 @@ public class ToJson
     final StringBuilder sb = new StringBuilder()
       .append("{\"level\":\"").append( ( xmlMessage.getLevel() != null )
         ? xmlMessage.getLevel().name()
-        : XmlLogLevel.UNKNOWN.name() ).append( "\"" )
+        : XmlLogLevel.UNKNOWN.name() )
+      .append( "\"" )
       .append( ",\"path\":\""  ).append(xmlMessage.getPath()  ).append( "\"" )
       .append( ",\"value\":\"" ).append(xmlMessage.getValue() ).append( "\"" );
+
+    if( xmlMessage.getExecutionContextConstraint() != null ) {
+      sb.append( ",\"executionConstraint\":\"" ).append(xmlMessage.getExecutionContextConstraint() ).append( "\"" );
+    }
 
     return sb.append( "}" ).toString();
   }
@@ -218,7 +223,7 @@ public class ToJson
 //      .append( ",\"ticketReference\":\""            ).append( xmlValue.getTicketReference()            ).append( "\"" )
 //      .append( ",\"ifExecutionContextContains\":\"" ).append( xmlValue.getIfExecutionContextContains() ).append( "\"" )
     ;
-
+ 
     return sb.append( "}" ).toString();
   }
 
