@@ -26,7 +26,7 @@ import com.github.kreutzr.responsediff.XmlVariable;
 import com.github.kreutzr.responsediff.XmlVariables;
 import com.github.kreutzr.responsediff.tools.FormatHelper;
 
-public class TestBase
+public class TestBase extends TestRoot
 {
   protected static final String rootPath_     = new File( "" ).getAbsolutePath() + File.separator;
   protected static final String CANDIDATE_URL = "http://candidate/";

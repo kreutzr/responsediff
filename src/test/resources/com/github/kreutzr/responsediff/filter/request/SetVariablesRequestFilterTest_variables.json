@@ -1,0 +1,12 @@
+{
+  "variables" : {
+    "PORT" : [ "4321" ],
+    "ENDPOINT" : [ "someEndpoint" ],
+    "ID" : [ "someId", "someOtherId" ],
+    "TEXT_VALUE" : [ "text-value" ],
+    "NUMBER_VALUE" : [ "123" ],	
+    "HEADER_VALUE" : [ "header-value" ],
+    "PARAMETER_VALUE" : [ "parameter-value" ]
+   },
+  "variableSets" : null
+}

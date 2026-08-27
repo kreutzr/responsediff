@@ -63,7 +63,7 @@ public abstract class DiffFilterImpl implements DiffFilter
   @Override
   public DiffFilter setFilterParameter( final String name, final String value )
   {
-    if( !filterParameterNames_.contains(name) ) {
+    if( !filterParameterNames_.contains( name ) ) {
       throw new UnregisteredParameterException( "Unregistered filter parameter \"" + name + "\" must not be used." );
     }
 
@@ -102,6 +102,7 @@ public abstract class DiffFilterImpl implements DiffFilter
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  @Override
   public String getTestSetupPath()
   {
     return testSetupPath_;

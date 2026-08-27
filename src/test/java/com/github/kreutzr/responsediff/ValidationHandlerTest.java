@@ -16,11 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreutzr.responsediff.base.TestRoot;
 import com.github.kreutzr.responsediff.tools.Converter;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-public class ValidationHandlerTest
+public class ValidationHandlerTest extends TestRoot
 {
   private static final String rootPath_ = new File( "" ).getAbsolutePath() + File.separator;
 
@@ -92,6 +93,21 @@ public class ValidationHandlerTest
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( ValidationHandler.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Test
   public void testThatValidateJsonWorks()

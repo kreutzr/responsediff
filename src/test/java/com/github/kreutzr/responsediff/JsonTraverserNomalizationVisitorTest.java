@@ -6,8 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.github.kreutzr.responsediff.base.TestRoot;
 
-public class JsonTraverserNomalizationVisitorTest
+public class JsonTraverserNomalizationVisitorTest extends TestRoot
 {
   @Test
   public void testThatMapNormalizationWorks()

@@ -1,11 +1,11 @@
 package com.github.kreutzr.responsediff.filter;
 
 import com.github.kreutzr.responsediff.HttpHandler;
+import com.github.kreutzr.responsediff.XmlHeader;
+import com.github.kreutzr.responsediff.XmlHeaders;
+import com.github.kreutzr.responsediff.XmlHttpResponse;
 import com.github.kreutzr.responsediff.tools.CloneHelper;
 import com.github.kreutzr.responsediff.tools.Converter;
-
-import com.github.kreutzr.responsediff.XmlHeader;
-import com.github.kreutzr.responsediff.XmlHttpResponse;
 
 /**
  * A filter base implementation. It allows to store the original HTTP response before it is manipulated by the inheriting filter class.
@@ -35,9 +35,11 @@ public abstract class DiffResponseFilterImpl extends DiffFilterImpl implements D
   public void apply( final XmlHttpResponse xmlHttpResponse )
   throws DiffFilterException
   {
-    if( Converter.asBoolean( getFilterParameter( PARAMETER_NAME__STORE_ORIGINAL ), false ) ) {
-      XmlHttpResponse original = CloneHelper.deepCopyJAXB( xmlHttpResponse, XmlHttpResponse.class );
-      xmlHttpResponse.setOriginalResponse( original );
+    if( xmlHttpResponse != null ) {
+      if( Converter.asBoolean( getFilterParameter( PARAMETER_NAME__STORE_ORIGINAL ), false ) ) {
+        XmlHttpResponse original = CloneHelper.deepCopyJAXB( xmlHttpResponse, XmlHttpResponse.class );
+        xmlHttpResponse.setOriginalResponse( original );
+      }
     }
   }
 
@@ -60,6 +62,9 @@ public abstract class DiffResponseFilterImpl extends DiffFilterImpl implements D
     );
 
     // Update header
+    if( xmlHttpResponse.getHeaders() == null ) {
+      xmlHttpResponse.setHeaders( new XmlHeaders() );
+    }
     XmlHeader xmlHeader = HttpHandler.getHeader( HttpHandler.HEADER_NAME__CONTENT_TYPE, xmlHttpResponse.getHeaders().getHeader() );
     if( xmlHeader == null ) {
       xmlHeader = new XmlHeader();

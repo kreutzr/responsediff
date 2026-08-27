@@ -40,4 +40,11 @@ public interface DiffFilter
    * @param path The path to the central test setup XML file. May be null.
    */
   public void setTestSetupPath( final String path );
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Gets the path to the central test setup XML file. This may be used for filters which read their configuration from the file system.
+   */
+  public String getTestSetupPath();
 }

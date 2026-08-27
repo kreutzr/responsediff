@@ -1,12 +1,30 @@
 package com.github.kreutzr.responsediff.filter.response;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.github.kreutzr.responsediff.XmlHttpResponse;
+import com.github.kreutzr.responsediff.base.TestRoot;
 
-public class SortJsonBodyResponseFilterTest
+public class SortJsonBodyResponseFilterTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( SortJsonBodyResponseFilter.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatJsonMapIsSorted()
   {
@@ -451,10 +469,10 @@ public class SortJsonBodyResponseFilterTest
     // Given
     final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
     filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS, "true" );
-    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "a" );
+    filter.setFilterParameter( SortJsonBodyResponseFilter.PARAMETER_NAME__SORT_ARRAYS__KEYS, "a,b,c" ); // b is not an array and is ignored
 
     final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
-    final String json = "{ \"x\":{\"b\":0,\"a\" : [3,2,1] } }";
+    final String json = "{ \"x\":{\"b\":0,\"a\" : [3,2,1], \"c\":[] } }";
     xmlHttpResponse.setBody( json );
     xmlHttpResponse.setBodyIsJson( true );
 
@@ -471,6 +489,35 @@ public class SortJsonBodyResponseFilterTest
     }
 
     // Then
-    Assertions.assertEquals( "{\"x\":{\"a\":[1,2,3],\"b\":0}}", sortedJson );
+    Assertions.assertEquals( "{\"x\":{\"a\":[1,2,3],\"b\":0,\"c\":[]}}", sortedJson );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatFilterSkipsIfNotJson()
+  {
+    // Given
+    final SortJsonBodyResponseFilter filter = new SortJsonBodyResponseFilter();
+
+    final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+    final String json = "NOT JSON";
+    xmlHttpResponse.setBody( json );
+    xmlHttpResponse.setBodyIsJson( false );
+
+    // When
+    String sortedJson = "NOT SORTED";
+    try
+    {
+      filter.apply( xmlHttpResponse );
+      sortedJson = xmlHttpResponse.getBody();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+
+    // Then
+    Assertions.assertEquals( "NOT JSON", sortedJson );
   }
 }

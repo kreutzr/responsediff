@@ -10,8 +10,25 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
 
-public class VariablesCalculatorTest
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class VariablesCalculatorTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( VariablesCalculator.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testCalculateIfRequieredWorks()
   {

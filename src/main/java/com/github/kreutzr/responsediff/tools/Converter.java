@@ -24,10 +24,12 @@ public class Converter
   private static boolean isOptionSet(
      final int option, final int[] options
   ){
-     for( int i = 0; i < options.length; i++ ) {
-        if( options[ i ] == option ) {
-           return true;
-        }
+     if( options != null ) {
+       for( int i = 0; i < options.length; i++ ) {
+          if( options[ i ] == option ) {
+             return true;
+          }
+       }
      }
      return false;
   }
@@ -150,7 +152,7 @@ public class Converter
 
        // Cut off tailing milliseconds and time zone
        {
-         int pos = Integer.MAX_VALUE;
+         int pos = Integer.MAX_VALUE; // Indicates that milliseconds and/or time zone have been eliminated
          int posEnd = -1;
          posEnd = valueAsString.indexOf( "." ); // Millis
          if( posEnd > 0 ) {
@@ -169,8 +171,8 @@ public class Converter
            pos = Math.min( posEnd, pos );
          }
 
-         if( pos > 0 && pos != Integer.MAX_VALUE ) {
-           valueAsString = valueAsString.substring(0, pos );
+         if( pos != Integer.MAX_VALUE ) {
+           valueAsString = valueAsString.substring( 0, pos );
          }
        }
 
@@ -238,7 +240,7 @@ public class Converter
       try {
          return Long.parseLong( value.toString().trim() );
       }
-      catch( final NumberFormatException ex ) {
+      catch( final Exception ex ) {
          if( isOptionSet( THROW_CONVERSION_EXCEPTION, options ) ) {
             throw new IllegalArgumentException( ex );
          }
@@ -266,7 +268,7 @@ public class Converter
       try {
          return Integer.parseInt( value.toString().trim() );
       }
-      catch( final NumberFormatException ex ) {
+      catch( final Exception ex ) {
          if( isOptionSet( THROW_CONVERSION_EXCEPTION, options ) ) {
             throw new IllegalArgumentException( ex );
          }
@@ -330,6 +332,9 @@ public class Converter
             "Parameter \"" + obj.toString() + "\" can not be parsed as Boolean." );
       }
       catch( final Exception ex ) {
+        if( isOptionSet( THROW_CONVERSION_EXCEPTION, options ) ) {
+            throw new IllegalArgumentException( ex );
+        }
          return fallback;
       }
    }

@@ -10,12 +10,29 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreutzr.responsediff.base.TestRoot;
 
-public class ExecutionContextHelperTest
+
+public class ExecutionContextHelperTest extends TestRoot
 {
   private static final Logger LOG = LoggerFactory.getLogger( ExecutionContextHelperTest.class );
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( ExecutionContextHelper.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Test
   public void testMatchesExecutionContextWorks()

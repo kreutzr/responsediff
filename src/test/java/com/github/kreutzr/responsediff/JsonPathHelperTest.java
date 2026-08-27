@@ -6,7 +6,10 @@ import static org.assertj.core.api.Assertions.fail;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-public class JsonPathHelperTest
+
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class JsonPathHelperTest extends TestRoot
 {
   @SuppressWarnings("unchecked")
   @Test

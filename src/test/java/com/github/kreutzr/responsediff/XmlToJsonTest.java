@@ -7,14 +7,31 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.kreutzr.responsediff.base.TestRoot;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-public class XmlToJsonTest
+public class XmlToJsonTest extends TestRoot
 {
   private static final Logger LOG = LoggerFactory.getLogger( XmlToJsonTest.class );
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( XmlToJson.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatSimplificationWork()
   {

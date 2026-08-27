@@ -9,8 +9,25 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-public class VariablesPermutationHandlerTest
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class VariablesPermutationHandlerTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( VariablesPermutationHandler.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatVariablePermutationWorks()
   {

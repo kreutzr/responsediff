@@ -103,9 +103,11 @@ public class SetVariablesRequestFilter extends DiffFilterImpl implements DiffReq
       variablesPermutationHandler_.next();
     }
     else {
-      variableSetsIndex_ += 1;
-      if( variableSetsIndex_ >= source_.getVariableSets().size() ) {
-        variableSetsIndex_ = 0;
+      if( source_ != null && source_.getVariableSets() != null ) {
+        variableSetsIndex_ += 1;
+        if( variableSetsIndex_ >= source_.getVariableSets().size() ) {
+          variableSetsIndex_ = 0;
+        }
       }
     }
 
@@ -131,7 +133,7 @@ public class SetVariablesRequestFilter extends DiffFilterImpl implements DiffReq
 
       try {
         if( useVariables_ ) {
-          if( source_.getVariables() == null || source_.getVariables().size() == 0 ) {
+          if( source_ == null || source_.getVariables() == null || source_.getVariables().size() == 0 ) {
             LOG.warn( "There are no variables defined." );
             return;
           }
@@ -140,10 +142,12 @@ public class SetVariablesRequestFilter extends DiffFilterImpl implements DiffReq
           for( final String name : variablesIndexByName.keySet() ) {
             final int variablesIndex = variablesIndexByName.get( name );
             final List< Object > variablesValues = source_.getVariables().get( name );
-            final String value = variablesValues.get( variablesIndex ) != null
-              ? variablesValues.get( variablesIndex ).toString()
-              : null;
-
+            String value = null;
+            if( variablesValues != null ) {
+              value = variablesValues.get( variablesIndex ) != null
+                ? variablesValues.get( variablesIndex ).toString()
+                : null;
+            }
             final XmlVariable xmlVariable = new XmlVariable();
             xmlVariable.setId( name );
             // CAUTION: We must avoid individual calculated values per instance!
@@ -152,7 +156,7 @@ public class SetVariablesRequestFilter extends DiffFilterImpl implements DiffReq
           }
         }
         else {
-          if( source_.getVariableSets().size() == 0 ) {
+          if( source_.getVariableSets() == null || source_.getVariableSets().size() == 0 ) {
             LOG.warn( "There are no variable sets defined." );
             return;
           }

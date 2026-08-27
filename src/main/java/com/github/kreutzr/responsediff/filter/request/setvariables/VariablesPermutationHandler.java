@@ -26,20 +26,22 @@ public class VariablesPermutationHandler
   {
     variables_ = variables;
 
-    // Initialize index map
-    variablesIndexByName_ = new TreeMap<>();
-    Iterator< String > it = variables_.keySet().iterator();
-    while( it.hasNext() ) {
-      final String variableName = it.next();
-      variablesIndexByName_.put( variableName, 0 );
-    }
+    if( variables_ != null ) {
+      // Initialize index map
+      variablesIndexByName_ = new TreeMap<>();
+      Iterator< String > it = variables_.keySet().iterator();
+      while( it.hasNext() ) {
+        final String variableName = it.next();
+        variablesIndexByName_.put( variableName, 0 );
+      }
 
-    // Initialize ordered(!) variable name list
-    variableNames_ = new ArrayList<>();
-    it = variablesIndexByName_.keySet().iterator();
-    while( it.hasNext() ) {
-      final String variableName = it.next();
-      variableNames_.add( variableName );
+      // Initialize ordered(!) variable name list
+      variableNames_ = new ArrayList<>();
+      it = variablesIndexByName_.keySet().iterator();
+      while( it.hasNext() ) {
+        final String variableName = it.next();
+        variableNames_.add( variableName );
+      }
     }
 
     variablesNameIndex_ = 0;
@@ -50,6 +52,10 @@ public class VariablesPermutationHandler
   public void next()
   {
     LOG.trace( "next()" );
+
+    if( variableNames_ == null || variableNames_.isEmpty() ) {
+      return;
+    }
 
     final String currentVariableName = variableNames_.get( variablesNameIndex_ );
     int nextVariableValueIndex = variablesIndexByName_.get( currentVariableName ) + 1;

@@ -12,9 +12,27 @@ import com.github.kreutzr.responsediff.JsonPathHelper;
 import com.github.kreutzr.responsediff.XmlHeader;
 import com.github.kreutzr.responsediff.XmlHeaders;
 import com.github.kreutzr.responsediff.XmlHttpResponse;
+import com.github.kreutzr.responsediff.base.TestRoot;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
 
-public class TextToJsonResponseFilterTest
+public class TextToJsonResponseFilterTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( TextToJsonResponseFilter.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatTextIsConvertedToJsonAsCompleteBody()
   {
@@ -163,6 +181,42 @@ public class TextToJsonResponseFilterTest
 //      System.out.println( json );
 
       assertThat( json ).isEqualTo( "{\"body\":{\"lines\":null}}" );
+    }
+    catch( final Throwable ex ) {
+      ex.printStackTrace();
+      fail( "unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatFilterSkipsIfContentTypeIsJson()
+  {
+    try {
+      // Given
+      final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+      xmlHttpResponse.setHeaders( new XmlHeaders() );
+      xmlHttpResponse.setBody( "{\"a\":1}" );
+      xmlHttpResponse.setBodyIsJson( true );
+
+      // When
+      final TextToJsonResponseFilter filter = new TextToJsonResponseFilter();
+      filter.apply( xmlHttpResponse );
+
+      // Then
+      String contentType = "UNKNOWN";
+      for( final XmlHeader xmlHeader : xmlHttpResponse.getHeaders().getHeader() ) {
+        if( xmlHeader.getName().equalsIgnoreCase( HttpHandler.HEADER_NAME__CONTENT_TYPE ) ) {
+          contentType = xmlHeader.getValue();
+          break;
+        }
+      }
+      assertThat( contentType ).isEqualTo( "UNKNOWN" ); // Content-Type header is not touched if already JSON
+      final String json = xmlHttpResponse.getBody();
+      final DocumentContext context = JsonPath.parse( json );
+//      LOG.debug( json );
+      assertThat( (int) context.read( "$.a" ) ).isEqualTo( 1 );
     }
     catch( final Throwable ex ) {
       ex.printStackTrace();

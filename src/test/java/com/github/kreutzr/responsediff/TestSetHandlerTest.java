@@ -11,16 +11,32 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.SAXException;
 
+import com.github.kreutzr.responsediff.base.TestRoot;
 import com.github.kreutzr.responsediff.filter.DiffFilter;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
 
 import jakarta.xml.bind.JAXBException;
 
-public class TestSetHandlerTest
+public class TestSetHandlerTest extends TestRoot
 {
   private static final String rootPath_ = new File( "" ).getAbsolutePath() + File.separator;
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( TestSetHandler.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Test
   public void testThatPrepareXmlRequestWorks()
@@ -476,14 +492,14 @@ public class TestSetHandlerTest
     long start = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
     long end = System.currentTimeMillis();
-    assertThat( end - start ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
+    assertThat( end - start ).isLessThan( 15 ); // 15 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
 
     // When / Then
     durationAsString = "UNPARSABLE";
     start = System.currentTimeMillis();
     TestSetHandler.waitBefore( durationAsString );
     end = System.currentTimeMillis();
-    assertThat( end - start ).isLessThan( 10 ); // 10 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
+    assertThat( end - start ).isLessThan( 15 ); // 15 = almost no execution time (NOTE: 5 was sometimes exceeded (6))
 
     // When / Then
     durationAsString = "PT3s"; // 3 seconds

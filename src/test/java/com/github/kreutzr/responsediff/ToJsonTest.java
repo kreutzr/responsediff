@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-public class ToJsonTest
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class ToJsonTest extends TestRoot
 {
   private XmlHeader createXmlHeader( final String name, final String value )
   {
@@ -15,6 +17,21 @@ public class ToJsonTest
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( ToJson.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Test
   public void testThatHeadersAreConvertedCorrectly()

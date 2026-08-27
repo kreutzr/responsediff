@@ -5,7 +5,6 @@
 :toc: left
 :toclevels: 5
 
-
 == Chapter 1
 
 Some text

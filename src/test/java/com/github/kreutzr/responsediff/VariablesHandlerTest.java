@@ -6,8 +6,25 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-public class VariablesHandlerTest
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class VariablesHandlerTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( VariablesHandler.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatUrlVariablesAreReplaced()
   {

@@ -13,7 +13,7 @@ public class ComparatorHelper
 {
   public static final Duration ZERO_DURATION = Duration.parse( "PT0S" );
 
-  private static final Logger LOG = LoggerFactory.getLogger( ComparatorHelper.class );
+  protected static final Logger LOG = LoggerFactory.getLogger( ComparatorHelper.class );
 
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -8,8 +8,25 @@ import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 
-public class AsciiDocConverterTest
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class AsciiDocConverterTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( AsciiDocConverter.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatAdocCanBeConvertedToPdf()
   {
@@ -71,4 +88,38 @@ public class AsciiDocConverterTest
       assertTrue( false, "Unreachable" );
     }
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+  @Test
+  public void testThatLogoCanBeUsed()
+  {
+    try {
+      // Given
+      final URL url = AsciiDocConverterTest.class.getClassLoader().getResource( "com/github/kreutzr/responsediff/reporter/AsciiDocConverterTest.adoc" );
+      final String reportFilePath = url.getFile();
+      final int pos = reportFilePath.lastIndexOf( "." );
+      final String targetFilePath = reportFilePath.substring( 0, pos+1 ) + "html";
+      final String transformerFilePath = targetFilePath; // NEEDS FIX C: Add test with custom style
+      final boolean useLogo = true;
+
+      // When
+      AsciiDocConverter.toHtml( reportFilePath, targetFilePath, transformerFilePath, useLogo );
+
+      // Then
+      final File report = new File( targetFilePath );
+      assertTrue( report.exists() );
+      assertThat( report.length() ).isGreaterThan( 0L );
+
+      // Cleanup
+      report.delete();
+    }
+    catch( final Throwable ex )
+    {
+      ex.printStackTrace();
+      assertTrue( false, "Unreachable" );
+    }
+  }
+*/
 }

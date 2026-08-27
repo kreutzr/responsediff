@@ -8,8 +8,25 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-public class ComparatorHelperTest
+import com.github.kreutzr.responsediff.base.TestRoot;
+
+public class ComparatorHelperTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( ComparatorHelper.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatEqualsWorksForLocalDate()
   {
@@ -36,7 +53,19 @@ public class ComparatorHelperTest
     assertThat( result ).isTrue();
 
     // When / Then
+    rhs = LocalDate.parse( "2023-10-27" );
+    epsilon = Duration.parse( "P1D" );
+    result = ComparatorHelper.equals( lhs, rhs, epsilon );
+    assertThat( result ).isTrue();
+
+    // When / Then
     rhs = LocalDate.parse( "2023-10-24" );
+    epsilon = Duration.parse( "P1D" );
+    result = ComparatorHelper.equals( lhs, rhs, epsilon );
+    assertThat( result ).isFalse();
+
+    // When / Then
+    rhs = LocalDate.parse( "2023-10-28" );
     epsilon = Duration.parse( "P1D" );
     result = ComparatorHelper.equals( lhs, rhs, epsilon );
     assertThat( result ).isFalse();
@@ -70,7 +99,19 @@ public class ComparatorHelperTest
     assertThat( result ).isTrue();
 
     // When / Then
+    rhs = LocalDateTime.parse( "2023-10-26T15:30:00" );
+    epsilon = Duration.parse( "PT30M" );
+    result = ComparatorHelper.equals( lhs, rhs, epsilon );
+    assertThat( result ).isTrue();
+
+    // When / Then
     rhs = LocalDateTime.parse( "2023-10-26T14:30:00" );
+    epsilon = Duration.parse( "PT29M59S" );
+    result = ComparatorHelper.equals( lhs, rhs, epsilon );
+    assertThat( result ).isFalse();
+
+    // When / Then
+    rhs = LocalDateTime.parse( "2023-10-26T15:30:00" );
     epsilon = Duration.parse( "PT29M59S" );
     result = ComparatorHelper.equals( lhs, rhs, epsilon );
     assertThat( result ).isFalse();
@@ -104,7 +145,19 @@ public class ComparatorHelperTest
     assertThat( result ).isTrue();
 
     // When / Then
+    rhs = Duration.parse( "PT23H59M55S" );
+    epsilon = Duration.parse( "PT5S" );
+    result = ComparatorHelper.equals( lhs, rhs, epsilon );
+    assertThat( result ).isTrue();
+
+    // When / Then
     rhs = Duration.parse( "P1DT5S" );
+    epsilon = Duration.parse( "PT4S" );
+    result = ComparatorHelper.equals( lhs, rhs, epsilon );
+    assertThat( result ).isFalse();
+
+    // When / Then
+    rhs = Duration.parse( "PT23H59M55S" );
     epsilon = Duration.parse( "PT4S" );
     result = ComparatorHelper.equals( lhs, rhs, epsilon );
     assertThat( result ).isFalse();

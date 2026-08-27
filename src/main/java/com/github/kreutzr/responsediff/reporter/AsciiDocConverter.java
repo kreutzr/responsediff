@@ -244,8 +244,13 @@ public class AsciiDocConverter
     if( useLogo ) {
       final Path logoPath = Paths.get( transformerFolderPath, LOGO_FILE_NAME );
       if( logoPath.toFile().exists() ) {
+//      final URL logoUrl = AsciiDocConverter.class.getClassLoader().getResource( "com/github/kreutzr/responsediff/reporter/logo.png" );
+//      logoPath = Paths.get( logoUrl.toString().substring(6) );
+//
+//      if( logoPath.toFile().exists() ) {
         logoFileExisted = Paths.get( targetFolderPath, LOGO_FILE_NAME ).toFile().exists();
         Files.copy( logoPath, Paths.get( targetFolderPath, LOGO_FILE_NAME ), StandardCopyOption.REPLACE_EXISTING );
+//      }
       }
     }
     return logoFileExisted;

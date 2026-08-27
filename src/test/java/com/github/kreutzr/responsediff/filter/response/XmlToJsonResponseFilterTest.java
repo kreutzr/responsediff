@@ -1,6 +1,7 @@
 package com.github.kreutzr.responsediff.filter.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
@@ -9,11 +10,28 @@ import com.github.kreutzr.responsediff.HttpHandler;
 import com.github.kreutzr.responsediff.XmlHeader;
 import com.github.kreutzr.responsediff.XmlHeaders;
 import com.github.kreutzr.responsediff.XmlHttpResponse;
+import com.github.kreutzr.responsediff.base.TestRoot;
+import com.github.kreutzr.responsediff.filter.DiffFilterException;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
-public class XmlToJsonResponseFilterTest
+public class XmlToJsonResponseFilterTest extends TestRoot
 {
+  @Test
+  public void testThatConstructorWorks()
+  {
+    try {
+      testThatPublicConstructorWorks( XmlToJsonResponseFilter.class );
+    }
+    catch( final Exception ex )
+    {
+      ex.printStackTrace();
+      assertThat( false ).isEqualTo( true ).withFailMessage( "Unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   @Test
   public void testThatXmlHttpResponseIsConvertedToJson()
   {
@@ -29,7 +47,7 @@ public class XmlToJsonResponseFilterTest
       filter.apply( xmlHttpResponse );
 
       // Then
-      String contentType = "UNKNWON";
+      String contentType = "UNKNOWN";
       for( final XmlHeader xmlHeader : xmlHttpResponse.getHeaders().getHeader() ) {
         if( xmlHeader.getName().equalsIgnoreCase( HttpHandler.HEADER_NAME__CONTENT_TYPE ) ) {
           contentType = xmlHeader.getValue();
@@ -44,6 +62,67 @@ public class XmlToJsonResponseFilterTest
       assertThat( (String) context.read( "$.xml.#value[1].b.#value" ) ).isEqualTo( "B" );
       assertThat( (String) context.read( "$.xml.#value[2].#text"    ) ).isEqualTo( "C" );
 
+    }
+    catch( final Throwable ex ) {
+      ex.printStackTrace();
+      fail( "unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatFilterSkipsIfContentTypeIsJson()
+  {
+    try {
+      // Given
+      final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+      xmlHttpResponse.setHeaders( new XmlHeaders() );
+      xmlHttpResponse.setBody( "{\"a\":1}" );
+      xmlHttpResponse.setBodyIsJson( true );
+
+      // When
+      final XmlToJsonResponseFilter filter = new XmlToJsonResponseFilter();
+      filter.apply( xmlHttpResponse );
+
+      // Then
+      String contentType = "UNKNOWN";
+      for( final XmlHeader xmlHeader : xmlHttpResponse.getHeaders().getHeader() ) {
+        if( xmlHeader.getName().equalsIgnoreCase( HttpHandler.HEADER_NAME__CONTENT_TYPE ) ) {
+          contentType = xmlHeader.getValue();
+          break;
+        }
+      }
+      assertThat( contentType ).isEqualTo( "UNKNOWN" ); // Content-Type header is not touched if already JSON
+      final String json = xmlHttpResponse.getBody();
+      final DocumentContext context = JsonPath.parse( json );
+//      LOG.debug( json );
+      assertThat( (int) context.read( "$.a" ) ).isEqualTo( 1 );
+    }
+    catch( final Throwable ex ) {
+      ex.printStackTrace();
+      fail( "unreachable" );
+    }
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatBrokenContentThrowsAnException()
+  {
+    try {
+      // Given
+      final XmlHttpResponse xmlHttpResponse = new XmlHttpResponse();
+      xmlHttpResponse.setHeaders( new XmlHeaders() );
+      xmlHttpResponse.setBody( "NEITHER-XML-NOR-JSON" );
+      xmlHttpResponse.setBodyIsJson( false );
+
+      // When
+      final XmlToJsonResponseFilter filter = new XmlToJsonResponseFilter();
+
+      // Then
+      Throwable ex = catchThrowable( () -> filter.apply( xmlHttpResponse ) );
+      assertThat( ex ).isInstanceOf( DiffFilterException.class );
     }
     catch( final Throwable ex ) {
       ex.printStackTrace();

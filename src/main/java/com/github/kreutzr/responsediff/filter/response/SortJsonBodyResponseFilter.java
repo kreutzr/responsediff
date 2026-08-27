@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +18,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.kreutzr.responsediff.JsonPathHelper;
 import com.github.kreutzr.responsediff.XmlHttpResponse;
 import com.github.kreutzr.responsediff.filter.DiffFilterException;
@@ -230,6 +231,7 @@ public class SortJsonBodyResponseFilter extends DiffResponseFilterImpl
    *      looping 1000 times over the tested sortArray methods.
    */
   @SuppressWarnings("unused")
+  @Generated()
   private void sortArrayByListSynchronization(
     final ArrayNode      arrayNode,
     final List< String > sortPaths

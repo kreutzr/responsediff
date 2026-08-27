@@ -39,6 +39,10 @@ public class NormalizeJsonBodyResponseFilter extends DiffResponseFilterImpl
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  protected static final String ERROR_MESSAGE__ILLEGAL_PARAMETER_COMBINATION = "The configration parameter \"" + PARAMETER_NAME__NORMALIZE_ARRAYS + "\" must only be set true, if \"" + PARAMETER_NAME__NORMALIZE_MAPS + "\" is set true.";
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   private static final Logger LOG = LoggerFactory.getLogger( NormalizeJsonBodyResponseFilter.class );
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +96,7 @@ public class NormalizeJsonBodyResponseFilter extends DiffResponseFilterImpl
       }
       else if( normalizeArrays ) {
         // Filter configuration check
-        throw new DiffFilterException( "The configration parameter \"" + PARAMETER_NAME__NORMALIZE_ARRAYS + "\" must only be set true, if \"" + PARAMETER_NAME__NORMALIZE_MAPS + "\" is set true.");
+        throw new DiffFilterException( ERROR_MESSAGE__ILLEGAL_PARAMETER_COMBINATION );
       }
     }
     catch( final Throwable ex ) {

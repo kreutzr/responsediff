@@ -25,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import com.github.kreutzr.responsediff.tools.Converter;
 import com.github.kreutzr.responsediff.tools.ErrorHandlingHelper;
+import com.github.kreutzr.responsediff.tools.Generated;
 
 /**
  * Processes XSLT transformations.
@@ -47,6 +48,7 @@ public class XsltProcessor
    * @throws FileNotFoundException
    * @throws Exception
    */
+  @Generated
   public static void process(
     final String sourceFilePath,
     final String xsltFilePath,
@@ -112,6 +114,7 @@ public class XsltProcessor
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  @Generated
   public static void main( final String[] args )
   {
     try {

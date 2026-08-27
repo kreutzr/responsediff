@@ -9,8 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
+import com.github.kreutzr.responsediff.base.TestRoot;
 
-public class JsonTraverserTest
+public class JsonTraverserTest extends TestRoot
 {
   private class _JsonTraverserTestListener implements JsonTraverserVisitor
   {
@@ -33,7 +34,7 @@ public class JsonTraverserTest
     }
   }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   @Test
   public void testThatTraverseWorksForMaps()

@@ -21,7 +21,7 @@ public class ErrorHandlingHelper
     * @param ex      The Throwable to handle. May be null.
     * @return The message and the stacktrace as one single line.
     */
-   public static final String createSingleMessageLine(
+   public static final String createSingleLineMessage(
       final Throwable ex
    ){
       return createSingleLineMessage( DEFAULT_MESSAGE, ex, LINE_BREAK_MASK );
@@ -72,7 +72,7 @@ public class ErrorHandlingHelper
     * @param ex      The Throwable to handle. May be null.
     * @return The message and the stacktrace.
     */
-   public static final String createMessage(
+   private static final String createMessage(
       final String message, final Throwable ex
    ){
       final StringBuilder sb = new StringBuilder( message != null ? message : DEFAULT_MESSAGE );
@@ -92,7 +92,7 @@ public class ErrorHandlingHelper
     * @param ex The throwable to read the stacktrace from. Must not be null.
     * @return The stacktrace of the given Throwable.
     */
-   public static final String getStackTraceFromThrowable(
+   private static final String getStackTraceFromThrowable(
       final Throwable ex
    ){
       final Writer      writer      = new StringWriter();
