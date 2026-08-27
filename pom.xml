@@ -124,6 +124,7 @@
     <mvnrepo.checksum-maven-plugin>https://mvnrepository.com/artifact/net.ju-n.maven.plugins/checksum-maven-plugin</mvnrepo.checksum-maven-plugin>
     <mvnrepo.cyclonedx-maven-plugin>https://mvnrepository.com/artifact/org.cyclonedx/cyclonedx-maven-plugin</mvnrepo.cyclonedx-maven-plugin>
     <mvnrepo.dependency-check-maven>https://mvnrepository.com/artifact/org.owasp/dependency-check-maven</mvnrepo.dependency-check-maven>
+    <mvnrepo.jacoco-maven-plugin>https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin</mvnrepo.jacoco-maven-plugin>
     <mvnrepo.jaxb2-maven-plugin>https://mvnrepository.com/artifact/org.codehaus.mojo/jaxb2-maven-plugin</mvnrepo.jaxb2-maven-plugin>
     <mvnrepo.license-maven-plugin>https://mvnrepository.com/artifact/com.mycila/license-maven-plugin</mvnrepo.license-maven-plugin>
     <mvnrepo.maven-compiler-plugin>https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin</mvnrepo.maven-compiler-plugin>
@@ -557,6 +558,68 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <!--
+          Code coverage. Invoked from the command line (see "start-jacoco"):
+            mvn org.jacoco:jacoco-maven-plugin:prepare-agent test org.jacoco:jacoco-maven-plugin:report
+          The <version> here pins the version used by those CLI invocations.
+
+          NOTE: The <excludes> below are report level excludes and therefore use
+          the path like class file notation. They keep the JAXB classes generated
+          from "responseDiffSetup.xsd" out of the coverage report.
+          They are listed one by one on purpose: a "Xml*.class" wildcard would also
+          swallow the hand written XmlFileHandler, XmlToJson and
+          XmlResponseDiffSetupHelper.
+          => When adding a complexType or an enum to the XSD, add it here as well.
+        -->
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.15</version>
+        <configuration>
+          <excludes>
+            <exclude>com/github/kreutzr/responsediff/ObjectFactory.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlAnalysis.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlBody.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlDownload.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlExpected.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlFile.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlFilter.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlFilterRegistry.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlFilterRegistryEntry.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlFilters.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlHeader.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlHeaders.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlHttpRequestMethod.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlHttpResponse.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlHttpStatus.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlIgnore.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlLogLevel.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlMaxDuration.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlMessage.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlMessages.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlOverAllExpected.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlParameter.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlParameters.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlRequest.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlResponse.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlResponseDiffSetup.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlRuntime.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlTest.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlTestOrder.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlTestSet.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlTestSetInclude.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlTicketServiceUrl.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlTicketServiceUrls.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlUploadParts.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlValue.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlValueType.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlValues.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlVariable.class</exclude>
+            <exclude>com/github/kreutzr/responsediff/XmlVariables.class</exclude>
+          </excludes>
+        </configuration>
       </plugin>
 
       <!--
