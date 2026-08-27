@@ -1,8 +1,11 @@
 package com.github.kreutzr.responsediff;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 /**
  * Invocation configuration for ResponseDiff main class.
  */
+@Generated
 public class CompareJsonConfiguration
 {
   String  referenceFilePath_ = null;

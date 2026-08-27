@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.github.kreutzr.responsediff.filter.response.SortJsonBodyResponseFilter;
 import com.github.kreutzr.responsediff.tools.Converter;
+import com.github.kreutzr.responsediff.tools.Generated;
 import com.github.kreutzr.responsediff.tools.JsonHelper;
 
 /**
@@ -190,6 +191,7 @@ public class CompareJson
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  @Generated
   public static final void main( final String[] args )
   {
     if( args == null || args.length != 1 ) {

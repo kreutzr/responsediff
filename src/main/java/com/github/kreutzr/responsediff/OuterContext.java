@@ -7,10 +7,12 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import com.github.kreutzr.responsediff.filter.DiffFilter;
+import com.github.kreutzr.responsediff.tools.Generated;
 
 /**
  * Holds the outer configuration for a ResponseDiff run.
  */
+@Generated
 public class OuterContext
 {
   private String candidateServiceUrl_;

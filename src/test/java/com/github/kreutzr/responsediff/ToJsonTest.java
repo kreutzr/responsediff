@@ -45,10 +45,10 @@ public class ToJsonTest extends TestRoot
     xmlVariable.setValue( "value" );
 
     // When / Then
-    String result = ToJson.fromVariable( xmlVariable );
+    String result = ToJson.fromXmlVariable( xmlVariable );
     assertThat( result ).isEqualTo( "{\"id\":\"id\",\"path\":\"path\",\"value\":\"value\"}" );
 
-    result = ToJson.fromVariable( null );
+    result = ToJson.fromXmlVariable( null );
     assertThat( result ).isEqualTo( "null" );
   }
 
@@ -82,10 +82,10 @@ public class ToJsonTest extends TestRoot
     xmlAnalysis.setMessages( xmlMessages );
 
     // When / Then
-    String result = ToJson.fromAnalysis( xmlAnalysis );
+    String result = ToJson.fromXmlAnalysis( xmlAnalysis );
     assertThat( result ).isEqualTo( "{\"begin\":\"2026-08-27T20:28:00\",\"end\":\"2026-08-27T20:29:00\",\"duration\":\"PT1M\",\"successCount\":1,\"failCount\":0,\"skipCount\":2,\"totalCount\":3,\"messages\":[{\"level\":\"TRACE\",\"path\":\"some path\",\"value\":\"some value\",\"executionConstraint\":\"some constraint\"},{\"level\":\"UNKNOWN\",\"path\":\"other path\",\"value\":\"other value\",\"executionConstraint\":\"other constraint\"},null]}");
 
-    result = ToJson.fromAnalysis( null );
+    result = ToJson.fromXmlAnalysis( null );
     assertThat( result ).isEqualTo( "null" );
   }
 
@@ -97,13 +97,13 @@ public class ToJsonTest extends TestRoot
     // Given
     final XmlHeaders xmlHeaders = new XmlHeaders();
     xmlHeaders.getHeader().add( createXmlHeader( "header-name", "header-value" ) );
-    xmlHeaders.getHeader().add( createXmlHeader( "etag", "my-etag" ) );
+    xmlHeaders.getHeader().add( createXmlHeader( "etag", null ) );
 
     // When / Then
-    String result = ToJson.fromHeaders( xmlHeaders, false, null );
-    assertThat( result ).isEqualTo( "\"headers\":{\"header-name\":\"header-value\",\"etag\":\"my-etag\"}" );
+    String result = ToJson.fromXmlHeaders( xmlHeaders, false, null );
+    assertThat( result ).isEqualTo( "\"headers\":{\"header-name\":\"header-value\",\"etag\":null}" );
 
-    result = ToJson.fromHeaders( null, true, null );
+    result = ToJson.fromXmlHeaders( null, true, null );
     assertThat( result ).isEqualTo( "{\"headers\":null}" );
   }
 
@@ -170,6 +170,82 @@ public class ToJsonTest extends TestRoot
     assertThat( result ).isEqualTo( "{\"headers\":{\"header-name\":\"header-value\",\"etag\":\"my-etag\"},\"body\":\"{\"a\":1}\"}" );
 
     result = ToJson.fromXmlResponse( null );
+    assertThat( result ).isEqualTo( "null" );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatFromXmlExpectedWorks()
+  {
+    // Given
+    final XmlHttpStatus xmlHttpStatus = new XmlHttpStatus();
+    xmlHttpStatus.setCheckInverse( Boolean.TRUE );
+    xmlHttpStatus.setLogLevel( XmlLogLevel.WARN );
+    xmlHttpStatus.setValue( 200 );
+    xmlHttpStatus.setTicketReference( "some ticket reference" );
+
+    final XmlHeaders xmlHeaders = new XmlHeaders();
+    xmlHeaders.getHeader().add( createXmlHeader( "header-with-quotes", "header-\"value\"" ) );
+    xmlHeaders.getHeader().add( createXmlHeader( "etag", "my-etag" ) );
+
+    final XmlMaxDuration xmlMaxDuration = new XmlMaxDuration();
+    xmlMaxDuration.setLogLevel( XmlLogLevel.WARN );
+    xmlMaxDuration.setValue( "PT5S" );
+
+    final XmlValue xmlValue1 = new XmlValue();
+    xmlValue1.setCheckInverse( Boolean.TRUE );
+    xmlValue1.setPath( "$.a" );
+    xmlValue1.setValue( "2" );
+    xmlValue1.setType( XmlValueType.INT);
+    final XmlValue xmlValue2 = new XmlValue();
+    xmlValue2.setCheckInverse( Boolean.FALSE );
+    xmlValue2.setPath( "$.a" );
+    xmlValue2.setValue( "1" );
+    xmlValue2.setType( XmlValueType.INT);
+    final XmlValues xmlValues = new XmlValues();
+    xmlValues.getValue().add( xmlValue1 );
+    xmlValues.getValue().add( xmlValue2 );
+
+    final XmlBody xmlBody = new XmlBody();
+    xmlBody.setLogLevel( XmlLogLevel.ERROR );
+    xmlBody.setNoBody( Boolean.FALSE );
+    xmlBody.setTicketReference( "other ticket reference" );
+    xmlBody.setValue( "{\"a\":1}" );
+
+    final XmlExpected xmlExpected = new XmlExpected();
+    xmlExpected.setHttpStatus( xmlHttpStatus );
+    xmlExpected.setHeaders( xmlHeaders );
+    xmlExpected.setMaxDuration( xmlMaxDuration );
+    xmlExpected.setValues( xmlValues );
+    xmlExpected.setBody( xmlBody );
+
+    // When / Then
+    String result = ToJson.fromXmlExpected( xmlExpected );
+    assertThat( result ).isEqualTo( "{\"headers\":{\"header-with-quotes\":\"header-\\\"value\\\"\",\"etag\":\"my-etag\"},\"httpStatus\":{\"value\":\"200\",\"checkInverse\":true,\"logLevel\":\"WARN\",\"ticketReference\":\"some ticket reference\"},\"maxDuration\":{\"value\":\"PT5S\",\"logLevel\":\"WARN\"},\"body\":{\"value\":\"{\"a\":1}\",\"noBody\":false,\"logLevel\":\"ERROR\",\"ticketReference\":\"other ticket reference\"},\"values\":[{\"epsilon\":\"null\",\"path\":\"$.a\",\"type\":\"INT\",\"value\":\"2\"},{\"epsilon\":\"null\",\"path\":\"$.a\",\"type\":\"INT\",\"value\":\"1\"}]}" );
+
+    result = ToJson.fromXmlExpected( null );
+    assertThat( result ).isEqualTo( "null" );
+  }
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  @Test
+  public void testThatVariousNullValuesWork()
+  {
+    String result = ToJson.fromXmlHttpStatus( null );
+    assertThat( result ).isEqualTo( "null" );
+
+    result = ToJson.fromXmlHeaders( null, false, null );
+    assertThat( result ).isEqualTo( "\"headers\":null" );
+
+    result = ToJson.fromXmlMaxDuration( null );
+    assertThat( result ).isEqualTo( "null" );
+
+    result = ToJson.fromXmlValues( null );
+    assertThat( result ).isEqualTo( "null" );
+
+    result = ToJson.fromXmlBody( null );
     assertThat( result ).isEqualTo( "null" );
   }
 }

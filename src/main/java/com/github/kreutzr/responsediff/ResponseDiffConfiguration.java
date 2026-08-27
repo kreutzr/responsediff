@@ -2,9 +2,12 @@ package com.github.kreutzr.responsediff;
 
 import java.util.List;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 /**
  * Invocation configuration for ResponseDiff main class.
  */
+@Generated
 public class ResponseDiffConfiguration
 {
   private String              rootPath_;

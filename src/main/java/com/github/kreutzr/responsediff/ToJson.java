@@ -1,5 +1,6 @@
 package com.github.kreutzr.responsediff;
 
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public class ToJson
    * @param lowerCaseHeaderNamesWithPaths An optional Set of lower case header names which have a path definition. => Therefore the value must be treated as JSON. May be null.
    * @return The formatted XmlHeaders.
    */
-  static String fromHeaders(
+  static String fromXmlHeaders(
     final XmlHeaders xmlHeaders,
     final boolean withOuterBrackets,
     final Set< String > lowerCaseHeaderNamesWithPaths
@@ -33,12 +34,12 @@ public class ToJson
 
     sb.append( "\"" ).append( HEADERS_SUBPATH ).append( "\":" );
 
-    if( xmlHeaders == null || xmlHeaders.getHeader() == null ) {
+    if( xmlHeaders == null ) {
       sb.append( "null" );
     }
     else {
       sb.append( "{" );
-      for( int i=0; i< xmlHeaders.getHeader().size(); i++ ) {
+      for( int i=0; i < xmlHeaders.getHeader().size(); i++ ) {
         if( i > 0 ) {
           sb.append( "," );
         }
@@ -51,7 +52,8 @@ public class ToJson
           sb.append( xmlHeader.getValue() ); // Use plain value => It becomes part of the JSON structure instead of a String value.
         }
         else {
-          sb.append( "\"" ).append( maskQuotes( xmlHeader.getValue() ) ).append( "\"" );
+          final String optionalQuotes = xmlHeader.getValue() != null ? "\"" : "";
+          sb.append( optionalQuotes ).append( maskQuotes( xmlHeader.getValue() ) ).append( optionalQuotes );
         }
       }
       sb.append( "}" );
@@ -83,7 +85,7 @@ public class ToJson
    * @param xmlVariable The variable to transform. May be null.
    * @return The formatted XmlVariable.
    */
-  static String fromVariable( final XmlVariable xmlVariable )
+  static String fromXmlVariable( final XmlVariable xmlVariable )
   {
     if( xmlVariable == null ) {
       return "null";
@@ -106,7 +108,7 @@ public class ToJson
    * @param xmlAnalysis The analysis object to transform. May be null.
    * @return The formatted XmlAnalysis.
    */
-  static String fromAnalysis( final XmlAnalysis xmlAnalysis )
+  static String fromXmlAnalysis( final XmlAnalysis xmlAnalysis )
   {
     if( xmlAnalysis == null ) {
       return "null";
@@ -114,16 +116,16 @@ public class ToJson
 
     final StringBuilder sb = new StringBuilder( "{" );
 
-    sb.append( "\"begin\":\""           ).append( xmlAnalysis.getBegin() )
-      .append( "\",\"end\":\""            ).append( xmlAnalysis.getEnd() )
-      .append( "\",\"duration\":\""       ).append( xmlAnalysis.getDuration() )
-      .append( "\",\"successCount\":"   ).append( xmlAnalysis.getSuccessCount() )
+    sb.append( "\"begin\":\""         ).append( xmlAnalysis.getBegin() )
+      .append( "\",\"end\":\""        ).append( xmlAnalysis.getEnd() )
+      .append( "\",\"duration\":\""   ).append( xmlAnalysis.getDuration() )
+      .append( "\",\"successCount\":" ).append( xmlAnalysis.getSuccessCount() )
       .append( ",\"failCount\":"      ).append( xmlAnalysis.getFailCount() )
       .append( ",\"skipCount\":"      ).append( xmlAnalysis.getSkipCount() )
       .append( ",\"totalCount\":"     ).append( xmlAnalysis.getTotalCount() );
 
     sb.append( ",\"messages\":[" );
-    if( xmlAnalysis.getMessages() != null && xmlAnalysis.getMessages().getMessage() != null ) {
+    if( xmlAnalysis.getMessages() != null ) {
       for( int i=0; i < xmlAnalysis.getMessages().getMessage().size(); i++ ) {
         final XmlMessage xmlMessage = xmlAnalysis.getMessages().getMessage().get( i );
         if( i > 0 ) {
@@ -223,7 +225,7 @@ public class ToJson
 //      .append( ",\"ticketReference\":\""            ).append( xmlValue.getTicketReference()            ).append( "\"" )
 //      .append( ",\"ifExecutionContextContains\":\"" ).append( xmlValue.getIfExecutionContextContains() ).append( "\"" )
     ;
- 
+
     return sb.append( "}" ).toString();
   }
 
@@ -249,7 +251,7 @@ public class ToJson
     if( sb.length() > 1 ) {
       sb.append( "," );
     }
-    sb.append( fromHeaders( xmlHeaders, false, null ) );
+    sb.append( fromXmlHeaders( xmlHeaders, false, null ) );
 
     if( body != null ) {
       sb.append( ",\"body\":\"" ).append( body ).append( "\"" );
@@ -260,4 +262,97 @@ public class ToJson
 
     return sb.append( "}" ).toString();
   }
-}
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public static String fromXmlHttpStatus( final XmlHttpStatus xmlHttpStatus )
+  {
+    if( xmlHttpStatus == null ) {
+      return "null";
+    }
+
+    final StringBuilder sb = new StringBuilder( "{" )
+      .append( "\"value\":\""            ).append( xmlHttpStatus.getValue()           ).append( "\"" )
+      .append( ",\"checkInverse\":"      ).append( xmlHttpStatus.isCheckInverse()     ).append( "" )
+      .append( ",\"logLevel\":\""        ).append( xmlHttpStatus.getLogLevel()        ).append( "\"" )
+      .append( ",\"ticketReference\":\"" ).append( xmlHttpStatus.getTicketReference() ).append( "\"" )
+      ;
+
+    return sb.append( "}" ).toString();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public static String fromXmlMaxDuration( final XmlMaxDuration xmlMaxDuration )
+  {
+    if( xmlMaxDuration == null ) {
+      return "null";
+    }
+
+    final StringBuilder sb = new StringBuilder( "{" )
+      .append( "\"value\":\""     ).append( xmlMaxDuration.getValue()    ).append( "\"" )
+      .append( ",\"logLevel\":\"" ).append( xmlMaxDuration.getLogLevel() ).append( "\"" )
+      ;
+
+    return sb.append( "}" ).toString();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public static String fromXmlBody( final XmlBody xmlBody )
+  {
+    if( xmlBody == null ) {
+      return "null";
+    }
+
+    final StringBuilder sb = new StringBuilder( "{" )
+      .append( "\"value\":\""            ).append( xmlBody.getValue()           ).append( "\"" )
+      .append( ",\"noBody\":"            ).append( xmlBody.isNoBody()           ).append( "" )
+      .append( ",\"logLevel\":\""        ).append( xmlBody.getLogLevel()        ).append( "\"" )
+      .append( ",\"ticketReference\":\"" ).append( xmlBody.getTicketReference() ).append( "\"" )
+      ;
+
+    return sb.append( "}" ).toString();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public static String fromXmlValues( final XmlValues xmlValues )
+  {
+    if( xmlValues == null ) {
+      return "null";
+    }
+
+    final StringBuilder sb = new StringBuilder( "[" );
+
+    final Iterator< XmlValue > it = xmlValues.value.iterator();
+    while( it.hasNext() ) {
+      final XmlValue xmlValue = it.next();
+      sb.append( ToJson.fromXmlValue( xmlValue ) )
+        .append( it.hasNext() ? "," : "" );
+    }
+
+    return sb.append( "]" ).toString();
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  public static String fromXmlExpected( final XmlExpected xmlExpected )
+  {
+    if( xmlExpected == null ) {
+      return "null";
+    }
+
+    final StringBuilder sb = new StringBuilder( "{" );
+
+    sb.append( fromXmlHeaders( xmlExpected.getHeaders(), false, null ) )
+      .append( ",\"httpStatus\":"  ).append( fromXmlHttpStatus ( xmlExpected.getHttpStatus()  ) )
+      .append( ",\"maxDuration\":" ).append( fromXmlMaxDuration( xmlExpected.getMaxDuration() ) )
+      .append( ",\"body\":"        ).append( fromXmlBody       ( xmlExpected.getBody()        ) )
+      .append( ",\"values\":"      ).append( fromXmlValues     ( xmlExpected.getValues()      ) )
+      ;
+
+    sb.append( "}" );
+
+    return sb.toString();
+  }}

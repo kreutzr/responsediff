@@ -1,9 +1,12 @@
 package com.github.kreutzr.responsediff;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 /**
  * Wrapper around a standard Throwable to carry the following details:
  * - instanceId (Either "candidate", "reference" or "control" (see TestSetHandler constants))
  */
+@Generated
 public class HttpHandlerException extends Throwable
 {
   private static final long serialVersionUID = -235534544976858779L;

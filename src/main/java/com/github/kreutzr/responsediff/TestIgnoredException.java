@@ -1,8 +1,11 @@
 package com.github.kreutzr.responsediff;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 /**
  * This Exception is thrown if a test id does not match the given test name pattern.
  */
+@Generated
 public class TestIgnoredException extends RuntimeException
 {
   private static final long serialVersionUID = 4333223029857615708L;

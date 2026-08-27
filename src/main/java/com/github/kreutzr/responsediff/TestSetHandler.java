@@ -147,7 +147,7 @@ public class TestSetHandler
     }
 
     if( LOG.isDebugEnabled() ) {
-      LOG.debug( "Total analysis =" + ToJson.fromAnalysis( xmlTestSetup.getAnalysis() ) );
+      LOG.debug( "Total analysis =" + ToJson.fromXmlAnalysis( xmlTestSetup.getAnalysis() ) );
     }
   }
 
@@ -319,7 +319,7 @@ public class TestSetHandler
        return;
      }
 
-    final String json = ToJson.fromHeaders( xmlHttpResponse.getHeaders(), true, null );
+    final String json = ToJson.fromXmlHeaders( xmlHttpResponse.getHeaders(), true, null );
 
     JsonPathHelper jph = null;
     for( final XmlVariable xmlVariable : xmlTest.getResponse().getVariables().getVariable() ) {
@@ -434,7 +434,7 @@ public class TestSetHandler
           xmlTestSet.getVariables().getVariable().add( xmlSetVariable );
         }
         else {
-          LOG.warn( "Found existing variable " + xmlVariable.getId() + " as follows \"" + ToJson.fromVariable( xmlSetVariable ) + "\". Reading variable value from response is skipped." );
+          LOG.warn( "Found existing variable " + xmlVariable.getId() + " as follows \"" + ToJson.fromXmlVariable( xmlSetVariable ) + "\". Reading variable value from response is skipped." );
         }
       }
       catch( final Exception ex ) {
@@ -1038,7 +1038,7 @@ public class TestSetHandler
     }
 
     if( LOG.isDebugEnabled() ) {
-      LOG.debug( "Analysis for test/set \"" + testId + "\"=" + ToJson.fromAnalysis( result ) );
+      LOG.debug( "Analysis for test/set \"" + testId + "\"=" + ToJson.fromXmlAnalysis( result ) );
     }
 
     return result;

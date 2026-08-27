@@ -146,8 +146,8 @@ public class ValidationHandlerTest extends TestRoot
     final Set< String > ignoreHeaders = new HashSet<>();
     ignoreHeaders.add( "date" );
 
-    final String candidate = ToJson.fromHeaders( candidateHeaders, true, null );
-    final String reference = ToJson.fromHeaders( referenceHeaders, true, null );
+    final String candidate = ToJson.fromXmlHeaders( candidateHeaders, true, null );
+    final String reference = ToJson.fromXmlHeaders( referenceHeaders, true, null );
     final JsonDiff headerIgnore = ValidationHandler.createIgnoreJsonDiff( null, ignoreHeaders, ToJson.HEADERS_SUBPATH, ValidationHandler.IGNORE_HEADER_TOKEN );
 
     final String testId = "testThatValidateJsonWorks";

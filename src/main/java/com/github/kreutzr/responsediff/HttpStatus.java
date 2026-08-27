@@ -3,6 +3,9 @@ package com.github.kreutzr.responsediff;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
+@Generated
 public enum HttpStatus
 {
   STATUS_100( 100, "Continue" ),

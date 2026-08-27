@@ -1,8 +1,11 @@
 package com.github.kreutzr.responsediff;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 /**
  * Invocation configuration for CloneTestSetup main class.
  */
+@Generated
 public class CloneTestSetupConfiguration
 {
   private String  rootPath_;

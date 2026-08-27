@@ -1,5 +1,8 @@
 package com.github.kreutzr.responsediff;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
+@Generated
 public class Constants
 {
   public static final String MIN_DATE     = "1970-01-01";

@@ -23,6 +23,6 @@ public class PropertyReader
 
   public String getProperty( final String propertyName )
   {
-      return properties_.getProperty( propertyName );
+    return properties_.getProperty( propertyName );
   }
 }
