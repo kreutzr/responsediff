@@ -3,6 +3,12 @@ package com.github.kreutzr.responsediff;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
+/**
+ * This is a WorkInProgress file to experiment with better difference recognition.
+ */
+@Generated
 public class SetDifference 
 {
   public static void main(String... args) 

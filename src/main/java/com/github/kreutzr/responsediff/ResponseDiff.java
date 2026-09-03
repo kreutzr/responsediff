@@ -22,6 +22,7 @@ import com.github.kreutzr.responsediff.reporter.AsciiDocConverter;
 import com.github.kreutzr.responsediff.reporter.XsltProcessor;
 import com.github.kreutzr.responsediff.tools.Converter;
 import com.github.kreutzr.responsediff.tools.ErrorHandlingHelper;
+import com.github.kreutzr.responsediff.tools.Generated;
 import com.github.kreutzr.responsediff.tools.JsonHelper;
 
 import jakarta.xml.bind.JAXBException;
@@ -469,6 +470,7 @@ public class ResponseDiff
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+   @Generated
    public static void main( final String[] args )
    {
      if( args == null || args.length != 1 ) {

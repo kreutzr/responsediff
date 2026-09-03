@@ -145,6 +145,12 @@ public class HttpHandler
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**
+   * Reads the complete file upload path from the given XmlFile. If the path is relative (indicated by a "." at the beginning), the upload path depends on the passed testFileName.
+   * @param xmlFile The current XmlFile. Must not be null.
+   * @param testFileName The complete file name of the current test. Must not null.
+   * @return The upload path.
+   */
   static String getUploadFilepath( final XmlFile xmlFile, final String testFileName )
   {
     // Handle relative paths
@@ -184,7 +190,7 @@ public class HttpHandler
         : ( "" + XmlFileHandler.getFileName( xmlFile.getValue() ) ).trim(); // Avoid NullPointerException
 
       // Handle relative paths
-      final String uploadFilePath = getUploadFilepath(xmlFile, testFileName );
+      final String uploadFilePath = getUploadFilepath( xmlFile, testFileName );
 
       final StringBuilder sb = new StringBuilder()
         .append( CRLF )
@@ -902,7 +908,7 @@ public class HttpHandler
    * @param testId The current test id. Must not be null.
    * @param testFileName The file name the current test is configured in. Must not be null.
    * @param referenceXmlSetup An optional XmlSetup that shall be used to simulate reference responses, if no reference service URL is configured. May be null.
-   * @return The initialized XmlHttpResponse object. ay be null. If referenceXmlSetup is null, null is returned.
+   * @return The initialized XmlHttpResponse object. May be null. If referenceXmlSetup is null, null is returned.
    */
   public static XmlHttpResponse createXmlHttpResponse(
     final XmlRequest           xmlRequest,
@@ -967,11 +973,15 @@ public class HttpHandler
 
   /**
    * Checks if the given headers indicate that the response is compressed (instead of being plain JSON text).
-   * @param xmlHeaders The List of headers to use. Must not be null.
+   * @param xmlHeaders The List of headers to use. May be null.
    * @return true if an compression indication could be found within the given headers. Otherwise false is returned.
    */
   static boolean isCompressed( final List< XmlHeader > xmlHeaders )
   {
+    if( xmlHeaders == null ) {
+      return false;
+    }
+
     final XmlHeader contentEncodingHeader = getHeader( HEADER_NAME__CONTENT_ENCODING, xmlHeaders );
 
     if( contentEncodingHeader == null ) {

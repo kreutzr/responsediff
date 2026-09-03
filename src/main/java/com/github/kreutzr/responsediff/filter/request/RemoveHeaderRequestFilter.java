@@ -26,7 +26,7 @@ import com.github.kreutzr.responsediff.XmlTest;
  */
 public class RemoveHeaderRequestFilter extends DiffFilterImpl implements DiffRequestFilter
 {
-  public  static final String PARAMETER_NAME__NAMES = "names";
+  public static final String PARAMETER_NAME__NAMES = "names";
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

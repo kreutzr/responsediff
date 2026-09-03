@@ -16,19 +16,19 @@ public class RangeParser
    * Tries to parses a range description which may be a range or not.
    * <p/>
    * Range expressions are coded as follows:
-   * <pre> ["["|"]"](.*),(.*)["["|[]"] </pre>
+   * <pre> ["\["|"\]"](.*),(.*)["\["|["\]"] </pre>
    * e.g. "[x,y]", "[x,y[", "]x,y]", "]x,y["
    * <ul>
    * <li>"[x" means lower border including x</li>
    * <li>"]x" means lower border excluding x</li>
-   * <li>"y[" means upper border excluding y</li>
    * <li>"y]" means upper border including y</li>
+   * <li>"y[" means upper border excluding y</li>
    * @param rangeDefinition The range description to parse.
    * @return A Range object if the passed value as a lower and an upper border. Otherwise null is returned.
    */
   public static Range parse( final String rangeDefinition )
   {
-    if( rangeDefinition == null ) {
+    if( rangeDefinition == null || rangeDefinition.length() < 5 ) { // 5 = minimum String length "[1,2]"
       return null;
     }
 
@@ -67,17 +67,21 @@ public class RangeParser
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 /*
   public static final void main( final String[] args )
   {
     String test = " [ x    ,    y     ] ";
-    LOG.info( test  + " : " + RangeParser.parse( test ) );
+    System.out.println( test  + " : " + RangeParser.parse( test ) );
+
     test = "[x,y[";
-    LOG.info( test  + " : " + RangeParser.parse( test ) );
+    System.out.println( test  + " : " + RangeParser.parse( test ) );
+
     test = "]x,y]";
-    LOG.info( test  + " : " + RangeParser.parse( test ) );
+    System.out.println( test  + " : " + RangeParser.parse( test ) );
+
     test = "]x,y[";
-    LOG.info( test  + " : " + RangeParser.parse( test ) );
+    System.out.println( test  + " : " + RangeParser.parse( test ) );
   }
 */
 }

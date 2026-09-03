@@ -1,8 +1,11 @@
 package com.github.kreutzr.responsediff;
 
+import com.github.kreutzr.responsediff.tools.Generated;
+
 /**
  * Helper class to handle value range borders
  */
+@Generated
 public class RangeBorder
 {
   final RangeType type_;

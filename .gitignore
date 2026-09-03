@@ -20,6 +20,9 @@
 *.rar
 *.bak
 
+Thumbs.db
+
+
 # Temporary editor files
 *.kate-swp
 

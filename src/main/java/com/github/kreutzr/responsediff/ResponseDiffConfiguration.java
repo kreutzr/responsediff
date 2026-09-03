@@ -32,7 +32,7 @@ public class ResponseDiffConfiguration
   private String              controlServiceUrl_;
   private List< XmlHeader >   controlHeaders_;
   private long                responseTimeoutMs_ = 1000;
-  private double              epsilon_ = 0.00000001;
+  private double              epsilon_ = Constants.EPSILON;
   private String              referenceFilePath_;
   private boolean             exitWithExitCode_ = true;
   private long                startupSleepMs_ = -1;

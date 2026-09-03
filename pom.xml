@@ -579,6 +579,10 @@
         <version>0.8.15</version>
         <configuration>
           <excludes>
+            <exclude>com/github/kreutzr/responsediff/proxy/*</exclude>
+            <exclude>tmp/*</exclude>
+            <exclude>com/github/kreutzr/responsediff/_*</exclude>
+
             <exclude>com/github/kreutzr/responsediff/ObjectFactory.class</exclude>
             <exclude>com/github/kreutzr/responsediff/XmlAnalysis.class</exclude>
             <exclude>com/github/kreutzr/responsediff/XmlBody.class</exclude>
