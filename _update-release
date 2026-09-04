@@ -13,6 +13,8 @@
 #
 # Run this script and zip updated "ResponseDiff/" folder.
 #
+# Log in to github (if not already done)
+#
 # Draft a release in GitHub with new tag "v1.x.0"
 # => - Follow link "Releases"
 #    - Click "draft new release"
