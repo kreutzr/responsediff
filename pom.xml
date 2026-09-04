@@ -82,7 +82,7 @@
     <version.jakarta.xml.bind-api>4.0.5</version.jakarta.xml.bind-api>
     <version.jsonpath>3.0.0</version.jsonpath>
     <!--
-    <version.jsonsmart>2.6.0</version.jsonsmart> <!-x- NOTE: jsonPath (2.9.0) comes with vulnerable version 2.5.0 so we have to exclude it there. -x->
+    <version.jruby>9.4.15.0</version.jruby> <!-x- NOTE: asciidoctorj (3.0.1) comes with vulnerable version 9.4.14 so we have to exclude it there. Version 9.4.15.0 comes with the same CVEs, so an update is useless. -x->
     -->
     <version.junit-jupiter>6.1.3</version.junit-jupiter>
     <version.lmax.disruptor>4.0.0</version.lmax.disruptor>
@@ -232,40 +232,36 @@
         <groupId>com.jayway.jsonpath</groupId>
         <artifactId>json-path</artifactId>
         <version>${version.jsonpath}</version>
-        <!--
-        <exclusions>
-          <exclusion>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-          </exclusion>
-        </exclusions>
-        -->
       </dependency>
-
-      <!-- Json-Smart (comes with Json-Path but in a vulnerable version, so we have to replace it) -->
-      <!--
-      <dependency>
-        <groupId>net.minidev</groupId>
-        <artifactId>json-smart</artifactId>
-        <version>${version.jsonsmart}</version>
-      </dependency>
-      -->
 
       <!-- AsciiDoctor -->
       <dependency>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctorj</artifactId>
         <version>${version.asciidoctorj}</version>
+        <!--
+        <exclusions>
+          <exclusion>
+            <groupId>org.jruby</groupId>
+            <artifactId>jruby</artifactId>
+          </exclusion>
+        </exclusions>
+      -->
       </dependency>
       <dependency>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctorj-pdf</artifactId>
         <version>${version.asciidoctorj-pdf}</version>
       </dependency>
+
+      <!-- Asciidoctorj comes with Jruby a vulnerable version, so we have to replace it -->
+      <!--
+      <dependency>
+        <groupId>org.jruby</groupId>
+        <artifactId>jruby</artifactId>
+        <version>${version.jruby}</version>
+      </dependency>
+      -->
     </dependencies>
   </dependencyManagement>
 
@@ -339,13 +335,6 @@
       <artifactId>json-path</artifactId>
     </dependency>
 
-    <!-- Json-Smart (comes with Json-Path but in a vulnerable version, so we have to replace it) -x->
-    <dependency>
-      <groupId>net.minidev</groupId>
-      <artifactId>json-smart</artifactId>
-    </dependency>
-    -->
-
     <!-- AsciiDoctor -->
     <dependency>
       <groupId>org.asciidoctor</groupId>
@@ -355,6 +344,15 @@
       <groupId>org.asciidoctor</groupId>
       <artifactId>asciidoctorj-pdf</artifactId>
     </dependency>
+
+    <!-- AsciidoctorJ comes with Jruby in a vulnerable version, so we have to replace it -->
+    <!--
+    <dependency>
+      <groupId>org.jruby</groupId>
+      <artifactId>jruby</artifactId>
+    </dependency>
+    -->
+
   </dependencies>
 
   <build>
