@@ -39,8 +39,7 @@ import jakarta.xml.bind.Unmarshaller;
  */
 public class XmlFileHandler
 {
-  private static final String XSD_FILE_NAME        = "responseDiffSetup.xsd";
-//  private static final String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  private static final String XSD_FILE_NAME = "responseDiffSetup.xsd";
 
   private static final Logger LOG = LoggerFactory.getLogger( XmlFileHandler.class );
 
@@ -286,7 +285,7 @@ public class XmlFileHandler
    * Expands XmlTestSets with an "iterations=n" attribute (with n > 1) by a XmlTestSet that holds n copies of the original XmlTestSets each with iterations=1.
    * @param setup The XmlResponseDiffSetup to expand. Must not be null.
    */
-  private static void expandSetupByIterations( final XmlResponseDiffSetup setup )
+  static void expandSetupByIterations( final XmlResponseDiffSetup setup )
   {
     if( LOG.isDebugEnabled() ) {
       LOG.debug( "Expanding test setup with id \"" + setup.getId() + "\"." );
