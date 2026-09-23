@@ -30,6 +30,7 @@ This is a regular maintenance release.
 * Upgrade "xml-maven-plugin" plugin from 1.2.1 to 1.2.2
 * Upgrade asciidoctorj-pdf from 2.3.23 to 2.3.27
 * Upgrade jackson-databind from 2.22.2 to 2.22.3
+* Upgrade slf4j from 2.0.19 to 2.0.20
 
 === Known issues
 
